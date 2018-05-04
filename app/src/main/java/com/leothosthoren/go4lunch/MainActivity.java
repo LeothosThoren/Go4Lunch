@@ -18,7 +18,7 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity {
 
     // 1 - Identifier for Sign-In Activity
-    private static final int RC_SIGN_IN = 123;
+    private static final int RC_SIGN_IN = 1984;
     // 1 - Get Coordinator Layout
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -53,11 +53,12 @@ public class MainActivity extends BaseActivity {
                         .setTheme(R.style.LoginTheme)
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),//EMAIL
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))//GOOGLE
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),//GOOGLE
 //                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))//FACEBOOK
-//                                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))//TWITTER
+                                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))//TWITTER
                         .setIsSmartLockEnabled(false, true)
                         .setLogo(R.drawable.background_image)
+                        .setTheme(R.style.AppTheme)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -83,7 +84,6 @@ public class MainActivity extends BaseActivity {
 
     // 3 - Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
-
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
         if (requestCode == RC_SIGN_IN) {
