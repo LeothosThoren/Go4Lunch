@@ -3,6 +3,8 @@ package com.leothosthoren.go4lunch;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
@@ -13,6 +15,7 @@ import com.leothosthoren.go4lunch.base.BaseActivity;
 import java.util.Arrays;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
@@ -36,16 +39,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public int getFragmentLayout() {
-        startSignInActivity();
         return R.layout.activity_main;
     }
-
 
     // --------------------
     // NAVIGATION
     // --------------------
 
     // 2 - Launch Sign-In Activity
+
     private void startSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance()
@@ -54,7 +56,7 @@ public class MainActivity extends BaseActivity {
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),//EMAIL
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),//GOOGLE
-//                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))//FACEBOOK
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),//FACEBOOK
                                         new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))//TWITTER
                         .setIsSmartLockEnabled(false, true)
                         .setLogo(R.drawable.background_image)
@@ -62,6 +64,7 @@ public class MainActivity extends BaseActivity {
                         .build(),
                 RC_SIGN_IN);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,5 +102,10 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    //Test Button
+    public void onClickTestButton(View view) {
+        startSignInActivity();
     }
 }
