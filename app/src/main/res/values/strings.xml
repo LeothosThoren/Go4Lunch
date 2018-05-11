@@ -1,7 +1,10 @@
 <resources>
+    <!-- Activity name -->
     <string name="app_name">Go4Lunch</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_bottom_navigation">I AM HUNGRY</string>
 
-    <!-- MAIN ACTIVITY -->
+    <!-- Main activity -->
     <string name="splash_screen_text">Find a nice restaurant and invite your co-workers for lunch!</string>
     <string name="error_not_connected">Vous devez vous connecter !</string>
     <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
@@ -14,8 +17,18 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">449666485470383</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb449666485470383</string>
+
     <!-- Twitter consumer key and secret -->
     <string name="twitter_consumer_key" translatable="false">GJek2fgq5fernhmawj6YtpzAM</string>
     <string name="twitter_consumer_secret" translatable="false">XaR5H40pcsudHs2ZBXZH6IPa8seZAxaabF1wfssTD8cjetCiOk</string>
+
+
+    <!-- Navigation bottom View -->
+    <string name="title_map_view">Map View</string>
+    <string name="title_list_view">List View</string>
+    <string name="title_workmates">Workmates</string>
+
+    <!-- Toolbar icon -->
+    <string name="toolbar_icon_search">Search restaurants</string>
 
 </resources>
