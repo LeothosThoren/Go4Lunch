@@ -31,4 +31,13 @@
     <!-- Toolbar icon -->
     <string name="toolbar_icon_search">Search restaurants</string>
 
+    <!-- Menu drawer-->
+    <string name="your_lunch">YOUR LUNCH</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logout">LOGOUT</string>
+    <string name="user">User name</string>
+    <string name="email">Email</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>
