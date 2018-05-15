@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,22 +20,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.base.BaseActivity;
 
 import butterknife.BindView;
 
-public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class Go4LunchActivity extends BaseActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
-
-    //    @BindView(R.id.navigation)
-//    BottomNavigationView mBottomNavigationView;
     GoogleMap mMap;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-
-    //Use bottom navigation view
+    //BOTTOM NAVIGATION VIEW
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -46,7 +42,6 @@ public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCa
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     //TODO
-
                     return true;
                 case R.id.navigation_list:
                     //TODO
@@ -62,20 +57,19 @@ public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bottom_navigation);
         //Menu configuration
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        //Bottom view configuration
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        //Google Map configuration
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        this.configureBottomNavigationView();
+        this.configureGoogleMapView();
     }
-    
+
+    @Override
+    public int getFragmentLayout() {
+        return R.layout.activity_go4lunch;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -89,27 +83,13 @@ public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCa
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //2 - Inflate the menu and add it to the Toolbar
-        getMenuInflater().inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
-    //    @Override
-//    public int getFragmentLayout() {
-////        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-////        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//
-//        return R.layout.activity_bottom_navigation;
-//    }
-
-    /*
-     * @method configureToolbar
-     *
-     * This method call the toolbar layout and display it in the actionbar
-     * */
-    private void configureToolbar() {
-        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-    }
+    //---------------------
+    // NAVIGATION
+    //---------------------
 
     //Handle menu drawer on back press button
     @Override
@@ -122,8 +102,7 @@ public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-
-    //Handle the click on drawer menu
+    //Handle the click on MENU DRAWER
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -164,5 +143,16 @@ public class Bottom_navigation extends AppCompatActivity implements OnMapReadyCa
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    // 4 - Configure BottomNavigationView
+    private void configureBottomNavigationView() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
 
+    private void configureGoogleMapView() {
+        //Google Map configuration
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
 }

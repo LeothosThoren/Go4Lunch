@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -38,8 +39,12 @@
 
         <!-- RESTAURANT ACTIVITY -->
         <activity
-            android:name=".controlers.Bottom_navigation"
+            android:name=".controlers.Go4LunchActivity"
             android:label="@string/title_activity_bottom_navigation" />
+
+        <!-- SETTINGS ACTIVITY -->
+        <activity android:name=".controlers.SettingActivity"
+            android:label="Settings"/>
     </application>
 
 </manifest>

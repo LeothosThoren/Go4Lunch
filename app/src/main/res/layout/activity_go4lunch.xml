@@ -18,7 +18,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".controlers.Bottom_navigation">
+            tools:context=".controlers.Go4LunchActivity">
 
 
             <!-- GOOGLE MAP -->
@@ -45,7 +45,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:menu="@menu/navigation" />
+                app:menu="@menu/menu_navigation" />
 
 
         </android.support.constraint.ConstraintLayout>
@@ -61,7 +61,7 @@
         android:fitsSystemWindows="true"
         android:background="@color/colorPrimary"
         app:itemTextColor="@android:color/white"
-        app:menu="@menu/drawer_view"
+        app:menu="@menu/menu_drawer_view"
         app:headerLayout="@layout/nav_header"/>
 
 </android.support.v4.widget.DrawerLayout>

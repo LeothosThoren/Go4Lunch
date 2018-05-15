@@ -39,5 +39,10 @@
     <string name="email">Email</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="delete_account">Delete account</string>
+    <string name="user_name">User name</string>
+    <string name="update_user_name">Update user name</string>
+    <string name="login_image">login image</string>
+    <string name="info_no_user_name_found">No user name found</string>
 
 </resources>
