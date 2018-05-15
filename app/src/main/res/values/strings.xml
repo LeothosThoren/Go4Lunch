@@ -44,5 +44,9 @@
     <string name="update_user_name">Update user name</string>
     <string name="login_image">login image</string>
     <string name="info_no_user_name_found">No user name found</string>
+    <string name="popup_message_confirmation_delete_account">Are you sure?</string>
+    <string name="popup_title">Delete account?</string>
+    <string name="popup_message_choice_yes">Yes</string>
+    <string name="popup_message_choice_no">No!</string>
 
 </resources>

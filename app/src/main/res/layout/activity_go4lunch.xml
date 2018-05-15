@@ -6,51 +6,61 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- FRAME LAYOUT MAIN CONTENT -->
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/container"
+
+        <!-- TOOLBAR -->
+        <include
+            android:id="@+id/include"
+            layout="@layout/toolbar" />
+
+        <!-- FRAME LAYOUT MAIN CONTENT -->
+        <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".controlers.Go4LunchActivity">
+            android:layout_height="match_parent">
 
 
-            <!-- GOOGLE MAP -->
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".controlers.MapsActivity" />
-
-            <!-- TOOLBAR -->
-            <include
-                android:id="@+id/include"
-                layout="@layout/toolbar" />
-
-            <!-- BOTTOM NAVIGATION VIEW -->
-            <android.support.design.widget.BottomNavigationView
-                android:id="@+id/navigation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
-                android:background="?android:attr/windowBackground"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:menu="@menu/menu_navigation" />
+                tools:context=".controlers.Go4LunchActivity">
 
 
-        </android.support.constraint.ConstraintLayout>
+                <!-- GOOGLE MAP -->
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".controlers.MapsActivity" />
 
-    </FrameLayout>
+
+                <!-- BOTTOM NAVIGATION VIEW -->
+                <android.support.design.widget.BottomNavigationView
+                    android:id="@+id/navigation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginStart="0dp"
+                    android:background="?android:attr/windowBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:menu="@menu/menu_navigation" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
 
     <!-- MENU DRAWER NAVIGATION VIEW -->
     <android.support.design.widget.NavigationView
@@ -58,10 +68,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
         app:itemTextColor="@android:color/white"
-        app:menu="@menu/menu_drawer_view"
-        app:headerLayout="@layout/nav_header"/>
+        app:menu="@menu/menu_drawer_view" />
 
 </android.support.v4.widget.DrawerLayout>

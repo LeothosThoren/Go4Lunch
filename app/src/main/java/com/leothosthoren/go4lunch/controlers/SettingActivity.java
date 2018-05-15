@@ -1,12 +1,20 @@
 package com.leothosthoren.go4lunch.controlers;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.leothosthoren.go4lunch.MainActivity;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 
@@ -15,15 +23,18 @@ import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
 
+    public static final int DELETE_USER_TASK = 68; //ASCII 'D'
+
     @BindView(R.id.placeholder)
     ImageView mImageViewProfile;
     @BindView(R.id.username)
     TextInputEditText mTextInputEditTextUsername;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.configureToolbar();
+//        this.configureToolbar();
         this.updateUIOnCreation();
     }
 
@@ -37,13 +48,35 @@ public class SettingActivity extends BaseActivity {
     // --------------------
 
     @OnClick(R.id.update_username)
-    public void onClickUpdateButton() {
+    public void onClickUpdateButton(View view) {
 
     }
 
     @OnClick(R.id.delete_account)
-    public void onClickDeleteButton() {
+    public void onClickDeleteButton(View view) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.popup_title)
+                .setMessage(R.string.popup_message_confirmation_delete_account)
+                .setPositiveButton(R.string.popup_message_choice_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteUser();
+                    }
+                })
+                .setNegativeButton(R.string.popup_message_choice_no, null)
+                .show();
+    }
 
+    // --------------------
+    // REST REQUESTS
+    // --------------------
+
+    private void deleteUser() {
+        if (this.getCurrentUser() != null) {
+            AuthUI.getInstance()
+                    .delete(this)
+                    .addOnSuccessListener(this, updateUiAfterHttpRequestsCompleted(DELETE_USER_TASK));
+        }
     }
 
     // --------------------
@@ -70,4 +103,25 @@ public class SettingActivity extends BaseActivity {
             this.mTextInputEditTextUsername.setText(username);
         }
     }
+
+    private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
+        return new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                switch (taskId) {
+                    case DELETE_USER_TASK:
+                        startMainActivity();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }

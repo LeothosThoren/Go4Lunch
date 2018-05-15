@@ -7,8 +7,11 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
-    app:titleTextColor="@android:color/white"
-    app:titleTextAppearance="@style/Toolbar.TitleText"
-    android:theme="@style/ToolbarTheme">
+    app:titleTextColor="@android:color/white">
 
+
+    <!--android:background="?attr/colorPrimary"-->
+    <!--android:minHeight="?attr/actionBarSize"-->
+    <!--app:titleTextColor="@android:color/white"-->
+    <!--app:titleTextAppearance="@style/Toolbar.TitleText"-->
 </android.support.v7.widget.Toolbar>

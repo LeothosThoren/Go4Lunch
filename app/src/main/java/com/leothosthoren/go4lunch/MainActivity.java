@@ -30,11 +30,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (this.isCurrentUserLogged()) {
-            this.startGo4LunchActivity();
-        } else {
-            this.startSignInActivity();
-        }
     }
 
     @Override
@@ -43,8 +38,11 @@ public class MainActivity extends BaseActivity {
         Fabric.with(this, new Crashlytics());
         // Force application to crash
 //        Crashlytics.getInstance().crash();
-
-
+        if (this.isCurrentUserLogged()) {
+            this.startGo4LunchActivity();
+        } else {
+            this.startSignInActivity();
+        }
     }
 
     @Override
