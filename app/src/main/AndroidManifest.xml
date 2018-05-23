@@ -18,7 +18,8 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Main Activity -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".controlers.activities.MainActivity"
+            android:theme="@style/AppTheme.NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,12 +40,13 @@
 
         <!-- RESTAURANT ACTIVITY -->
         <activity
-            android:name=".controlers.Go4LunchActivity"
+            android:name=".controlers.activities.Go4LunchActivity"
             android:label="@string/title_activity_bottom_navigation" />
 
         <!-- SETTINGS ACTIVITY -->
-        <activity android:name=".controlers.SettingActivity"
-            android:label="Settings"/>
+        <activity android:name=".controlers.activities.SettingActivity"
+            android:label="Settings"
+            android:parentActivityName=".controlers.activities.Go4LunchActivity"/>
     </application>
 
 </manifest>

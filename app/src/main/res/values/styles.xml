@@ -25,12 +25,12 @@
 
     </style>
 
-    <!--&lt;!&ndash; STYLE FOR MAIN ACTIVITY &ndash;&gt;-->
-    <!--<style name="AppTheme.NoTitle" parent="AppTheme">-->
-    <!--<item name="windowNoTitle">true</item>-->
-    <!--<item name="windowActionBar">false</item>-->
-    <!--<item name="actionBarTheme">@null</item>-->
-    <!--</style>-->
+    <!-- STYLE FOR MAIN ACTIVITY -->
+    <style name="AppTheme.NoTitle" parent="AppTheme">
+    <item name="windowNoTitle">true</item>
+    <item name="windowActionBar">false</item>
+    <item name="actionBarTheme">@null</item>
+    </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">

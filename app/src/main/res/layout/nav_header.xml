@@ -4,46 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="@drawable/background_image"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:background="@drawable/menu_drawer_image"
     android:orientation="vertical"
     android:gravity="bottom">
 
     <TextView
         android:id="@+id/menu_drawer_user"
+        style="@style/MainStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/user"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636" />
+        app:layout_constraintBottom_toTopOf="@+id/menu_drawer_email"
+        app:layout_constraintStart_toEndOf="@+id/menu_drawer_imageView" />
 
     <TextView
         android:id="@+id/menu_drawer_email"
+        style="@style/MainStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.051"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/menu_drawer_user" />
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/menu_drawer_imageView" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/menu_drawer_imageView"
+        style="@style/MainStyle"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:src="@drawable/ic_collegues"
+        android:src="@drawable/com_facebook_profile_picture_blank_portrait"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.922" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

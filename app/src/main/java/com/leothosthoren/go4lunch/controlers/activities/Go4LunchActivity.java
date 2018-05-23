@@ -1,4 +1,4 @@
-package com.leothosthoren.go4lunch.controlers;
+package com.leothosthoren.go4lunch.controlers.activities;
 
 import android.content.Intent;
 import android.os.Build;
@@ -7,35 +7,35 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.base.BaseActivity;
+import com.leothosthoren.go4lunch.controlers.fragments.ListViewFragment;
+import com.leothosthoren.go4lunch.controlers.fragments.MapViewFragment;
+import com.leothosthoren.go4lunch.controlers.fragments.WorkMatesFragment;
 
-import butterknife.BindView;
-
-public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCallback,
-        NavigationView.OnNavigationItemSelectedListener {
+public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
-    GoogleMap mMap;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+
+    private Toolbar mToolbar;
+    //    private TextView mTextViewUser;
+//    private TextView mTextViewEmail;
+//    private ImageView mImageViewProfile;
     private DrawerLayout drawerLayout;
+
+
     private NavigationView navigationView;
 
     //BOTTOM NAVIGATION VIEW
@@ -44,15 +44,19 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     //TODO
+                    configureFragment(new MapViewFragment());
                     return true;
                 case R.id.navigation_list:
                     //TODO
+                    configureFragment(new ListViewFragment());
                     return true;
                 case R.id.navigation_workmates:
                     //TODO
+                    configureFragment(new WorkMatesFragment());
                     return true;
             }
             return false;
@@ -62,38 +66,23 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_go4lunch);
         //Menu configuration
+//        mTextViewUser = (TextView) findViewById(R.id.menu_drawer_user);
+//        mTextViewEmail = (TextView)  findViewById(R.id.menu_drawer_email);
+//        mImageViewProfile = (ImageView) findViewById(R.id.menu_drawer_imageView);
+
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
-        this.configureGoogleMapView();
+//        this.updateUIOnCreation();
+        this.configureFragment(new MapViewFragment());
     }
-
-//    @Override
-//    public int getFragmentLayout() {
-//        return R.layout.activity_go4lunch;
-//    }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    public int getFragmentLayout() {
+        return R.layout.activity_go4lunch;
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //2 - Inflate the menu and add it to the Toolbar
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
-    }
-
 
     //---------------------
     // NAVIGATION
@@ -108,6 +97,13 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //2 - Inflate the menu and add it to the Toolbar
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
     }
 
     //Handle the click on MENU DRAWER
@@ -134,16 +130,16 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
         return true;
     }
 
-    //Launch activity
-    private void startActivitySettings() {
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-    }
 
     // ---------------------
     // CONFIGURATION
     // ---------------------
 
+    @Override
+    protected void configureToolbar() {
+        this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(this.mToolbar);
+    }
 
     // 2 - Configure Drawer Layout
     private void configureDrawerLayout() {
@@ -165,11 +161,17 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void configureGoogleMapView() {
-        //Google Map configuration
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    //Launch activity
+    private void startActivitySettings() {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+    }
+
+    //Launch fragments
+    private void configureFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, fragment).commit();
     }
 
     // --------------------
@@ -186,9 +188,30 @@ public class Go4LunchActivity extends AppCompatActivity implements OnMapReadyCal
     // UI
     //---------------------
 
-    private void configureToolbar() {
-       setSupportActionBar(mToolbar);
-    }
+
+//    private void updateUIOnCreation() {
+//
+//        if (this.getCurrentUser() != null) {
+//
+//            //Get user picture from providers on Firebase
+//            if (this.getCurrentUser().getPhotoUrl() != null) {
+//                Glide.with(this)
+//                        .load(this.getCurrentUser().getPhotoUrl())
+//                        .apply(RequestOptions.circleCropTransform())
+//                        .into(mImageViewProfile);
+//            }
+//
+//            //Get user 's name
+//            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
+//                    getString(R.string.info_no_user_name_found) : this.getCurrentUser().getDisplayName();
+//
+//            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
+//                    getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+//            //Update view with data
+//            mTextViewUser.setText(username);
+//            mTextViewEmail.setText(email);
+//        }
+//    }
 
     private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
         return new OnSuccessListener<Void>() {

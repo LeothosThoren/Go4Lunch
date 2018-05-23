@@ -1,11 +1,10 @@
-package com.leothosthoren.go4lunch.controlers;
+package com.leothosthoren.go4lunch.controlers.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.leothosthoren.go4lunch.MainActivity;
+import com.leothosthoren.go4lunch.controlers.activities.MainActivity;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 
