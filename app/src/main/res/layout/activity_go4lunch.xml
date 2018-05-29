@@ -15,25 +15,27 @@
         android:orientation="vertical">
 
         <!-- TOOLBAR -->
-        <!-- Toolbar -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/activity_main_toolbar"
+            style="@style/Toolbar.TitleText"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            style="@style/Toolbar.TitleText"/>
+            android:layout_height="?attr/actionBarSize" />
 
         <!-- FRAME LAYOUT MAIN CONTENT -->
         <FrameLayout
-            android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <FrameLayout
+                    android:id="@+id/content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </FrameLayout>
 
                 <!-- BOTTOM NAVIGATION VIEW -->
                 <android.support.design.widget.BottomNavigationView
@@ -63,8 +65,8 @@
         android:background="@color/colorAccent"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:itemTextColor="@android:color/white"
         app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
         app:menu="@menu/menu_drawer_view" />
 
 </android.support.v4.widget.DrawerLayout>
