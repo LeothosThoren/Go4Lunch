@@ -67,8 +67,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //FIREBASE
-    implementation 'com.google.firebase:firebase-core:15.0.2'
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
 
     // FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:3.3.1'
 
     // FACEBOOK LOGIN SUPPORT
-    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
 
 //    //TWITTER LOGIN SUPPORT
     implementation('com.twitter.sdk.android:twitter:3.0.0@aar') {
@@ -94,5 +94,6 @@ dependencies {
     //GOOGLE SERVICES
     implementation "com.google.android.gms:play-services-location:15.0.1"
     implementation "com.google.android.gms:play-services-places:15.0.1"
+    implementation "com.google.android.gms:play-services-maps:15.0.1"
 }
 apply plugin: 'com.google.gms.google-services'

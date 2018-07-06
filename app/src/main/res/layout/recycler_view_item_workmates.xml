@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_workmates_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_workmates" />
+
+    <RelativeLayout
+        android:id="@+id/item_workmates_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:text="@string/workmates_decision" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/tw__composer_deep_gray" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -57,6 +57,15 @@
             app:layout_constraintStart_toStartOf="@+id/button_test"
             app:layout_constraintTop_toBottomOf="@+id/button_test" />
 
+        <Button
+            android:id="@+id/placeActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="156dp"
+            android:onClick="onClickPlaceButton"
+            android:text="GO TO PLACE" />
 
     </RelativeLayout>
 

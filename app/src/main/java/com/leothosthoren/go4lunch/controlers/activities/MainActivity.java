@@ -1,5 +1,6 @@
 package com.leothosthoren.go4lunch.controlers.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,11 +44,11 @@ public class MainActivity extends BaseActivity {
         Fabric.with(this, new Crashlytics());
         // Force application to crash
 //        Crashlytics.getInstance().crash();
-        if (this.isCurrentUserLogged()) {
-            this.startGo4LunchActivity();
-        } else {
-            this.startSignInActivity();
-        }
+//        if (this.isCurrentUserLogged()) {
+//            this.startGo4LunchActivity();
+//        } else {
+//            this.startSignInActivity();
+//        }
     }
 
     @Override
@@ -122,11 +123,15 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onClickMapButton(View view) {
-        this.startGo4LunchActivity();
+        this.startActivity(Go4LunchActivity.class);
     }
 
-    private void startGo4LunchActivity() {
-        Intent intent = new Intent(this, Go4LunchActivity.class);
+    public void onClickPlaceButton(View view) {
+        this.startActivity(PlaceActivity.class);
+    }
+
+    private void startActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
         startActivity(intent);
     }
 }

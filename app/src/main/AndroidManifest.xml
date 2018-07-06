@@ -54,6 +54,7 @@
             android:name=".controlers.activities.SettingActivity"
             android:label="Settings"
             android:parentActivityName=".controlers.activities.Go4LunchActivity" />
+        <activity android:name=".controlers.activities.PlaceActivity" />
     </application>
 
 </manifest>

@@ -48,6 +48,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     //TODO
+                    //Try to launch activity
                     configureFragment(new MapViewFragment());
                     return true;
                 case R.id.navigation_list:
@@ -62,6 +63,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
             return false;
         }
     };
+
+    @Override
+    public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
+        super.startActivityFromFragment(fragment, intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
