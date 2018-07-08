@@ -8,7 +8,8 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_workmates" />
+        android:src="@drawable/ic_workmates"
+        android:contentDescription="@string/workmates_profil" />
 
     <RelativeLayout
         android:id="@+id/item_workmates_relative_layout"

@@ -55,7 +55,7 @@
     <string name="list_fragment_text">List</string>
     <string name="mates_fragment_text">Mates</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- GOOGLE MAP -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_info_title">title</string>
     <string name="default_info_snippet">snippet</string>
@@ -63,5 +63,13 @@
 
     <!-- RecyclerView item -->
     <string name="workmates_decision">$name hasn\'t decided yet</string>
+    <string name="opening_time">opening time</string>
+    <string name="distance">distance</string>
+    <string name="nb_workmates_selection">(nb)</string>
+    <string name="workmate_icon">workmate_icon</string>
+    <string name="restaurant_adress">restaurant adress</string>
+    <string name="restaurant_name">restaurant name</string>
+    <string name="restaurant_image">restaurant image</string>
+    <string name="workmates_profil">workmates_profil</string>
 
 </resources>
