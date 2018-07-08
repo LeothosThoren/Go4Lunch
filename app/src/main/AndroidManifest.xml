@@ -24,7 +24,7 @@
 
         <!-- Main Activity -->
         <activity
-            android:name=".controlers.activities.MainActivity"
+            android:name=".controler.activities.MainActivity"
             android:theme="@style/AppTheme.NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,15 +46,15 @@
 
         <!-- RESTAURANT ACTIVITY -->
         <activity
-            android:name=".controlers.activities.Go4LunchActivity"
+            android:name=".controler.activities.Go4LunchActivity"
             android:label="@string/title_activity_bottom_navigation" />
 
         <!-- SETTINGS ACTIVITY -->
         <activity
-            android:name=".controlers.activities.SettingActivity"
+            android:name=".controler.activities.SettingActivity"
             android:label="Settings"
-            android:parentActivityName=".controlers.activities.Go4LunchActivity" />
-        <activity android:name=".controlers.activities.PlaceActivity" />
+            android:parentActivityName=".controler.activities.Go4LunchActivity" />
+        <activity android:name=".controler.activities.PlaceActivity" />
     </application>
 
 </manifest>

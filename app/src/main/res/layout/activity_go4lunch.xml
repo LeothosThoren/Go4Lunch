@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".controlers.activities.Go4LunchActivity"
+    tools:context=".controler.activities.Go4LunchActivity"
     tools:openDrawer="start">
 
     <LinearLayout
