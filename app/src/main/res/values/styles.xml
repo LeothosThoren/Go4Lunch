@@ -70,4 +70,10 @@
 
     <!-- Notification page -->
     <string name="switch_notifications">Enable notifications (once per day)</string>
+
+    <!--RatingBar-->
+    <style name="RatingBar" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/blackStar</item>
+        <item name="colorControlActivated">@color/yellowStar</item>
+    </style>
 </resources>

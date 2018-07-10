@@ -21,9 +21,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseActivity;
-import com.leothosthoren.go4lunch.controler.fragments.ListViewFragment;
+import com.leothosthoren.go4lunch.controler.fragments.RestaurantViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.MapViewFragment;
-import com.leothosthoren.go4lunch.controler.fragments.WorkMatesFragment;
+import com.leothosthoren.go4lunch.controler.fragments.WorkMatesViewFragment;
 
 public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -53,11 +53,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                     return true;
                 case R.id.navigation_list:
                     //TODO
-                    configureFragment(new ListViewFragment());
+                    configureFragment(new RestaurantViewFragment());
                     return true;
                 case R.id.navigation_workmates:
                     //TODO
-                    configureFragment(new WorkMatesFragment());
+                    configureFragment(new WorkMatesViewFragment());
                     return true;
             }
             return false;
