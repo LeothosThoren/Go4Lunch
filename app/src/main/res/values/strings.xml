@@ -61,15 +61,20 @@
     <string name="default_info_snippet">snippet</string>
     <string name="map_error_connexion">It seems you have no connection availability</string>
 
-    <!-- RecyclerView item -->
-    <string name="workmates_decision">$name hasn\'t decided yet</string>
+    <!-- RecyclerView restaurants item -->
     <string name="opening_time">opening time</string>
-    <string name="distance">distance</string>
-    <string name="nb_workmates_selection">(nb)</string>
+    <string name="distance">%1$dm</string>
+    <string name="nb_workmate_selection">(%1$d)</string>
     <string name="workmate_icon">workmate_icon</string>
-    <string name="restaurant_adress">restaurant adress</string>
+    <string name="restaurant_type_adress">%1$s - %2$s</string>
     <string name="restaurant_name">restaurant name</string>
     <string name="restaurant_image">restaurant image</string>
-    <string name="workmates_profil">workmates_profil</string>
+
+
+    <!--RecyclerView workmates item-->
+    <string name="workmate_default_decision">%1$s hasn\'t decided yet</string>
+    <string name="workmate_profil">workmates_profil</string>
+    <string name="workmate_is_eating">%1$s is eating %2$s (%3$s)</string>
+    <string name="workmate_is_joining">%1$s is joining</string>
 
 </resources>

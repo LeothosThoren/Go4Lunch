@@ -4,25 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!--WORKMATES PHOTO-->
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_workmates"
-        android:contentDescription="@string/workmates_profil" />
+        android:contentDescription="@string/workmate_profil"
+        android:src="@drawable/ic_workmates" />
 
     <RelativeLayout
         android:id="@+id/item_workmates_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--WORKMATES CHOICE-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
-            android:text="@string/workmates_decision" />
+            android:text="@string/workmate_default_decision"
+            android:textStyle="italic" />
 
+        <!--SEPARATION-->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

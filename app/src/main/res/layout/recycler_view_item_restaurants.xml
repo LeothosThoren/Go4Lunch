@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_restaurants_title"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
     android:layout_weight="1">
 
     <!--RESTAURANT PHOTO-->
@@ -27,11 +28,13 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/tw__composer_black"
         android:text="@string/restaurant_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--RESTAURANTS ADDRESS-->
+    <!--RESTAURANTS TYPE & ADDRESS-->
     <TextView
         android:id="@+id/item_restaurants_address"
         android:layout_width="wrap_content"
@@ -39,7 +42,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/restaurant_adress"
+        android:text="@string/restaurant_type_adress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_restaurants_name" />
 
@@ -51,6 +54,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textStyle="italic"
         android:text="@string/opening_time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_restaurants_address" />
@@ -71,7 +75,7 @@
         app:layout_constraintStart_toEndOf="@+id/item_restaurants_name"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--RESTAURANTS WORKMATES NUMBER-->
+    <!--RESTAURANTS COLLEAGUES NUMBER-->
     <TextView
         android:id="@+id/ite_restaurants_nb_workmates"
         android:layout_width="wrap_content"
@@ -79,7 +83,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/nb_workmates_selection"
+        android:textStyle="bold"
+        android:text="@string/nb_workmate_selection"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/item_restaurants_distance" />
 
@@ -113,7 +118,7 @@
         android:layout_marginTop="8dp"
         android:isIndicator="true"
         android:numStars="3"
-        android:rating="3"
+        android:rating="1"
         android:stepSize="0.5"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="1.0"
