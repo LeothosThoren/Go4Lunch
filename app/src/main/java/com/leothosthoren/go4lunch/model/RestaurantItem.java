@@ -6,14 +6,14 @@ public class RestaurantItem {
     private String foodType;
     private String address;
     private String openingInfo;
-    private String distance;
-    private String workmateQuantity;
+    private int distance;
+    private int workmateQuantity;
     private String url;
-    private float rating;
+    private double rating;
 
 
     public RestaurantItem(String name, String foodType, String address, String openingInfo,
-                          String distance, String workmateQuantity, String url, float rating) {
+                          int distance, int workmateQuantity, String url, double rating) {
         this.name = name;
         this.foodType = foodType;
         this.address = address;
@@ -57,19 +57,19 @@ public class RestaurantItem {
         this.openingInfo = openingInfo;
     }
 
-    public String getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 
-    public String getWorkmateQuantity() {
+    public int getWorkmateQuantity() {
         return workmateQuantity;
     }
 
-    public void setWorkmateQuantity(String workmateQuantity) {
+    public void setWorkmateQuantity(int workmateQuantity) {
         this.workmateQuantity = workmateQuantity;
     }
 
@@ -81,11 +81,29 @@ public class RestaurantItem {
         this.url = url;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    //Some Methods to handle
+
+    public String concatTypeAndAdress(String type, String address){
+        return type + " - " + address;
+    }
+
+    public String concatWorkmateQuantity(int quantity) {
+        return "("+quantity+")";
+    }
+
+    public String concatDistance(int distance){
+        return distance+"m";
+    }
+
+    public float concatRating(double rating){
+        return (float)rating;
     }
 }

@@ -43,7 +43,7 @@ public class PlaceActivity extends FragmentActivity
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final float DEFAULT_ZOOM = 18f;
     private static final String TAG = "SecondMapActivity";
-    private static final int MAX_PLACES = 30;
+    private static final int MAX_PLACES = 100;
     private static final int REQUEST_PICK_PLACE = 2;
 
     //VAR
@@ -201,10 +201,10 @@ public class PlaceActivity extends FragmentActivity
                             //Move camera toward device position
                             if (mLastKnownLocation != null) {
 
-                                //Define the bounds
-                                mLatLngBounds = new LatLngBounds(
-                                        new LatLng(48.856614, 2.3522219),
-                                        new LatLng(48.856614, 2.3522219));
+//                                //Define the bounds
+//                                mLatLngBounds = new LatLngBounds(
+//                                        new LatLng(48.856614, 2.3522219),
+//                                        new LatLng(48.856614, 2.3522219));
 
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(mLastKnownLocation.getLatitude(),
@@ -274,7 +274,7 @@ public class PlaceActivity extends FragmentActivity
         }
 
         //Add likelyPlace elements into arrays
-        int i = 0;
+//        int i = 0;
         mLikelyPlaceName = new String[count];
         mLikelyPlaceLatlng = new LatLng[count];
         //Check if the nearest poi are restaurants
@@ -282,22 +282,22 @@ public class PlaceActivity extends FragmentActivity
             place = placeLikelihood.getPlace();
             for (int j = 0; j < place.getPlaceTypes().size(); j++) {
                 if (place.getPlaceTypes().get(j) == Place.TYPE_RESTAURANT) {
-                    mLikelyPlaceName[i] = place.getName().toString();
-                    mLikelyPlaceLatlng[i] = place.getLatLng();
+                    mLikelyPlaceName[j] = place.getName().toString();
+                    mLikelyPlaceLatlng[j] = place.getLatLng();
 
                     //Add marker in every place found
-                    addMarkerOnMap(i);
+                    addMarkerOnMap(j);
 
-                    Log.d(TAG, "onComplete: show me Latlng marker: " + mLikelyPlaceName[i]
-                            + " " + mLikelyPlaceLatlng[i]
+                    Log.d(TAG, "onComplete: show me Latlng marker: " + mLikelyPlaceName[j]
+                            + " " + mLikelyPlaceLatlng[j]
                             + "\n" + place.getPlaceTypes());
                 }
             }
 
-            i++;
-            if (i > (count - 1)) {
-                break;
-            }
+//            i++;
+//            if (i > (count - 1)) {
+//                break;
+//            }
 
         }
     }

@@ -48,11 +48,9 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     //TODO
-                    //Try to launch activity
                     configureFragment(new MapViewFragment());
                     return true;
                 case R.id.navigation_list:
-                    //TODO
                     configureFragment(new RestaurantViewFragment());
                     return true;
                 case R.id.navigation_workmates:
@@ -63,11 +61,6 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
             return false;
         }
     };
-
-    @Override
-    public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
-        super.startActivityFromFragment(fragment, intent, requestCode);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +143,8 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     // 2 - Configure Drawer Layout
     private void configureDrawerLayout() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }

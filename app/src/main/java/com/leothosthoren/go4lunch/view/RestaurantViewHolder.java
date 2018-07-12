@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
@@ -30,6 +31,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     TextView mRestaurantDistance;
     @BindView(R.id.item_restaurants_nb_workmates)
     TextView mNbOfWorkmates;
+    @BindView(R.id.item_restaurants_ratingbar)
+    RatingBar mRatingBar;
 
 
     private WeakReference<RestaurantRVAdapter.Listener> callbackWeakRef;
@@ -42,10 +45,11 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     public void updateRestaurantList(RestaurantItem restaurantItem, RequestManager glide) {
         assert this.mRestaurantName != null;
         this.mRestaurantName.setText(restaurantItem.getName());
-        this.mRestaurantAddress.setText(restaurantItem.getAddress());
-        this.mRestaurantDistance.setText(restaurantItem.getDistance());
+        this.mRestaurantAddress.setText(restaurantItem.concatTypeAndAdress(restaurantItem.getFoodType(), restaurantItem.getAddress()));
+        this.mRestaurantDistance.setText(restaurantItem.concatDistance(restaurantItem.getDistance()));
         this.mRestaurantOpening.setText(restaurantItem.getOpeningInfo());
-        this.mNbOfWorkmates.setText(restaurantItem.getWorkmateQuantity());
+        this.mNbOfWorkmates.setText(restaurantItem.concatWorkmateQuantity(restaurantItem.getWorkmateQuantity()));
+        this.mRatingBar.setRating(restaurantItem.concatRating(restaurantItem.getRating()));
         glide.load(restaurantItem.getUrl()).into(this.mRestaurantPhoto);
     }
 
