@@ -52,4 +52,9 @@ public class RestaurantRVAdapter extends RecyclerView.Adapter<RestaurantViewHold
     public interface Listener {
         void onClickItemButton(int position);
     }
+
+    //Handle click
+    public RestaurantItem getRestaurantItem(int position){
+        return this.mRestaurantItems.get(position);
+    }
 }

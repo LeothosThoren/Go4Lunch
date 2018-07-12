@@ -37,7 +37,7 @@ import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapViewFragment extends BaseFragment implements GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback {
 
 
     //CONSTANT
@@ -90,11 +90,6 @@ public class MapViewFragment extends BaseFragment implements GoogleApiClient.OnC
         getLocationPermission();
         getDeviceLocation();
         updateUI();
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
