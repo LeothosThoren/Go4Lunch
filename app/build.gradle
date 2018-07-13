@@ -63,7 +63,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //Multidex
+    //MULTIDEX
     implementation 'com.android.support:multidex:1.0.3'
 
     //GLIDE
@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
 
-    // FirebaseUI
+    //FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
     implementation 'com.firebaseui:firebase-ui-firestore:3.3.1'
     implementation 'com.firebaseui:firebase-ui-storage:3.3.1'
@@ -86,7 +86,7 @@ dependencies {
     // FACEBOOK LOGIN SUPPORT
     implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
 
-//    //TWITTER LOGIN SUPPORT
+   //TWITTER LOGIN SUPPORT
     implementation('com.twitter.sdk.android:twitter:3.0.0@aar') {
         transitive = true
     }
@@ -94,7 +94,7 @@ dependencies {
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
 
-    //Crashlytic
+    //CRASHYLITICS
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
@@ -103,5 +103,18 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:15.0.1"
     implementation "com.google.android.gms:play-services-places:15.0.1"
     implementation "com.google.android.gms:play-services-maps:15.0.1"
+
+    //RXJAVA
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+
+    //GSON
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
