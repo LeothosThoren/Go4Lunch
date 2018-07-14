@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Sofiane M. alias Leothos Thoren on 23/05/2018
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements HttpRequestTools{
     // 1 - Force developer implement those methods
     protected abstract BaseFragment newInstance();
     protected abstract int getFragmentLayout();

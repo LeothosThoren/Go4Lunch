@@ -2,6 +2,7 @@ package com.leothosthoren.go4lunch.controler.fragments;
 
 
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,13 +26,23 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
+import com.leothosthoren.go4lunch.utils.PlaceStreams;
 
+import java.util.ArrayList;
 import java.util.Objects;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +67,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private GoogleApiClient mGoogleApiClient;
+    private Disposable mDisposable;
+    //TEST
+    private ArrayList<LatLng> mLatLngArrayList = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -90,6 +103,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         getLocationPermission();
         getDeviceLocation();
         updateUI();
+        setMapStyle(mMap);
+        addMarkerOnMap();
 
     }
 
@@ -98,7 +113,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //---------------------------------------------------------------------------------------------//
 
 
-    //Useful to initiate a map insid a fragment != Activity
+    //Useful to initiate a map inside a fragment != Activity
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -123,6 +138,24 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
     }
+
+    private void setMapStyle(GoogleMap googleMap) {
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            Objects.requireNonNull(getContext()), R.raw.style_json));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
+    }
+
     //---------------------------------------------------------------------------------------------//
     //                                      PERMISSION                                             //
     //---------------------------------------------------------------------------------------------//
@@ -158,7 +191,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     }
 
     //---------------------------------------------------------------------------------------------//
-    //                                         LOCATION                                                  //
+    //                                         LOCATION                                            //
     //---------------------------------------------------------------------------------------------//
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -170,6 +203,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
             if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                executeHttpRequestWithNearby();
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -220,5 +254,62 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         }
     }
 
+    //---------------------------------------------------------------------------------------------//
+    //                                      HTTP RxJava                                            //
+    //---------------------------------------------------------------------------------------------//
+
+    private void executeHttpRequestWithNearby() {
+        this.mDisposable = PlaceStreams
+                .streamFetchPlaceId(/*48.856614, 2.3522219*/)
+                .subscribeWith(new DisposableObserver<NearbySearch>() {
+                    @Override
+                    public void onNext(NearbySearch nearbySearch) {
+                        Log.d(TAG, "onNext: "+ nearbySearch.getResults().size());
+                        mLatLngArrayList.add(new LatLng(nearbySearch.getResults().get(0).getGeometry().getLocation().getLat()
+                                , nearbySearch.getResults().get(0).getGeometry().getLocation().getLng()));
+                        Log.d(TAG, "onNext: bis latlng"+mDefaultLocation);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: ");
+                    }
+                });
+
+    }
+
+    // 4 - Dispose subscription
+    private void disposeWhenDestroy() {
+        if (this.mDisposable != null && !this.mDisposable.isDisposed())
+            this.mDisposable.dispose();
+    }
+
+
+    //Called for better performances
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
+    }
+
+    // --------------------------
+    //             TEST
+    // --------------------------
+
+    private void addMarkerOnMap() {
+        for (int i = 0; i < mLatLngArrayList.size(); i++){
+            if (mLatLngArrayList.size() != 0) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(mLatLngArrayList.get(i))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            }
+        }
+        Log.d(TAG, "addMarkerOnMap "+mLatLngArrayList.size());
+    }
 }
 

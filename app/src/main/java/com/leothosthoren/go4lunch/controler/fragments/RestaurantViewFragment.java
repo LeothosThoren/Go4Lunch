@@ -15,7 +15,6 @@ import com.leothosthoren.go4lunch.adapter.RestaurantRVAdapter;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.base.RecyclerViewBuilder;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
-import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     //VAR
     private RestaurantRVAdapter mAdapter;
     private ArrayList<RestaurantItem> mRestaurantItemsList;
-    private HttpRequestTools mTools = new HttpRequestTools();
 
     @Override
     protected BaseFragment newInstance() {
@@ -52,7 +50,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     protected void configureDesign() {
         this.configureRecyclerView();
         this.configureSwipeRefreshLayout();
-        this.mTools.progressBarHandler(mProgressBar, getContext());
+        this.progressBarHandler(mProgressBar, getContext());
         this.configureOnclickRecyclerView();
     }
 
@@ -85,7 +83,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
             @Override
             public void onRefresh() {
 //                http request to execute
-                mTools.updateUIWhenStartingHTTPRequest(mProgressBar);
+                updateUIWhenStartingHTTPRequest(mProgressBar);
             }
         });
     }
@@ -112,7 +110,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 
     @Override
     public void updateUI(/*ArrayList<RestaurantItem> restaurantItems*/) {
-        this.mTools.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
+        this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
 
         mRestaurantItemsList.add(new RestaurantItem("Le Chalutier", "Française", "15 rue des Ardeches",
                 "Open", 120, 2,
