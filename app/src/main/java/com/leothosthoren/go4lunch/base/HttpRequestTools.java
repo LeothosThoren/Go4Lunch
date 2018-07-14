@@ -11,10 +11,10 @@ import android.widget.Toast;
 
 import com.leothosthoren.go4lunch.R;
 
-public class HttpRequestTools {
-
-    public HttpRequestTools() {
-    }
+public interface HttpRequestTools {
+//
+//    public HttpRequestTools() {
+//    }
 
     /*
      * @method progressBarHandler
@@ -23,7 +23,7 @@ public class HttpRequestTools {
      *
      * Personalised the progressbar color
      * */
-    public void progressBarHandler(ProgressBar progressBar, Context context) {
+    default void progressBarHandler(ProgressBar progressBar, Context context) {
         progressBar.getIndeterminateDrawable()
                 .setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
     }
@@ -34,7 +34,7 @@ public class HttpRequestTools {
      *
      * The progress bar is launched just before the http request start
      * */
-    public void updateUIWhenStartingHTTPRequest(ProgressBar progressBar) {
+    default void updateUIWhenStartingHTTPRequest(ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -45,7 +45,7 @@ public class HttpRequestTools {
      *
      * On complete status the http request, the UI interface stop to refresh screen
      * */
-    public void updateUIWhenStopingHTTPRequest(SwipeRefreshLayout refresh, ProgressBar bar) {
+    default void updateUIWhenStopingHTTPRequest(SwipeRefreshLayout refresh, ProgressBar bar) {
         bar.setVisibility(View.GONE);
         refresh.setRefreshing(false);
 
@@ -59,7 +59,7 @@ public class HttpRequestTools {
      *
      * When the http request is on error status a toast message is displayed to alert the user
      * */
-    public void internetDisable(ProgressBar progressBar, String text, Context context) {
+    default void internetDisable(ProgressBar progressBar, String text, Context context) {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
