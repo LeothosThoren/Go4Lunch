@@ -66,7 +66,7 @@
     <string name="distance">%1$sm</string>
     <string name="nb_workmate_selection">(%1$s)</string>
     <string name="workmate_icon">workmate_icon</string>
-    <string name="restaurant_type_adress">%1$s - %2$s</string>
+    <string name="restaurant_type_address">%1$s - %2$s</string>
     <string name="restaurant_name">restaurant name</string>
     <string name="restaurant_image">restaurant image</string>
 
@@ -76,5 +76,8 @@
     <string name="workmate_profil">workmates_profil</string>
     <string name="workmate_is_eating">%1$s is eating %2$s (%3$s)</string>
     <string name="workmate_is_joining">%1$s is joining</string>
+    <string name="call">CALL</string>
+    <string name="like">LIKE</string>
+    <string name="website">WEBSITE</string>
 
 </resources>

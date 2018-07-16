@@ -23,7 +23,7 @@ public class PlaceStreams {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public static Observable<PlaceDetail> streamFetchPlaceDetailList(String placeID) {
+    public static Observable<List<PlaceDetail>> streamFetchPlaceDetailList(String placeID) {
         PlaceService service = PlaceService.RETROFIT.create(PlaceService.class);
         return service.getDetail(placeID)
                 .subscribeOn(Schedulers.io())

@@ -29,7 +29,7 @@ public interface PlaceService {
 
     //Place Detail api
     @GET("details/json?&key=" + apiKey)
-    Observable<PlaceDetail> getDetail(@Query("placeid") String placeId);
+    Observable<List<PlaceDetail>> getDetail(@Query("placeid") String placeId);
 
     //Place Photo api
     @GET("photo?photoreference={photoReference}&key=" + apiKey)

@@ -86,7 +86,7 @@ dependencies {
     // FACEBOOK LOGIN SUPPORT
     implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
 
-   //TWITTER LOGIN SUPPORT
+    //TWITTER LOGIN SUPPORT
     implementation('com.twitter.sdk.android:twitter:3.0.0@aar') {
         transitive = true
     }
