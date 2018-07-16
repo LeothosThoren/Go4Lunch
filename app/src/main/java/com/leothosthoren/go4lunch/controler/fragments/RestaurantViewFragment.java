@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,18 +16,23 @@ import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.base.RecyclerViewBuilder;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
+import com.leothosthoren.go4lunch.utils.PlaceStreams;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RestaurantViewFragment extends BaseFragment implements RecyclerViewBuilder {
 
+    //VIEW
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecyclerView;
     @BindView(R.id.swipe_container)
@@ -39,6 +43,11 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     private RestaurantRVAdapter mAdapter;
     private ArrayList<RestaurantItem> mRestaurantItemsList;
     private static final String TAG = RestaurantViewFragment.class.getSimpleName();
+    private Disposable disposable;
+    //DATA
+    private ArrayList<Result> NearbySearchListFromSingleton =
+            (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
+    private ArrayList<PlaceDetail> mPlaceDetailArrayList= new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -56,14 +65,14 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
         this.configureOnclickRecyclerView();
+        this.feedMyArrayListWithMyObservable();
     }
 
     @Override
     protected void updateDesign() {
         this.updateUI();
         //TEST
-        checkSingletonContent();
-
+        this.checkSingletonContent();
     }
 
     // -------------------------------------------------------------------------------------------//
@@ -129,10 +138,39 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     // --------------------
 
     private void checkSingletonContent(){
-        ArrayList<Result> resultArrayList = (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
-        Log.d(TAG, "checkSingletonContent: "+ resultArrayList.size());
+        Log.d(TAG, "checkSingletonContent: "+ NearbySearchListFromSingleton.size());
+        Log.d(TAG, "feedMyArrayListWithMyObservable0: "+mPlaceDetailArrayList.size());
+
     }
 
+    public void executeHttpRequestWithPlaceDetail(String placeID) {
+        disposable = PlaceStreams.streamFetchPlaceDetailList(placeID)
+                .subscribeWith(new DisposableObserver<PlaceDetail>() {
+                    @Override
+                    public void onNext(PlaceDetail placeDetail) {
+                        Log.d(TAG, "onNext: "+placeDetail.getResult().getName());
+                        mPlaceDetailArrayList.add(placeDetail);
+                        Log.d(TAG, "feedMyArrayListWithMyObservable1: "+mPlaceDetailArrayList.size());
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: "+e.getMessage() );
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: ");
+                    }
+                });
+    }
+
+    public void feedMyArrayListWithMyObservable(){
+        for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
+            executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
+        }
+
+        Log.d(TAG, "feedMyArrayListWithMyObservable2: "+mPlaceDetailArrayList.size());
+    }
 
 }

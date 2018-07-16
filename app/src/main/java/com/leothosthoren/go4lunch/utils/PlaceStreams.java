@@ -23,7 +23,7 @@ public class PlaceStreams {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-    public static Observable<List<PlaceDetail>> streamFetchPlaceDetailList(String placeID) {
+    public static Observable<PlaceDetail> streamFetchPlaceDetailList(String placeID) {
         PlaceService service = PlaceService.RETROFIT.create(PlaceService.class);
         return service.getDetail(placeID)
                 .subscribeOn(Schedulers.io())
@@ -37,9 +37,9 @@ public class PlaceStreams {
                     @Override
                     public Observable<List<PlaceDetail>>  apply(NearbySearch nearbySearch) throws Exception {
                         int i = 0;
-                        for(; i < nearbySearch.getResults().size(); i++) {
-                            return streamFetchPlaceDetailList(nearbySearch.getResults().get(i).getPlaceId());
-                        }
+//                        for(; i < nearbySearch.getResults().size(); i++) {
+//                            return streamFetchPlaceDetailList(nearbySearch.getResults().get(i).getPlaceId());
+//                        }
                         return null;
                     }
                 });
