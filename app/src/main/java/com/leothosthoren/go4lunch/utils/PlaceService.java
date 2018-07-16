@@ -1,6 +1,9 @@
 package com.leothosthoren.go4lunch.utils;
 
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -25,8 +28,8 @@ public interface PlaceService {
     Observable<NearbySearch> getNearbySearch(@Query("location") String location);
 
     //Place Detail api
-    @GET("details/json?placeid={placeID}&key=" + apiKey)
-    Observable<?> getDetail(@Query("placeID") String placeId);
+    @GET("details/json?&key=" + apiKey)
+    Observable<List<PlaceDetail>> getDetail(@Query("placeid") String placeId);
 
     //Place Photo api
     @GET("photo?photoreference={photoReference}&key=" + apiKey)

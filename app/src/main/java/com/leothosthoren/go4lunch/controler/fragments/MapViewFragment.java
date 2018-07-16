@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.base.HttpRequestTools;
+import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.PlaceStreams;
@@ -236,8 +237,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     //---------------------------------------------------------------------------------------------//
 
     private void executeHttpRequestWithNearby(Double latitude, Double longitude) {
-        this.mDisposable = PlaceStreams
-                .streamFetchNearbyApi(setLocationIntoString(latitude, longitude))
+        this.mDisposable = PlaceStreams.streamFetchNearbyApi(setLocationIntoString(latitude, longitude))
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
@@ -301,9 +301,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void addMarkerOnMap(NearbySearch nearbySearch) {
         this.mResults.addAll(nearbySearch.getResults());
+        DataSingleton.getInstance().setNearbySearch(mResults);
         if (mResults.size() != 0) {
             for (int i = 0; i < mResults.size(); i++) {
-
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
                                 mResults.get(i).getGeometry().getLocation().getLng()))

@@ -2,13 +2,14 @@ package com.leothosthoren.go4lunch.data;
 
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
+import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 
 import java.util.List;
 
 public class DataSingleton {
 
     private static final DataSingleton ourInstance = new DataSingleton();
-    private List<NearbySearch> mNearbySearch;
+    private List<Result> mNearbySearch;
     private List<PlaceDetail> mPlaceDetail;
 
     private DataSingleton() {
@@ -22,11 +23,11 @@ public class DataSingleton {
         mPlaceDetail = placeDetail;
     }
 
-    public List<NearbySearch> getNearbySearch() {
+    public List<Result> getNearbySearch() {
         return mNearbySearch;
     }
 
-    public void setNearbySearch(List<NearbySearch> nearbySearch) {
+    public void setNearbySearch(List<Result> nearbySearch) {
         mNearbySearch = nearbySearch;
     }
 

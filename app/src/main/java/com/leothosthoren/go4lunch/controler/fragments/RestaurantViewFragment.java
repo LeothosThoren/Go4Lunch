@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -14,7 +15,9 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantRVAdapter;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.base.RecyclerViewBuilder;
+import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
+import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     //VAR
     private RestaurantRVAdapter mAdapter;
     private ArrayList<RestaurantItem> mRestaurantItemsList;
+    private static final String TAG = RestaurantViewFragment.class.getSimpleName();
 
     @Override
     protected BaseFragment newInstance() {
@@ -57,6 +61,8 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     @Override
     protected void updateDesign() {
         this.updateUI();
+        //TEST
+        checkSingletonContent();
 
     }
 
@@ -79,12 +85,9 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
      * */
     @Override
     public void configureSwipeRefreshLayout() {
-        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        this.mSwipeRefreshLayout.setOnRefreshListener(() -> {
 //                http request to execute
-                updateUIWhenStartingHTTPRequest(mProgressBar);
-            }
+            updateUIWhenStartingHTTPRequest(mProgressBar);
         });
     }
 
@@ -94,13 +97,9 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 
     private void configureOnclickRecyclerView() {
         ItemClickSupport.addTo(mRecyclerView, R.id.item_restaurant_layout)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        RestaurantItem restaurantItem = mAdapter.getRestaurantItem(position);
-
-                        Toast.makeText(getContext(), "CLICK on position: " + position + " name: "+ restaurantItem.getName(), Toast.LENGTH_SHORT).show();
-                    }
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    RestaurantItem restaurantItem = mAdapter.getRestaurantItem(position);
+                    Toast.makeText(getContext(), "CLICK on position: " + position + " name: "+ restaurantItem.getName(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -124,5 +123,16 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 //        mRestaurantItemsList.addAll(restaurantItems);
         mAdapter.notifyDataSetChanged();
     }
+
+    //---------------------
+    // TEST
+    // --------------------
+
+    private void checkSingletonContent(){
+        ArrayList<Result> resultArrayList = (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
+        Log.d(TAG, "checkSingletonContent: "+ resultArrayList.size());
+    }
+
+
 
 }
