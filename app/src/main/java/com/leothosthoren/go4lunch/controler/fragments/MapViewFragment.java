@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
+import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.PlaceStreams;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     private GoogleApiClient mGoogleApiClient;
     private Disposable mDisposable;
     //TEST
-    private ArrayList<LatLng> mLatLngArrayList = new ArrayList<>();
+    private ArrayList<Result> mResults = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -101,11 +102,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         getLocationPermission();
-        getDeviceLocation();
         updateUI();
         setMapStyle(mMap);
-        addMarkerOnMap();
-
     }
 
     //---------------------------------------------------------------------------------------------//
@@ -203,7 +201,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
             if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                executeHttpRequestWithNearby();
+                getDeviceLocation();
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -233,6 +231,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(mLastKnownLocation.getLatitude(),
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                //HTTP RXJAVA
+                                executeHttpRequestWithNearby();
+
                             } else {
                                 Toast.makeText(getContext(),
                                         "Make sure your emulator device got map position on true",
@@ -265,9 +266,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
                         Log.d(TAG, "onNext: "+ nearbySearch.getResults().size());
-                        mLatLngArrayList.add(new LatLng(nearbySearch.getResults().get(0).getGeometry().getLocation().getLat()
-                                , nearbySearch.getResults().get(0).getGeometry().getLocation().getLng()));
-                        Log.d(TAG, "onNext: bis latlng"+mDefaultLocation);
+                        addMarkerOnMap(nearbySearch);
+
                     }
 
                     @Override
@@ -301,15 +301,18 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //             TEST
     // --------------------------
 
-    private void addMarkerOnMap() {
-        for (int i = 0; i < mLatLngArrayList.size(); i++){
-            if (mLatLngArrayList.size() != 0) {
+    private void addMarkerOnMap(NearbySearch nearbySearch) {
+        this.mResults.addAll(nearbySearch.getResults());
+        if (mResults.size() != 0) {
+        for (int i = 0; i < mResults.size(); i++){
+
                 mMap.addMarker(new MarkerOptions()
-                        .position(mLatLngArrayList.get(i))
+                        .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
+                                mResults.get(i).getGeometry().getLocation().getLng()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             }
         }
-        Log.d(TAG, "addMarkerOnMap "+mLatLngArrayList.size());
+        Log.d(TAG, "addMarkerOnMap "+mResults.size());
     }
 }
 
