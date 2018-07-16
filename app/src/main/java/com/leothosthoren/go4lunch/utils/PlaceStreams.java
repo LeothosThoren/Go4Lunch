@@ -10,9 +10,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PlaceStreams {
 
-    public static Observable<NearbySearch> streamFetchPlaceId(/*Double latitude, Double longitude*/) {
+    public static Observable<NearbySearch> streamFetchNearbyApi(String location) {
         PlaceService service = PlaceService.RETROFIT.create(PlaceService.class);
-        return service.getNearbySearch(/*latitude, longitude*/)
+        return service.getNearbySearch(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);

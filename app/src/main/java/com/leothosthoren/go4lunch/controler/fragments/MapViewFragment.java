@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.base.HttpRequestTools;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.PlaceStreams;
@@ -48,11 +49,11 @@ import io.reactivex.observers.DisposableObserver;
  * A simple {@link Fragment} subclass.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class MapViewFragment extends BaseFragment implements OnMapReadyCallback {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, HttpRequestTools {
 
     //CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 15f;
+    public static final float DEFAULT_ZOOM = 16f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
     private static final int MAX_PLACES = 100;
     private static final int REQUEST_PICK_PLACE = 2;
@@ -207,7 +208,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             //HTTP RXJAVA
-                            executeHttpRequestWithNearby();
+                            executeHttpRequestWithNearby(mLastKnownLocation.getLatitude(),
+                                    mLastKnownLocation.getLongitude());
 
                         } else {
                             Toast.makeText(getContext(),
@@ -233,9 +235,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //                                      HTTP RxJava                                            //
     //---------------------------------------------------------------------------------------------//
 
-    private void executeHttpRequestWithNearby() {
+    private void executeHttpRequestWithNearby(Double latitude, Double longitude) {
         this.mDisposable = PlaceStreams
-                .streamFetchPlaceId(/*48.856614, 2.3522219*/)
+                .streamFetchNearbyApi(setLocationIntoString(latitude, longitude))
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {

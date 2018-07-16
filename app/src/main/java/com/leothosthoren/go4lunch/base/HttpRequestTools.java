@@ -63,4 +63,8 @@ public interface HttpRequestTools {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
+
+    default String setLocationIntoString(Double d1, Double d2) {
+        return String.valueOf(d1 + "," + d2);
+    }
 }
