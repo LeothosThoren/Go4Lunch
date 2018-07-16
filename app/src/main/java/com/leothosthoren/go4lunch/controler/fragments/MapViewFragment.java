@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
@@ -48,8 +47,8 @@ import io.reactivex.observers.DisposableObserver;
 /**
  * A simple {@link Fragment} subclass.
  */
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback {
-
 
     //CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -82,7 +81,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         return R.layout.fragment_map_view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     protected void configureDesign() {
         instantiatePlacesApiClients();
@@ -97,7 +96,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //                                         MAP                                                 //
     //---------------------------------------------------------------------------------------------//
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -124,7 +123,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     private void instantiatePlacesApiClients() {
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(Objects.requireNonNull(getContext()));
@@ -158,7 +157,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //                                      PERMISSION                                             //
     //---------------------------------------------------------------------------------------------//
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     private void getLocationPermission() {
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -172,7 +171,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions
             , @NonNull int[] grantResults) {
@@ -192,60 +191,35 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     //                                         LOCATION                                            //
     //---------------------------------------------------------------------------------------------//
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void updateUI() {
-        if (mMap == null) {
-            return;
-        }
-        try {
-            if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                getDeviceLocation();
-            } else {
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
-                //Try to obtain location permission
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "updateUI: SecurityException " + e.getMessage());
-        }
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void getDeviceLocation() {
         try {
             if (mLocationPermissionGranted && getActivity() != null) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = task.getResult();
-                            //Move camera toward device position
-                            if (mLastKnownLocation != null) {
+                locationResult.addOnCompleteListener(getActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = task.getResult();
+                        //Move camera toward device position
+                        if (mLastKnownLocation != null) {
 
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(mLastKnownLocation.getLatitude(),
-                                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                                //HTTP RXJAVA
-                                executeHttpRequestWithNearby();
-
-                            } else {
-                                Toast.makeText(getContext(),
-                                        "Make sure your emulator device got map position on true",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(mLastKnownLocation.getLatitude(),
+                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            //HTTP RXJAVA
+                            executeHttpRequestWithNearby();
 
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "getPhoneLocation => Exception: %s" + task.getException());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            Toast.makeText(getContext(),
+                                    "Make sure your emulator device got map position on true",
+                                    Toast.LENGTH_SHORT).show();
                         }
+
+                    } else {
+                        Log.d(TAG, "Current location is null. Using defaults.");
+                        Log.e(TAG, "getPhoneLocation => Exception: %s" + task.getException());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     }
                 });
             }
@@ -265,7 +239,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
-                        Log.d(TAG, "onNext: "+ nearbySearch.getResults().size());
+                        Log.d(TAG, "onNext: " + nearbySearch.getResults().size());
                         addMarkerOnMap(nearbySearch);
 
                     }
@@ -297,22 +271,44 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         this.disposeWhenDestroy();
     }
 
-    // --------------------------
-    //             TEST
-    // --------------------------
+    //---------------------------------------------------------------------------------------------//
+    //                                          UI                                                 //
+    //---------------------------------------------------------------------------------------------//
+
+
+    private void updateUI() {
+        if (mMap == null) {
+            return;
+        }
+        try {
+            if (mLocationPermissionGranted) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                getDeviceLocation();
+            } else {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mLastKnownLocation = null;
+                //Try to obtain location permission
+                getLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "updateUI: SecurityException " + e.getMessage());
+        }
+    }
 
     private void addMarkerOnMap(NearbySearch nearbySearch) {
         this.mResults.addAll(nearbySearch.getResults());
         if (mResults.size() != 0) {
-        for (int i = 0; i < mResults.size(); i++){
+            for (int i = 0; i < mResults.size(); i++) {
 
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
                                 mResults.get(i).getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             }
-        }
-        Log.d(TAG, "addMarkerOnMap "+mResults.size());
+        } else
+            Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
     }
 }
 
