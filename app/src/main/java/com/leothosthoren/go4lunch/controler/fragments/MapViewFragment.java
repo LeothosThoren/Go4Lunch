@@ -243,7 +243,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     public void onNext(NearbySearch nearbySearch) {
                         Log.d(TAG, "onNext: " + nearbySearch.getResults().size());
                         addMarkerOnMap(nearbySearch);
-
                     }
 
                     @Override
@@ -312,5 +311,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
     }
+
 }
 
