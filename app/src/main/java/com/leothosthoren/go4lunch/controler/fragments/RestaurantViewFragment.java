@@ -22,7 +22,6 @@ import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 import com.leothosthoren.go4lunch.utils.PlaceStreams;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -48,7 +47,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     //DATA
     private ArrayList<Result> NearbySearchListFromSingleton =
             (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
-    private ArrayList<PlaceDetail> mPlaceDetailArrayList = new ArrayList<>();
+    public static ArrayList<com.leothosthoren.go4lunch.model.detail.Result> mPlaceDetailArrayList = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -74,6 +73,8 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
         this.updateUI();
         //TEST
         this.checkSingletonContent();
+        Log.d(TAG, "test: " + mPlaceDetailArrayList.size());
+
     }
 
     // -------------------------------------------------------------------------------------------//
@@ -144,12 +145,12 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     }
 
     public void executeHttpRequestWithPlaceDetail(String placeID) {
-        disposable = PlaceStreams.streamFetchPlaceDetailList(placeID)
-                .subscribeWith(new DisposableObserver<List<PlaceDetail>>() {
+        disposable = PlaceStreams.streamFetchPlaceDetail(placeID)
+                .subscribeWith(new DisposableObserver<PlaceDetail>() {
                     @Override
-                    public void onNext(List<PlaceDetail> placeDetail) {
-                        Log.d(TAG, "onNext: " + placeDetail.get(0).getResult().getName());
-                        mPlaceDetailArrayList.addAll(placeDetail);
+                    public void onNext(PlaceDetail placeDetail) {
+                        Log.d(TAG, "onNext: " + placeDetail.getResult().getName());
+                        mPlaceDetailArrayList.add(placeDetail.getResult());
                     }
 
                     @Override
@@ -159,7 +160,8 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: ");
+                        Log.d(TAG, "onComplete: " + mPlaceDetailArrayList.size());
+                        Log.d(TAG, "feedMyArrayListWithMyObservable: " + mPlaceDetailArrayList.size());
                     }
                 });
     }
@@ -168,12 +170,6 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
         for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
             executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
         }
-        if (!mPlaceDetailArrayList.isEmpty()) {
-            for (int i = 0; i < mPlaceDetailArrayList.size(); i++) {
-                Log.d(TAG, "feedMyArrayListWithMyObservable: " + mPlaceDetailArrayList.get(i).getResult().getName());
-            }
-        }
-
 
     }
 
