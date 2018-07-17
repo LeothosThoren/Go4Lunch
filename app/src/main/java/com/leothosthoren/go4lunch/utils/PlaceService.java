@@ -1,5 +1,6 @@
 package com.leothosthoren.go4lunch.utils;
 
+import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 
@@ -14,7 +15,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PlaceService {
-    String apiKey = "AIzaSyBDL58mNZkTUDJKLJ8boce0frl7VIhSMAQ";
+    String apiKey = BuildConfig.ApiKey;
     String baseUri = "https://maps.googleapis.com/maps/api/place/";
 
     Retrofit RETROFIT = new Retrofit.Builder()

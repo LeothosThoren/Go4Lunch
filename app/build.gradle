@@ -33,10 +33,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "ApiKey", GO4Lunch_PlaceWebApiKey
+            resValue 'string', "api_key", GO4Lunch_PlaceWebApiKey
         }
-//        debug {
-//            testCoverageEnabled true
-//        }
+        debug {
+            buildConfigField 'String', "ApiKey", GO4Lunch_PlaceWebApiKey
+            resValue 'string', "api_key", GO4Lunch_PlaceWebApiKey
+        }
     }
     compileOptions {
         targetCompatibility 1.8
