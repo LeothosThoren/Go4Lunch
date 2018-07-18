@@ -35,6 +35,7 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.base.HttpRequestTools;
 import com.leothosthoren.go4lunch.data.DataSingleton;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.PlaceStreams;
@@ -72,6 +73,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private Disposable mDisposable;
     //TEST
     private ArrayList<Result> mResults = new ArrayList<>();
+    private ArrayList<PlaceDetail> mDetails = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -205,12 +207,16 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                         //Move camera toward device position
                         if (mLastKnownLocation != null) {
 
+                            Double latitude = mLastKnownLocation.getLatitude();
+                            Double longitude = mLastKnownLocation.getLongitude();
+
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
                             //HTTP RXJAVA
                             executeHttpRequestWithNearby(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude());
+                            //HTTP RXJAVA TEST
+                            executeTest(setLocationIntoString(latitude, longitude));
 
                         } else {
                             Toast.makeText(getContext(),
@@ -241,7 +247,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
-                        Log.d(TAG, "onNext: " + nearbySearch.getResults().size());
+                        Log.d(TAG, "onNext: " + nearbySearch.getResults().get(0).getName()+" "+ nearbySearch.getResults().get(1).getName());
                         addMarkerOnMap(nearbySearch);
                     }
 
@@ -257,6 +263,30 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 });
 
     }
+
+    //TEST
+    private void executeTest(String location) {
+        this.mDisposable = PlaceStreams.streamTest(location)
+                .subscribeWith(new DisposableObserver<PlaceDetail>() {
+                    @Override
+                    public void onNext(PlaceDetail placeDetail) {
+                        Log.d(TAG, "onNextTest: " + placeDetail.getResult());
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: "+e.getMessage() );
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: ");
+                    }
+                });
+    }
+
 
     // 4 - Dispose subscription
     private void disposeWhenDestroy() {

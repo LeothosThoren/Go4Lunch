@@ -47,7 +47,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     //DATA
     private ArrayList<Result> NearbySearchListFromSingleton =
             (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
-    public static ArrayList<com.leothosthoren.go4lunch.model.detail.Result> mPlaceDetailArrayList = new ArrayList<>();
+    public static ArrayList<PlaceDetail> mPlaceDetailArrayList = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -65,7 +65,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
         this.configureOnclickRecyclerView();
-        this.feedMyArrayListWithMyObservable();
+//        this.feedMyArrayListWithMyObservable();
     }
 
     @Override
@@ -150,7 +150,8 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
                     @Override
                     public void onNext(PlaceDetail placeDetail) {
                         Log.d(TAG, "onNext: " + placeDetail.getResult().getName());
-                        mPlaceDetailArrayList.add(placeDetail.getResult());
+
+
                     }
 
                     @Override
@@ -168,9 +169,16 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 
     public void feedMyArrayListWithMyObservable() {
         for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
-            executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
+//            executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
         }
 
+    }
+
+    public void test(PlaceDetail placeDetail){
+
+        for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
+            mPlaceDetailArrayList.get(i).getResult();
+        }
     }
 
 }
