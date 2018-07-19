@@ -1,4 +1,4 @@
-package com.leothosthoren.go4lunch.base;
+package com.leothosthoren.go4lunch.utils;
 
 
 import android.content.Context;

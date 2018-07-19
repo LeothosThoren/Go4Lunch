@@ -1,4 +1,4 @@
-package com.leothosthoren.go4lunch.base;
+package com.leothosthoren.go4lunch.utils;
 
 public interface RecyclerViewBuilder {
 

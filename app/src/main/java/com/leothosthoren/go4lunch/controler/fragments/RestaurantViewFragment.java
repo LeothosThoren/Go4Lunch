@@ -13,13 +13,13 @@ import com.bumptech.glide.Glide;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantRVAdapter;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.base.RecyclerViewBuilder;
+import com.leothosthoren.go4lunch.utils.RecyclerViewBuilder;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
-import com.leothosthoren.go4lunch.utils.PlaceStreams;
+import com.leothosthoren.go4lunch.api.PlaceStreams;
 
 import java.util.ArrayList;
 

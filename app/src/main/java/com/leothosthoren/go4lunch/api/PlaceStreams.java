@@ -1,15 +1,12 @@
-package com.leothosthoren.go4lunch.utils;
+package com.leothosthoren.go4lunch.api;
 
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 
-import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -31,8 +28,6 @@ public class PlaceStreams {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
     }
-
-
 
 
     public static Observable<PlaceDetail> streamTest(String location) {

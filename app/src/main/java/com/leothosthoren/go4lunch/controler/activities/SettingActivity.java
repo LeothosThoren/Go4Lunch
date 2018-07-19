@@ -55,12 +55,7 @@ public class SettingActivity extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.popup_title)
                 .setMessage(R.string.popup_message_confirmation_delete_account)
-                .setPositiveButton(R.string.popup_message_choice_yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteUser();
-                    }
-                })
+                .setPositiveButton(R.string.popup_message_choice_yes, (dialog, which) -> deleteUser())
                 .setNegativeButton(R.string.popup_message_choice_no, null)
                 .show();
     }
@@ -103,16 +98,13 @@ public class SettingActivity extends BaseActivity {
     }
 
     private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
-        return new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                switch (taskId) {
-                    case DELETE_USER_TASK:
-                        startMainActivity();
-                        break;
-                    default:
-                        break;
-                }
+        return aVoid -> {
+            switch (taskId) {
+                case DELETE_USER_TASK:
+                    finish();
+                    break;
+                default:
+                    break;
             }
         };
     }

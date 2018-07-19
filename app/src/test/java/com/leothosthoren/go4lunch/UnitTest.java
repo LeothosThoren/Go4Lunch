@@ -1,6 +1,6 @@
 package com.leothosthoren.go4lunch;
 
-import com.leothosthoren.go4lunch.base.HttpRequestTools;
+import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import org.junit.Test;
 
