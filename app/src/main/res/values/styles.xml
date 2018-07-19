@@ -26,9 +26,9 @@
 
     <!-- STYLE FOR MAIN ACTIVITY -->
     <style name="AppTheme.NoTitle" parent="AppTheme">
-    <item name="windowNoTitle">true</item>
-    <item name="windowActionBar">false</item>
-    <item name="actionBarTheme">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="actionBarTheme">@null</item>
     </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->
@@ -75,5 +75,15 @@
     <style name="RatingBar" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/black</item>
         <item name="colorControlActivated">@color/yellow</item>
+    </style>
+
+    <!--ConstraintLayout style-->
+    <style name="marginConstraint">
+
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+
     </style>
 </resources>

@@ -62,13 +62,11 @@ public class RestaurantInfoActivity extends BaseActivity {
         mLikeButton.setOnClickListener(v -> {
 
             if (isCheckLike) {
-                mLikeButton.setCompoundDrawables(null,
-                        getResources().getDrawable(R.drawable.ic_star_full), null, null);
+                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
                 isCheckLike = false;
                 Toast.makeText(this, "click on star button true", Toast.LENGTH_SHORT).show();
             } else {
-                mLikeButton.setCompoundDrawables(null,
-                        getResources().getDrawable(R.drawable.ic_star_border), null, null);
+                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border, 0, 0);
                 isCheckLike = true;
                 Toast.makeText(this, "click on star button false", Toast.LENGTH_SHORT).show();
             }

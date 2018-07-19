@@ -80,6 +80,7 @@ dependencies {
     //FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
+//    implementation 'com.google.firebase:firebase-auth:16.0.2'
 
     //FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'

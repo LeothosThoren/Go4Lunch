@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
@@ -15,6 +16,7 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 import io.fabric.sdk.android.Fabric;
@@ -22,10 +24,12 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity {
 
     // 1 - Identifier for Sign-In Activity
-    private static final int RC_SIGN_IN = 100;
+    private static final int RC_SIGN_IN = 123;
     // 1 - Get Coordinator Layout
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.main_button)
+    Button mLoginButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,11 +47,8 @@ public class MainActivity extends BaseActivity {
         Fabric.with(this, new Crashlytics());
         // Force application to crash
 //        Crashlytics.getInstance().crash();
-//        if (this.isCurrentUserLogged()) {
-//            this.startGo4LunchActivity();
-//        } else {
-//            this.startSignInActivity();
-//        }
+        updateUIWhenResuming();
+
     }
 
     @Override
@@ -67,12 +68,12 @@ public class MainActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setTheme(R.style.LoginTheme)
                         .setAvailableProviders(
-                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),//EMAIL
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),//GOOGLE
-                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),//FACEBOOK
-                                        new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()))//TWITTER
+                                Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),//EMAIL
+                                        new AuthUI.IdpConfig.GoogleBuilder().build(),//GOOGLE
+                                        new AuthUI.IdpConfig.FacebookBuilder().build(),//FACEBOOK
+                                        new AuthUI.IdpConfig.TwitterBuilder().build()))//TWITTER
                         .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.background_image)
+                        .setLogo(R.drawable.logo)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -107,27 +108,34 @@ public class MainActivity extends BaseActivity {
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.coordinatorLayout, getString(R.string.error_authentication_canceled));
-                } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
                     showSnackBar(this.coordinatorLayout, getString(R.string.error_no_internet));
-                } else if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackBar(this.coordinatorLayout, getString(R.string.error_unknown_error));
                 }
             }
         }
     }
 
-    //Test Button
-    public void onClickTestButton(View view) {
-        this.startSignInActivity();
+
+    public void onClickLoginButton(View v) {
+        if (this.isCurrentUserLogged()) {
+            this.startActivity(Go4LunchActivity.class);
+        } else {
+            this.startSignInActivity();
+        }
     }
 
-    public void onClickMapButton(View view) {
-        this.startActivity(Go4LunchActivity.class);
-    }
-
-    public void onClickPlaceButton(View view) {
+    public void onClickDetailRestaurantButton(View v) {
         this.startActivity(RestaurantInfoActivity.class);
     }
+
+
+    private void updateUIWhenResuming(){
+        this.mLoginButton.setText(this.isCurrentUserLogged() ?
+                getString(R.string.button_login_text_logged) : getString(R.string.button_login_text_not_logged));
+    }
+
 
     //Generic activity launcher method
     private void startActivity(Class activity) {
