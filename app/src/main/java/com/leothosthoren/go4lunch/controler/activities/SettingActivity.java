@@ -27,6 +27,7 @@ public class SettingActivity extends BaseActivity {
     ImageView mImageViewProfile;
     @BindView(R.id.username)
     TextInputEditText mTextInputEditTextUsername;
+//    @BindView(R.id.email_user) TextInputEditText mTextInputEditTextEmail
 
 
     @Override

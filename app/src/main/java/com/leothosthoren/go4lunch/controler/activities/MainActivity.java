@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         Fabric.with(this, new Crashlytics());
         // Force application to crash
 //        Crashlytics.getInstance().crash();
-        updateUIWhenResuming();
+        this.updateUIWhenResuming();
 
     }
 

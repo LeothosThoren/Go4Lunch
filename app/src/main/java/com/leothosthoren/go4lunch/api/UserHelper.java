@@ -1,4 +1,4 @@
-package com.leothosthoren.go4lunch.data;
+package com.leothosthoren.go4lunch.api;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

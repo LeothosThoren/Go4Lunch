@@ -4,6 +4,7 @@ import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -32,34 +33,18 @@ public class PlaceStreams {
 
     public static Observable<PlaceDetail> streamTest(String location) {
         return streamFetchNearbyApi(location)
-                .map(new Function<NearbySearch, Result>() {
+                .map(new Function<NearbySearch, List<Result>>() {
                     @Override
-                    public Result apply(NearbySearch nearbySearch) throws Exception {
-                        return nearbySearch.getResults().get(0);
+                    public List<Result> apply(NearbySearch nearbySearch) throws Exception {
+                        return nearbySearch.getResults();
                     }
-                }).flatMap(new Function<Result, Observable<PlaceDetail>>() {
+                })
+                .flatMap(new Function<List<Result>, Observable<PlaceDetail>>() {
                     @Override
-                    public Observable<PlaceDetail> apply(Result result) throws Exception {
-                        return streamFetchPlaceDetail(result.getPlaceId());
+                    public Observable<PlaceDetail> apply(List<Result> results) throws Exception {
+                        return streamFetchPlaceDetail(results.get(0).getPlaceId());
                     }
-
                 });
-    }
 
-//
-//    public static Observable<PlaceDetail> streamTest(String location) {
-//        return streamFetchNearbyApi(location)
-//                .map(new Function<NearbySearch, Result>() {
-//                    @Override
-//                    public Result apply(NearbySearch nearbySearch) throws Exception {
-//                        return nearbySearch.getResults().get(0);
-//                    }
-//                }).flatMap(new Function<Result, Observable<PlaceDetail>>() {
-//                    @Override
-//                    public Observable<PlaceDetail> apply(Result result) throws Exception {
-//                        return streamFetchPlaceDetail(result.getPlaceId());
-//                    }
-//
-//                });
-//    }
+    }
 }
