@@ -30,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
@@ -53,13 +54,13 @@ import io.reactivex.observers.DisposableObserver;
  * A simple {@link Fragment} subclass.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, HttpRequestTools {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, HttpRequestTools, GoogleMap.OnMarkerClickListener {
 
     //CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 16f;
+    public static final float DEFAULT_ZOOM = 17f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
-    private static final int MAX_PLACES = 100;
+    private static final int MAX_PLACES = 10;
     private static final int REQUEST_PICK_PLACE = 2;
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
@@ -111,6 +112,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         updateUI();
         setMapStyle(mMap);
         setMyPositionOnMap();
+        mMap.setOnMarkerClickListener(this);
 
     }
 
@@ -326,9 +328,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         try {
             if (mLocationPermissionGranted) {
                 mGpsLocation.setVisibility(View.VISIBLE);
+                mMap.setMyLocationEnabled(true);
                 getDeviceLocation();
             } else {
                 mGpsLocation.setVisibility(View.INVISIBLE);
+                mMap.setMyLocationEnabled(false);
                 mLastKnownLocation = null;
                 //Try to obtain location permission
                 getLocationPermission();
@@ -342,11 +346,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         this.mResults.addAll(nearbySearch.getResults());
         DataSingleton.getInstance().setNearbySearch(mResults);
         if (mResults.size() != 0) {
-            for (int i = 0; i < mResults.size(); i++) {
+            for (int i = 0; i < MAX_PLACES; i++) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
                                 mResults.get(i).getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon)));
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
@@ -359,5 +363,13 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         });
     }
 
+    //---------------------------------------------------------------------------------------------//
+    //                                          ACTION                                             //
+    //---------------------------------------------------------------------------------------------//
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        Toast.makeText(getContext(), "You click on marker :"+marker.getId(), Toast.LENGTH_SHORT).show();
+        return false;
+    }
 }
 

@@ -56,9 +56,11 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_my_location" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Téléchargements/restaurant-icon-png-4887.png" />
+                                      <entry key="outputName" value="ic_restaurant_map_icon" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="010105" />
+                                      <entry key="themeColor" value="ff5722" />
                                     </map>
                                   </option>
                                 </PersistentState>
