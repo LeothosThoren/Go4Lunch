@@ -24,8 +24,9 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
 
+
     // 1 - Identifier for Sign-In Activity
-    private static final int RC_SIGN_IN = 123;
+    private static final int RC_SIGN_IN = 82; //ASCII 'R'
     // 1 - Get Coordinator Layout
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -86,6 +87,31 @@ public class MainActivity extends BaseActivity {
         // 4 - Handle SignIn Activity response on activity result
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
     }
+
+    // --------------------
+    // ACTION
+    // --------------------
+
+    public void onClickLoginButton(View v) {
+        if (this.isCurrentUserLogged()) {
+            this.startActivity(Go4LunchActivity.class);
+        } else {
+            this.startSignInActivity();
+
+        }
+    }
+
+    public void onClickDetailRestaurantButton(View v) {
+        this.startActivity(RestaurantInfoActivity.class);
+    }
+
+
+    //Generic activity launcher method
+    private void startActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+    }
+
     // --------------------
     // UI
     // --------------------
@@ -95,11 +121,17 @@ public class MainActivity extends BaseActivity {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
+    private void updateUIWhenResuming() {
+        this.mLoginButton.setText(this.isCurrentUserLogged() ?
+                getString(R.string.button_login_text_logged) : getString(R.string.button_login_text_not_logged));
+    }
+
+
     // --------------------
     // REST REQUEST
     // --------------------
 
-    private void createUserInFirestore(){
+    private void createUserInFirestore() {
         if (this.getCurrentUser() != null) {
 
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ?
@@ -111,8 +143,6 @@ public class MainActivity extends BaseActivity {
             UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
         }
     }
-
-
 
 
     // --------------------
@@ -139,29 +169,4 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
-    public void onClickLoginButton(View v) {
-        if (this.isCurrentUserLogged()) {
-            this.startActivity(Go4LunchActivity.class);
-        } else {
-            this.startSignInActivity();
-        }
-    }
-
-    public void onClickDetailRestaurantButton(View v) {
-        this.startActivity(RestaurantInfoActivity.class);
-    }
-
-
-    private void updateUIWhenResuming(){
-        this.mLoginButton.setText(this.isCurrentUserLogged() ?
-                getString(R.string.button_login_text_logged) : getString(R.string.button_login_text_not_logged));
-    }
-
-
-    //Generic activity launcher method
-    private void startActivity(Class activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-    }
 }

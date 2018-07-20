@@ -1,5 +1,6 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.UserHelper;
@@ -35,6 +39,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
 
     //CONSTANT
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
+    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
     //VAR
     private Toolbar mToolbar;
     private DrawerLayout drawerLayout;
@@ -47,18 +52,20 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
 
-        switch (item.getItemId()) {
-            case R.id.navigation_map:
-                //TODO
-                configureContentFrameFragment(new MapViewFragment());
-                return true;
-            case R.id.navigation_list:
-                configureContentFrameFragment(new RestaurantViewFragment());
-                return true;
-            case R.id.navigation_workmates:
-                //TODO
-                configureContentFrameFragment(new WorkMatesViewFragment());
-                return true;
+        if (isServiceOk()) {
+            switch (item.getItemId()) {
+                case R.id.navigation_map:
+                    //TODO
+                    configureContentFrameFragment(new MapViewFragment());
+                    return true;
+                case R.id.navigation_list:
+                    configureContentFrameFragment(new RestaurantViewFragment());
+                    return true;
+                case R.id.navigation_workmates:
+                    //TODO
+                    configureContentFrameFragment(new WorkMatesViewFragment());
+                    return true;
+            }
         }
         return false;
     };
@@ -190,7 +197,6 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     // UI
     //---------------------
 
-
     private void updateMenuUIOnCreation() {
 
         if (this.getCurrentUser() != null) {
@@ -226,6 +232,30 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
 //            mTextViewUser.setText(username);
 //            mTextViewEmail.setText(email);
         }
+    }
+
+    //---------------------
+    // UTILS
+    //---------------------
+
+
+    public boolean isServiceOk() {
+        Log.d(TAG, "isServiceOk: checking google service version");
+
+        int availability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
+        if (availability == ConnectionResult.SUCCESS) {
+            //We check that the google services is fine and user can make request
+            Log.d(TAG, "isServiceOk: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(availability)) {
+            //We have to handle the error status
+            Log.d(TAG, "isServiceOk: an error occurred but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, availability,
+                    ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        return false;
     }
 
     private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {

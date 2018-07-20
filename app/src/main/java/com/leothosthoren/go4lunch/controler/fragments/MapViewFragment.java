@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,17 +33,18 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
-import com.leothosthoren.go4lunch.api.PlaceStreams;
+import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
@@ -59,7 +61,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     public static final String TAG = MapViewFragment.class.getSimpleName();
     private static final int MAX_PLACES = 100;
     private static final int REQUEST_PICK_PLACE = 2;
-
+    @BindView(R.id.position_icon)
+    ImageButton mGpsLocation;
     //VAR
     private MapView mMapView;
     private GoogleMap mMap;
@@ -107,6 +110,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         getLocationPermission();
         updateUI();
         setMapStyle(mMap);
+        setMyPositionOnMap();
+
     }
 
     //---------------------------------------------------------------------------------------------//
@@ -138,6 +143,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
     }
 
     private void setMapStyle(GoogleMap googleMap) {
@@ -167,6 +178,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
+            updateUI();
         } else {
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -184,11 +196,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
+                    //Update Ui
+                    updateUI();
                 }
             }
         }
-        //Update Ui here
-        updateUI();
+
     }
 
     //---------------------------------------------------------------------------------------------//
@@ -216,7 +229,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             executeHttpRequestWithNearby(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude());
                             //HTTP RXJAVA TEST
-                            executeTest(setLocationIntoString(latitude, longitude));
+//                            executeTest(setLocationIntoString(latitude, longitude));
 
                         } else {
                             Toast.makeText(getContext(),
@@ -247,7 +260,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
-                        Log.d(TAG, "onNext: " + nearbySearch.getResults().get(0).getName()+" "+ nearbySearch.getResults().get(1).getName());
+                        Log.d(TAG, "onNext: " + nearbySearch.getResults().get(0).getName() + " " + nearbySearch.getResults().get(1).getName());
                         addMarkerOnMap(nearbySearch);
                     }
 
@@ -263,29 +276,29 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 });
 
     }
-
-    //TEST
-    private void executeTest(String location) {
-        this.mDisposable = PlaceStreams.streamTest(location)
-                .subscribeWith(new DisposableObserver<PlaceDetail>() {
-                    @Override
-                    public void onNext(PlaceDetail placeDetail) {
-                        Log.d(TAG, "onNextTest: " + placeDetail.getResult());
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: "+e.getMessage() );
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.e(TAG, "onComplete: ");
-                    }
-                });
-    }
+//
+//    //TEST
+//    private void executeTest(String location) {
+//        this.mDisposable = PlaceStreams.streamTest(location)
+//                .subscribeWith(new DisposableObserver<PlaceDetail>() {
+//                    @Override
+//                    public void onNext(PlaceDetail placeDetail) {
+//                        Log.d(TAG, "onNextTest: " + placeDetail.getResult());
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(TAG, "onError: "+e.getMessage() );
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.e(TAG, "onComplete: ");
+//                    }
+//                });
+//    }
 
 
     // 4 - Dispose subscription
@@ -306,19 +319,16 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     //                                          UI                                                 //
     //---------------------------------------------------------------------------------------------//
 
-
     private void updateUI() {
         if (mMap == null) {
             return;
         }
         try {
             if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mGpsLocation.setVisibility(View.VISIBLE);
                 getDeviceLocation();
             } else {
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mGpsLocation.setVisibility(View.INVISIBLE);
                 mLastKnownLocation = null;
                 //Try to obtain location permission
                 getLocationPermission();
@@ -340,6 +350,13 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
+    }
+
+    private void setMyPositionOnMap() {
+        this.mGpsLocation.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: clicked gps icon");
+            updateUI();
+        });
     }
 
 }
