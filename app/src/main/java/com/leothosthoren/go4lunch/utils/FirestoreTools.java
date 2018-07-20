@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public interface FirestoreTools {
 
-     String TAG = "FirestoreTools";
+     String TAG = FirestoreTools.class.getSimpleName();
 
     // --------------------
     // UTILS
@@ -31,13 +31,10 @@ public interface FirestoreTools {
     // --------------------
 
     default OnFailureListener onFailureListener() {
-        return new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+        return e -> {
 //                Toast.makeText(get, "R.string.error_unknown_error", Toast.LENGTH_LONG).show();
-                //Handle it
-                Log.e(TAG, "onFailure: an error occurred... " + e.getMessage());
-            }
+            //Handle it
+            Log.e(TAG, "onFailure: an error occurred... " + e.getMessage());
         };
     }
 

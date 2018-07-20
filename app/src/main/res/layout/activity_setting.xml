@@ -37,7 +37,7 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="@drawable/custom_buttons"
         android:text="@string/update_user_name"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"

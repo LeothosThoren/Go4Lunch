@@ -73,4 +73,7 @@
     <string name="like">LIKE</string>
     <string name="website">WEBSITE</string>
 
+    <!--Extras-->
+    <string name="dowloading">Downloading...</string>
+
 </resources>

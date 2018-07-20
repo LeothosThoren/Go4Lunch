@@ -36,7 +36,7 @@ public class Users {
         this.username = username;
     }
 
-    public String getEmail() {
+    public String getUserEmail() {
         return email;
     }
 

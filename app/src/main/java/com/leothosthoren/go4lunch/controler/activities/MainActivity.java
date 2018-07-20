@@ -13,6 +13,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 
 import java.util.Arrays;
@@ -95,6 +96,26 @@ public class MainActivity extends BaseActivity {
     }
 
     // --------------------
+    // REST REQUEST
+    // --------------------
+
+    private void createUserInFirestore(){
+        if (this.getCurrentUser() != null) {
+
+            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ?
+                    this.getCurrentUser().getPhotoUrl().toString() : null;
+            String username = this.getCurrentUser().getDisplayName();
+            String email = this.getCurrentUser().getEmail();
+            String uid = this.getCurrentUser().getUid();
+
+            UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
+        }
+    }
+
+
+
+
+    // --------------------
     // UTILS
     // --------------------
 
@@ -104,6 +125,7 @@ public class MainActivity extends BaseActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
+                this.createUserInFirestore();
                 showSnackBar(this.coordinatorLayout, getString(R.string.connection_succeed));
             } else { // ERRORS
                 if (response == null) {

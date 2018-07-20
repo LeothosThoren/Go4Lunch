@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,10 +24,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.controler.fragments.MapViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.RestaurantViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.WorkMatesViewFragment;
+import com.leothosthoren.go4lunch.model.firebase.Users;
 
 public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -70,7 +71,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         this.configureNavigationView();
         this.configureBottomNavigationView();
         this.configureContentFrameFragment(new MapViewFragment());
-        this.updateUIOnCreation();
+        this.updateMenuUIOnCreation();
     }
 
     @Override
@@ -175,9 +176,9 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         transaction.replace(R.id.content_frame, fragment).commit();
     }
 
-    // --------------------
-    // REST REQUESTS FB
-    // --------------------
+    // -----------------------
+    // REST REQUESTS FIREBASE
+    // -----------------------
 
     private void signOutUser() {
         AuthUI.getInstance()
@@ -190,7 +191,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     //---------------------
 
 
-    private void updateUIOnCreation() {
+    private void updateMenuUIOnCreation() {
 
         if (this.getCurrentUser() != null) {
 
@@ -202,15 +203,28 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                         .into(this.mImageViewProfile);
             }
 
-            //Get user 's name
-            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
-                    getString(R.string.info_no_user_name_found) : this.getCurrentUser().getDisplayName();
+            //data from Firestore
+            UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
+                Users currentUser = documentSnapshot.toObject(Users.class);
+                assert currentUser != null;
+                String username = TextUtils.isEmpty(currentUser.getUsername()) ?
+                        getString(R.string.info_no_user_name_found) : currentUser.getUsername();
 
-            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
-                    getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
-            //Update view with data
-            mTextViewUser.setText(username);
-            mTextViewEmail.setText(email);
+                String email = TextUtils.isEmpty(currentUser.getUserEmail()) ?
+                        getString(R.string.info_no_email_found) : currentUser.getUserEmail();
+                mTextViewUser.setText(username);
+                mTextViewEmail.setText(email);
+            });
+
+//            //Get user 's name
+//            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
+//                    getString(R.string.info_no_user_name_found) : this.getCurrentUser().getDisplayName();
+//
+//            String email = TextUtils.isEmpty(this.getCurrentUser().getUserEmail()) ?
+//                    getString(R.string.info_no_email_found) : this.getCurrentUser().getUserEmail();
+//            //Update view with data
+//            mTextViewUser.setText(username);
+//            mTextViewEmail.setText(email);
         }
     }
 

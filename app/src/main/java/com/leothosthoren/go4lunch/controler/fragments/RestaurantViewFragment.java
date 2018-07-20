@@ -174,11 +174,4 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
 
     }
 
-    public void test(PlaceDetail placeDetail){
-
-        for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
-            mPlaceDetailArrayList.get(i).getResult();
-        }
-    }
-
 }
