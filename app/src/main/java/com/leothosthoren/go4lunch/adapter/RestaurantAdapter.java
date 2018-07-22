@@ -14,7 +14,8 @@ import com.leothosthoren.go4lunch.view.RestaurantViewHolder;
 
 import java.util.ArrayList;
 
-public class RestaurantRVAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
+
 
     // FOR COMMUNICATION
 //    private final Listener callback;
@@ -22,7 +23,7 @@ public class RestaurantRVAdapter extends RecyclerView.Adapter<RestaurantViewHold
     private ArrayList<RestaurantItem> mRestaurantItems;
     private RequestManager glide;
 
-    public RestaurantRVAdapter(ArrayList<RestaurantItem> restaurantItems, RequestManager glide/*, Listener callback*/) {
+    public RestaurantAdapter(ArrayList<RestaurantItem> restaurantItems, RequestManager glide/*, Listener callback*/) {
         this.mRestaurantItems = restaurantItems;
         this.glide = glide;
 //        this.callback = callback;

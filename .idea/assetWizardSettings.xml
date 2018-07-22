@@ -23,7 +23,6 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="paddingPercent" value="25" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -35,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/opt/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_my_location_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/opt/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_sentiment_very_dissatisfied_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -56,9 +55,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Téléchargements/restaurant-icon-png-4887.png" />
-                                      <entry key="outputName" value="ic_restaurant_map_icon" />
+                                      <entry key="imageAsset" value="$PROJECT_DIR$/../9-Patch-Resizer-1.4.2/drawable-xxhdpi/ic_restaurant_map_icon.png" />
+                                      <entry key="outputName" value="ic_no_workmates" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="ff5722" />
                                     </map>

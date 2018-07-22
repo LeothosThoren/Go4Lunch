@@ -1,6 +1,7 @@
 package com.leothosthoren.go4lunch;
 
 import com.leothosthoren.go4lunch.utils.HttpRequestTools;
+import com.leothosthoren.go4lunch.utils.StringHelper;
 
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class UnitTest implements HttpRequestTools {
+public class UnitTest implements HttpRequestTools, StringHelper {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
@@ -24,5 +25,11 @@ public class UnitTest implements HttpRequestTools {
     @Test
     public void setValuesIntoString () throws Exception {
         assertEquals("48.7927684,2.3591994999999315", setLocationIntoString(48.7927684, 2.3591994999999315));
+    }
+
+    @Test
+    public void splitStringValues () throws Exception {
+        assertEquals("Vador", displayFirstName("Vador Dark"));
+
     }
 }

@@ -12,9 +12,6 @@ import android.widget.Toast;
 import com.leothosthoren.go4lunch.R;
 
 public interface HttpRequestTools {
-//
-//    public HttpRequestTools() {
-//    }
 
     /*
      * @method progressBarHandler
@@ -67,4 +64,6 @@ public interface HttpRequestTools {
     default String setLocationIntoString(Double d1, Double d2) {
         return String.valueOf(d1 + "," + d2);
     }
+
+
 }

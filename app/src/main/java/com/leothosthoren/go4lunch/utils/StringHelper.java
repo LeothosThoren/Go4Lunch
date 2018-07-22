@@ -1,4 +1,9 @@
 package com.leothosthoren.go4lunch.utils;
 
-public class StringHelper {
+public interface StringHelper {
+
+    default String displayFirstName(String fullName){
+        String [] arr = fullName.split(" ");
+        return arr[0];
+    }
 }

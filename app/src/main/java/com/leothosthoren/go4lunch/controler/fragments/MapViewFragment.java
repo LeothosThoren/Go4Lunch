@@ -49,18 +49,20 @@ import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ORANGE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, HttpRequestTools, GoogleMap.OnMarkerClickListener {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     //CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 17f;
+    public static final float DEFAULT_ZOOM = 15f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
-    private static final int MAX_PLACES = 10;
+    private static final int MAX_PLACES = 15;
     private static final int REQUEST_PICK_PLACE = 2;
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
@@ -346,11 +348,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         this.mResults.addAll(nearbySearch.getResults());
         DataSingleton.getInstance().setNearbySearch(mResults);
         if (mResults.size() != 0) {
-            for (int i = 0; i < MAX_PLACES; i++) {
+            for (int i = 0; i < mResults.size(); i++) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
                                 mResults.get(i).getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
+                        .flat(true));
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());

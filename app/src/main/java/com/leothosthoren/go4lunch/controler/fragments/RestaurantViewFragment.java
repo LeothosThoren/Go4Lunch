@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.adapter.RestaurantRVAdapter;
+import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.utils.RecyclerViewBuilder;
 import com.leothosthoren.go4lunch.data.DataSingleton;
@@ -41,7 +41,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
     //VAR
-    private RestaurantRVAdapter mAdapter;
+    private RestaurantAdapter mAdapter;
     private ArrayList<RestaurantItem> mRestaurantItemsList;
     private Disposable disposable;
     //DATA
@@ -84,7 +84,7 @@ public class RestaurantViewFragment extends BaseFragment implements RecyclerView
     @Override
     public void configureRecyclerView() {
         this.mRestaurantItemsList = new ArrayList<>();
-        this.mAdapter = new RestaurantRVAdapter(this.mRestaurantItemsList, Glide.with(this));
+        this.mAdapter = new RestaurantAdapter(this.mRestaurantItemsList, Glide.with(this));
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }

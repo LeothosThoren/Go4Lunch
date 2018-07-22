@@ -75,5 +75,6 @@
 
     <!--Extras-->
     <string name="dowloading">Downloading...</string>
+    <string name="no_workmate_available">No workmate available</string>
 
 </resources>

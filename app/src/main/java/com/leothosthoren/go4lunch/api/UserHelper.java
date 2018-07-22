@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
 public class UserHelper {
@@ -27,6 +28,11 @@ public class UserHelper {
 
     public static Task<DocumentSnapshot> getUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).get();
+    }
+
+    // --- Try to get All user from collection with query
+    public static Query getAllUsersWorkmates() {
+        return UserHelper.getUsersCollection().limit(50).orderBy("username");
     }
 
     // --- UPDATE ---

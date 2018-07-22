@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.adapter.RestaurantRVAdapter;
+import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
 
 import java.lang.ref.WeakReference;
@@ -35,7 +35,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     RatingBar mRatingBar;
 
 
-    private WeakReference<RestaurantRVAdapter.Listener> callbackWeakRef;
+    private WeakReference<RestaurantAdapter.Listener> callbackWeakRef;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
