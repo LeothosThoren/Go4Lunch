@@ -7,22 +7,26 @@ import java.util.Date;
 public class RestaurantChoice {
 
     private Date dateChoice;
-    private boolean likeRestaurant;
+    private Users restaurantUsers;
+    private String restaurantName;
+    private String restaurantPlaceId;
+    private String restaurantFoodType;
+    private boolean restaurantLike;
     private boolean restaurantSelection;
 
 
-    public RestaurantChoice(Date dateChoice, boolean likeRestaurant, boolean restaurantSelection) {
+    public RestaurantChoice(Date dateChoice, boolean restaurantLike, boolean restaurantSelection) {
         this.dateChoice = dateChoice;
-        this.likeRestaurant = likeRestaurant;
+        this.restaurantLike = restaurantLike;
         this.restaurantSelection = restaurantSelection;
     }
 
     public RestaurantChoice() {
     }
 
-    public RestaurantChoice(boolean likeRestaurant, boolean restaurantSelection) {
+    public RestaurantChoice(boolean restaurantLike, boolean restaurantSelection) {
 
-        this.likeRestaurant = likeRestaurant;
+        this.restaurantLike = restaurantLike;
         this.restaurantSelection = restaurantSelection;
     }
 
@@ -35,12 +39,12 @@ public class RestaurantChoice {
         this.dateChoice = dateChoice;
     }
 
-    public boolean isLikeRestaurant() {
-        return likeRestaurant;
+    public boolean isRestaurantLike() {
+        return restaurantLike;
     }
 
-    public void setLikeRestaurant(boolean likeRestaurant) {
-        this.likeRestaurant = likeRestaurant;
+    public void setRestaurantLike(boolean restaurantLike) {
+        this.restaurantLike = restaurantLike;
     }
 
     public boolean isRestaurantSelection() {
