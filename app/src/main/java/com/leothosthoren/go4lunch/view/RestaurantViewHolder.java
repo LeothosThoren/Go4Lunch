@@ -8,9 +8,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
 import com.leothosthoren.go4lunch.model.RestaurantItem;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
 import java.lang.ref.WeakReference;
 
@@ -42,15 +45,25 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateRestaurantList(RestaurantItem restaurantItem, RequestManager glide) {
+//    public void updateRestaurantList(RestaurantItem restaurantItem, RequestManager glide) {
+//        assert this.mRestaurantName != null;
+//        this.mRestaurantName.setText(restaurantItem.getName());
+//        this.mRestaurantAddress.setText(restaurantItem.concatTypeAndAdress(restaurantItem.getFoodType(), restaurantItem.getAddress()));
+//        this.mRestaurantDistance.setText(restaurantItem.concatDistance(restaurantItem.getDistance()));
+//        this.mRestaurantOpening.setText(restaurantItem.getOpeningInfo());
+//        this.mNbOfWorkmates.setText(restaurantItem.concatWorkmateQuantity(restaurantItem.getWorkmateQuantity()));
+//        this.mRatingBar.setRating(restaurantItem.concatRating(restaurantItem.getRating()));
+//        glide.load(restaurantItem.getUrl()).into(this.mRestaurantPhoto);
+//    }
+
+    public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide){
         assert this.mRestaurantName != null;
-        this.mRestaurantName.setText(restaurantItem.getName());
-        this.mRestaurantAddress.setText(restaurantItem.concatTypeAndAdress(restaurantItem.getFoodType(), restaurantItem.getAddress()));
-        this.mRestaurantDistance.setText(restaurantItem.concatDistance(restaurantItem.getDistance()));
-        this.mRestaurantOpening.setText(restaurantItem.getOpeningInfo());
-        this.mNbOfWorkmates.setText(restaurantItem.concatWorkmateQuantity(restaurantItem.getWorkmateQuantity()));
-        this.mRatingBar.setRating(restaurantItem.concatRating(restaurantItem.getRating()));
-        glide.load(restaurantItem.getUrl()).into(this.mRestaurantPhoto);
+        this.mRestaurantName.setText(placeDetail.getResult().getName());
+        if (placeDetail.getResult().getPhotos().get(0).getPhotoReference() != null) {
+            glide.load("https://maps.googleapis.com/maps/api/place/photo?photoreference="
+                    +placeDetail.getResult().getPhotos().get(0).getPhotoReference()+"&key="+ BuildConfig.ApiKey).into(mRestaurantPhoto);
+        }
+
     }
 
     @Override

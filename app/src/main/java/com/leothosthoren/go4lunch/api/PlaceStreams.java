@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class PlaceStreams {
+
 
     public static Observable<NearbySearch> streamFetchNearbyApi(String location) {
         PlaceService service = PlaceService.RETROFIT.create(PlaceService.class);
@@ -31,20 +33,38 @@ public class PlaceStreams {
     }
 
 
-    public static Observable<PlaceDetail> streamTest(String location) {
+
+    public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
         return streamFetchNearbyApi(location)
                 .map(new Function<NearbySearch, List<Result>>() {
                     @Override
-                    public List<Result> apply(NearbySearch nearbySearch) throws Exception {
-                        return nearbySearch.getResults();
+                    public List<Result> apply(NearbySearch restaurant) throws Exception {
+                        return restaurant.getResults();
                     }
                 })
-                .flatMap(new Function<List<Result>, Observable<PlaceDetail>>() {
+                .flatMap(new Function<List<Result>, Observable<List<PlaceDetail>>>() {
                     @Override
-                    public Observable<PlaceDetail> apply(List<Result> results) throws Exception {
-                        return streamFetchPlaceDetail(results.get(0).getPlaceId());
+                    public Observable<List<PlaceDetail>> apply(List<Result> results) throws Exception {
+                        return Observable.fromIterable(results)
+                                .flatMap(new Function<Result, Observable<PlaceDetail>>() {
+                                    @Override
+                                    public Observable<PlaceDetail> apply(Result result) throws Exception {
+                                        return streamFetchPlaceDetail(result.getPlaceId());
+                                    }
+                                })
+                                .toList()
+                                .toObservable();
                     }
                 });
-
     }
+
+
+//    public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
+//        return streamFetchNearbyApi(location)
+//                .map(restaurant -> restaurant.getResults())
+//                .flatMap((Function<List<Result>, Observable<List<PlaceDetail>>>) results -> Observable.fromIterable(results)
+//                        .flatMap((Function<Result, Observable<PlaceDetail>>) result -> streamFetchPlaceDetail(result.getPlaceId()))
+//                        .toList()
+//                        .toObservable());
+//    }
 }
