@@ -140,6 +140,7 @@ public class MainActivity extends BaseActivity {
             String email = this.getCurrentUser().getEmail();
             String uid = this.getCurrentUser().getUid();
 
+            // Allow the creation on the data base
             UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
         }
     }

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.leothosthoren.go4lunch.utils.FirestoreTools;
+import com.leothosthoren.go4lunch.utils.FireBaseTools;
 import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import butterknife.ButterKnife;
@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Sofiane M. alias Leothos Thoren on 23/05/2018
  */
-public abstract class BaseFragment extends Fragment implements HttpRequestTools, FirestoreTools {
+public abstract class BaseFragment extends Fragment implements HttpRequestTools, FireBaseTools {
     // 1 - Force developer implement those methods
     protected abstract BaseFragment newInstance();
     protected abstract int getFragmentLayout();

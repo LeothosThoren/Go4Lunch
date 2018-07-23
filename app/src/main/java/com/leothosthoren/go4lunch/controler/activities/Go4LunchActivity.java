@@ -1,5 +1,6 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -35,18 +37,27 @@ import com.leothosthoren.go4lunch.controler.fragments.RestaurantViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.WorkMatesViewFragment;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
+import java.util.Objects;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
     //CONSTANT
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
-    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
-    //VAR
+    // STATIC DATA FOR PICTURE
+    private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
+    private static final int RC_IMAGE_PERMS = 100;
+    // VAR
     private Toolbar mToolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TextView mTextViewUser;
     private TextView mTextViewEmail;
     private ImageView mImageViewProfile;
+
 
     //BOTTOM NAVIGATION VIEW
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -76,6 +87,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         this.configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        this.configureNavHeader();
         this.configureBottomNavigationView();
         this.configureContentFrameFragment(new MapViewFragment());
         this.updateMenuUIOnCreation();
@@ -101,17 +113,9 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //2 - Inflate the menu and add it to the Toolbar
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
-    }
-
     //Handle the click on MENU DRAWER
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         // 4 - Handle Navigation Item Click
         int id = item.getItemId();
         switch (id) {
@@ -132,7 +136,6 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         return true;
     }
 
-
     // ---------------------
     // CONFIGURATION
     // ---------------------
@@ -141,6 +144,13 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     protected void configureToolbar() {
         this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(this.mToolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //2 - Inflate the menu and add it to the Toolbar
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
     }
 
     // 2 - Configure Drawer Layout
@@ -156,11 +166,16 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     private void configureNavigationView() {
         this.navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void configureNavHeader() {
         // 3 bis - Handle navigation header items
         View headView = navigationView.getHeaderView(0);
         mTextViewUser = (TextView) headView.findViewById(R.id.menu_drawer_user);
         mTextViewEmail = (TextView) headView.findViewById(R.id.menu_drawer_email);
         mImageViewProfile = (ImageView) headView.findViewById(R.id.menu_drawer_imageView);
+
 
     }
 
@@ -201,25 +216,34 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
 
         if (this.getCurrentUser() != null) {
 
-            //Get user picture from providers on Firebase
-            if (this.getCurrentUser().getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(this.getCurrentUser().getPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(this.mImageViewProfile);
-            }
-
             //data from Firestore
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
                 Users currentUser = documentSnapshot.toObject(Users.class);
                 assert currentUser != null;
+
+                //Get user picture from providers on Firebase
+                if (currentUser.getUrlPicture() != null) {
+                    Glide.with(this)
+                            .load(currentUser.getUrlPicture())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(this.mImageViewProfile);
+                }
+
+                //Update picture when registration contain empty photo
+                if (currentUser.getUrlPicture() != null) {
+                    UserHelper.updateProfilPicture(currentUser.getUrlPicture(),
+                            Objects.requireNonNull(this.getCurrentUser()).getUid())
+                            .addOnFailureListener(this.onFailureListener());
+                }
+
                 String username = TextUtils.isEmpty(currentUser.getUsername()) ?
                         getString(R.string.info_no_user_name_found) : currentUser.getUsername();
 
-                String email = TextUtils.isEmpty(currentUser.getUserEmail()) ?
-                        getString(R.string.info_no_email_found) : currentUser.getUserEmail();
+                String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
+                        getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
                 mTextViewUser.setText(username);
                 mTextViewEmail.setText(email);
+
             });
 
 //            //Get user 's name
@@ -235,7 +259,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     }
 
     //---------------------
-    // UTILS
+    // PERMISSION
     //---------------------
 
 
@@ -258,6 +282,14 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         return false;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
     private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
         return aVoid -> {
             switch (taskId) {
@@ -268,6 +300,23 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                     break;
             }
         };
+    }
+
+
+    // ---------------------
+    // ACTION
+    // ---------------------
+
+
+    // Ask permission when accessing to this listener
+    @AfterPermissionGranted(RC_IMAGE_PERMS)
+    public void onClickProfilePicture(View view) {
+        if (!EasyPermissions.hasPermissions(getApplicationContext(), PERMS)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.popup_title_permission_files_access),
+                    RC_IMAGE_PERMS, PERMS);
+            return;
+        }
+        Toast.makeText(this, "Vous avez le droit d'accéder aux images !", Toast.LENGTH_SHORT).show();
     }
 
 }

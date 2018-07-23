@@ -4,21 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.utils.FirestoreTools;
+import com.leothosthoren.go4lunch.utils.FireBaseTools;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Optional;
 
 /**
  * Created by Sofiane M. alias Leothos Thoren on 04/05/2018
  */
-public abstract class BaseActivity extends AppCompatActivity implements FirestoreTools{
+public abstract class BaseActivity extends AppCompatActivity implements FireBaseTools {
 
     // --------------------
     // LIFE CYCLE

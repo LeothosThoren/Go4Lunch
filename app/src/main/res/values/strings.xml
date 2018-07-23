@@ -63,7 +63,7 @@
 
 
     <!--RecyclerView workmates item-->
-    <string name="workmate_default_decision">name hasn\'t decided yet</string>
+    <string name="workmate_default_decision"> %1$s hasn\'t decided yet</string>
     <string name="workmate_profil">workmates_profil</string>
     <string name="workmate_is_eating">%1$s is eating %2$s (%3$s)</string>
     <string name="workmate_is_joining">%1$s is joining</string>
@@ -76,5 +76,7 @@
     <!--Extras-->
     <string name="dowloading">Downloading...</string>
     <string name="no_workmate_available">No workmate available</string>
+    <string name="popup_title_permission_files_access">File is accessible</string>
+    <string name="toast_title_no_image_chosen">No image chosen!</string>
 
 </resources>

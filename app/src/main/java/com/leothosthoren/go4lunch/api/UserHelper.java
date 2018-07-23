@@ -2,6 +2,7 @@ package com.leothosthoren.go4lunch.api;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,6 +31,10 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+    public static Task<DocumentSnapshot> getEmail(String uid) {
+        return UserHelper.getUsersCollection().document(uid).get();
+    }
+
     // --- Try to get All user from collection with query
     public static Query getAllUsersWorkmates() {
         return UserHelper.getUsersCollection().limit(50).orderBy("username");
@@ -41,8 +46,12 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("username", username);
     }
 
-    public static Task<Void> updateEmail(String uid, String email) {
+    public static Task<Void> updateEmail(String email, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("email", email);
+    }
+
+    public static Task<Void> updateProfilPicture(String urlPicture, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("urlPicture", urlPicture);
     }
 
     // --- DELETE ---

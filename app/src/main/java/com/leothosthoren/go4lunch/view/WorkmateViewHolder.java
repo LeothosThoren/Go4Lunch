@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.model.WorkmateItem;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.StringHelper;
 
@@ -28,7 +27,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements Strin
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithWorkmateItem(Users workmateItem, String currentUserId, RequestManager glide){
+    public void updateWithWorkmateItem(Users workmateItem, String currentUserId, RequestManager glide) {
         //Update workmate profil picture
         if (workmateItem.getUrlPicture() != null) {
             glide.load(workmateItem.getUrlPicture())

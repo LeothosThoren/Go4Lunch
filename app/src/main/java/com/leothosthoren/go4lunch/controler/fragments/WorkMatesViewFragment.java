@@ -15,14 +15,11 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.model.WorkmateItem;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
 import java.util.Objects;
 
 import butterknife.BindView;
-
-import static com.leothosthoren.go4lunch.api.UserHelper.getAllUsersWorkmates;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +73,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     private void configureRecyclerView() {
         this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper
                 .getAllUsersWorkmates()),
-                Glide.with(Objects.requireNonNull(getContext())),
+                Glide.with(Objects.requireNonNull(this)),
                 this,
                 Objects.requireNonNull(this.getCurrentUser()).getUid());
 
@@ -85,9 +82,14 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
             }
+
         });
+
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
+        mWorkmateAdapter.notifyDataSetChanged();
+
     }
 
     // 6 - Create options for RecyclerView from a Query

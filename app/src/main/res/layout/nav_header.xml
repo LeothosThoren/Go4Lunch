@@ -24,9 +24,12 @@
         style="@style/MainStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="@string/email"
         android:textColor="@android:color/white"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/menu_drawer_imageView" />
 
@@ -35,9 +38,12 @@
         style="@style/MainStyle"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:clickable="true"
+        android:onClick="onClickProfilePicture"
         android:src="@drawable/com_facebook_profile_picture_blank_portrait"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:focusable="true" />
 
 
 </android.support.constraint.ConstraintLayout>
