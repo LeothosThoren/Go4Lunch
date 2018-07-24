@@ -1,5 +1,7 @@
 package com.leothosthoren.go4lunch.model;
 
+import com.leothosthoren.go4lunch.model.firebase.Users;
+
 public class RestaurantItem {
 
     private String name;
@@ -8,19 +10,20 @@ public class RestaurantItem {
     private String openingInfo;
     private int distance;
     private int workmateQuantity;
-    private String url;
+    private String urlPhoto;
     private double rating;
+    private Users userSender;
 
 
     public RestaurantItem(String name, String foodType, String address, String openingInfo,
-                          int distance, int workmateQuantity, String url, double rating) {
+                          int distance, int workmateQuantity, String urlPhoto, double rating) {
         this.name = name;
         this.foodType = foodType;
         this.address = address;
         this.openingInfo = openingInfo;
         this.distance = distance;
         this.workmateQuantity = workmateQuantity;
-        this.url = url;
+        this.urlPhoto = urlPhoto;
         this.rating = rating;
     }
 
@@ -73,12 +76,12 @@ public class RestaurantItem {
         this.workmateQuantity = workmateQuantity;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUrlPhoto() {
+        return urlPhoto;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrlPhoto(String urlPhoto) {
+        this.urlPhoto = urlPhoto;
     }
 
     public double getRating() {

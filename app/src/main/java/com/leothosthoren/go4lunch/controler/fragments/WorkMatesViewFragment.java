@@ -48,7 +48,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     @Override
     protected void configureDesign() {
         this.configureRecyclerView();
-        this.getCurrentUserFromFirestore();
+//        this.getCurrentUserFromFirestore();
     }
 
     @Override
@@ -71,24 +71,23 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     // --------------------
 
     private void configureRecyclerView() {
-        this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper
-                .getAllUsersWorkmates()),
+        this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsersWorkmates()),
                 Glide.with(Objects.requireNonNull(this)),
                 this,
                 Objects.requireNonNull(this.getCurrentUser()).getUid());
 
-        mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
-            }
+//        mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeInserted(int positionStart, int itemCount) {
+//                mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
+//            }
+//
+//        });
 
-        });
-
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
-        mWorkmateAdapter.notifyDataSetChanged();
+//        mWorkmateAdapter.notifyDataSetChanged();
 
     }
 

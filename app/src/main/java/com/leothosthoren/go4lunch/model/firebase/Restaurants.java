@@ -11,20 +11,22 @@ public class Restaurants {
     private String restaurantName;
     private String restaurantPlaceId;
     private String restaurantFoodType;
-    private boolean restaurantLike;
-    private boolean restaurantSelection;
+//    private boolean restaurantLike;
+//    private boolean restaurantSelection;
+    private Boolean latitude;
+    private Boolean longitude;
 
 
     public Restaurants(Date dateChoice, Users restaurantUsers, String restaurantName,
-                       String restaurantPlaceId, String restaurantFoodType,
-                       boolean restaurantLike, boolean restaurantSelection) {
+                       String restaurantPlaceId, String restaurantFoodType
+                       /*boolean restaurantLike, boolean restaurantSelection*/) {
         this.dateChoice = dateChoice;
         this.restaurantUsers = restaurantUsers;
         this.restaurantName = restaurantName;
         this.restaurantPlaceId = restaurantPlaceId;
         this.restaurantFoodType = restaurantFoodType;
-        this.restaurantLike = restaurantLike;
-        this.restaurantSelection = restaurantSelection;
+//        this.restaurantLike = restaurantLike;
+//        this.restaurantSelection = restaurantSelection;
     }
 
     public Restaurants() {
@@ -70,20 +72,20 @@ public class Restaurants {
     public void setDateChoice(Date dateChoice) {
         this.dateChoice = dateChoice;
     }
-
-    public boolean isRestaurantLike() {
-        return restaurantLike;
-    }
-
-    public void setRestaurantLike(boolean restaurantLike) {
-        this.restaurantLike = restaurantLike;
-    }
-
-    public boolean isRestaurantSelection() {
-        return restaurantSelection;
-    }
-
-    public void setRestaurantSelection(boolean restaurantSelection) {
-        this.restaurantSelection = restaurantSelection;
-    }
+//
+//    public boolean isRestaurantLike() {
+//        return restaurantLike;
+//    }
+//
+//    public void setRestaurantLike(boolean restaurantLike) {
+//        this.restaurantLike = restaurantLike;
+//    }
+//
+//    public boolean isRestaurantSelection() {
+//        return restaurantSelection;
+//    }
+//
+//    public void setRestaurantSelection(boolean restaurantSelection) {
+//        this.restaurantSelection = restaurantSelection;
+//    }
 }

@@ -41,11 +41,11 @@ public class RestaurantViewFragment extends BaseFragment {
     ProgressBar mProgressBar;
     //VAR
     private RestaurantAdapter mAdapter;
-    private ArrayList<PlaceDetail> mRestaurantItemsList;
     private Disposable disposable;
     //DATA
-    private ArrayList<Result> NearbySearchListFromSingleton =
-            (ArrayList<Result>) DataSingleton.getInstance().getNearbySearch();
+    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton =
+            (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetail();
+    private ArrayList<PlaceDetail> mRestaurantItemsList; //TODO : Switch this with above
 
 
     @Override
@@ -71,9 +71,8 @@ public class RestaurantViewFragment extends BaseFragment {
     protected void updateDesign() {
         //TEST
         this.checkSingletonContent();
-        //HTTP
-//        this.executeHttpRequestWithPlaceDetail();
-        this.feedMyArrayListWithMyObservable();
+        //Feed Array
+        this.updateUI();
 
     }
 
@@ -121,17 +120,17 @@ public class RestaurantViewFragment extends BaseFragment {
     // --------------------
 
     private void checkSingletonContent() {
-        Log.d(TAG, "checkSingletonContent: " + NearbySearchListFromSingleton.size());
+        Log.d(TAG, "checkSingletonContent: " + PlaceDetailListFromSingleton.size());
 
     }
 
-    public void executeHttpRequestWithPlaceDetail(String placeID) {
-        disposable = PlaceStreams.streamFetchListPlaceDetail(placeID)
+    public void executeHttpRequestWithNearBySearchAndPlaceDetail(String location) {
+        disposable = PlaceStreams.streamFetchListPlaceDetail(location)
                 .subscribeWith(new DisposableObserver<List<PlaceDetail>>() {
                     @Override
                     public void onNext(List<PlaceDetail> placeDetail) {
                         Log.d(TAG, "onNext: ");
-                        updateUI(placeDetail);
+
 
                     }
 
@@ -152,9 +151,9 @@ public class RestaurantViewFragment extends BaseFragment {
     //                                      UI                                                    //
     // -------------------------------------------------------------------------------------------//
 
-    public void updateUI(List<PlaceDetail> restaurantItems) {
+    public void updateUI() {
         this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
-        mRestaurantItemsList.addAll(restaurantItems);
+        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
         mAdapter.notifyDataSetChanged();
 //        mRestaurantItemsList.add(new RestaurantItem("Le Chalutier", "Française", "15 rue des Ardeches",
 //                "Open", 120, 2,
@@ -165,15 +164,6 @@ public class RestaurantViewFragment extends BaseFragment {
 //        mRestaurantItemsList.add(new RestaurantItem("Kebab Futur", "Turc", "70 rue des boulets",
 //                "Closed", 12, 0,
 //                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI-zPkYqtvaQxd5nCaWct9CmlKq9w1HZNiCZkLU1ixl-UuQIiW", 2));
-
-    }
-
-    public void feedMyArrayListWithMyObservable() {
-        for (int i = 0; i < NearbySearchListFromSingleton.size(); i++) {
-//            executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
-            //HTTP
-            this.executeHttpRequestWithPlaceDetail(NearbySearchListFromSingleton.get(i).getPlaceId());
-        }
 
     }
 

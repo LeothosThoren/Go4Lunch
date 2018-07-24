@@ -37,7 +37,7 @@ public class UserHelper {
 
     // --- Try to get All user from collection with query
     public static Query getAllUsersWorkmates() {
-        return UserHelper.getUsersCollection().limit(50).orderBy("username");
+        return UserHelper.getUsersCollection().orderBy("username");
     }
 
     // --- UPDATE ---

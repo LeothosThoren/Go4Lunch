@@ -40,16 +40,14 @@ import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
 import com.leothosthoren.go4lunch.model.nearbysearch.Result;
-import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-
-import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ORANGE;
 
 
 /**
@@ -77,7 +75,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private PlaceDetectionClient mPlaceDetectionClient;
     private GoogleApiClient mGoogleApiClient;
     private Disposable mDisposable;
-    //TEST
+    //DATA
     private ArrayList<Result> mResults = new ArrayList<>();
     private ArrayList<PlaceDetail> mDetails = new ArrayList<>();
 
@@ -229,21 +227,24 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude, longitude), DEFAULT_ZOOM));
+//                            //TEST
+//                            if (mGpsLocation.callOnClick()) {
+//                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+//                                        new LatLng(latitude, longitude), DEFAULT_ZOOM));
+//                            }
                             //HTTP RXJAVA
-                            executeHttpRequestWithNearby(mLastKnownLocation.getLatitude(),
-                                    mLastKnownLocation.getLongitude());
-                            //HTTP RXJAVA TEST
-//                            executeTest(setLocationIntoString(latitude, longitude));
+                            executeHttpRequestWithNearBySearchAndPlaceDetail(setLocationIntoString(latitude, longitude));
+//                            executeHttpRequestWithNearby(setLocationIntoString(latitude, longitude));
 
                         } else {
                             Toast.makeText(getContext(),
-                                    "Make sure your emulator device got map position on true",
+                                    R.string.toast_message_geolocation,
                                     Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.");
-                        Log.e(TAG, "getPhoneLocation => Exception: %s" + task.getException());
+                        Log.e(TAG, "getDeviceLocation => Exception: %s" + task.getException());
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                         mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     }
@@ -259,13 +260,34 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     //                                      HTTP RxJava                                            //
     //---------------------------------------------------------------------------------------------//
 
-    private void executeHttpRequestWithNearby(Double latitude, Double longitude) {
-        this.mDisposable = PlaceStreams.streamFetchNearbyApi(setLocationIntoString(latitude, longitude))
+    public void executeHttpRequestWithNearby(String location) {
+        mDisposable = PlaceStreams.streamFetchNearbyApi(location)
                 .subscribeWith(new DisposableObserver<NearbySearch>() {
                     @Override
                     public void onNext(NearbySearch nearbySearch) {
-                        Log.d(TAG, "onNext: " + nearbySearch.getResults().get(0).getName() + " " + nearbySearch.getResults().get(1).getName());
-                        addMarkerOnMap(nearbySearch);
+                        Log.d(TAG, "NearbyOnNext: "+nearbySearch.getResults().size());
+//                        addMarkerOnMap(nearbySearch);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "NearbyOnError: "+e.getMessage() );
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "NearbyOnComplete: ");
+                    }
+                });
+    }
+
+    public void executeHttpRequestWithNearBySearchAndPlaceDetail(String location) {
+        mDisposable = PlaceStreams.streamFetchListPlaceDetail(location)
+                .subscribeWith(new DisposableObserver<List<PlaceDetail>>() {
+                    @Override
+                    public void onNext(List<PlaceDetail> placeDetail) {
+                        Log.d(TAG, "onNext: " + placeDetail.size());
+                        addMarkerOnMap(placeDetail);
                     }
 
                     @Override
@@ -275,35 +297,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: ");
+                        Log.d(TAG, "onComplete: " + mDetails.size());
+
                     }
                 });
-
     }
-//
-//    //TEST
-//    private void executeTest(String location) {
-//        this.mDisposable = PlaceStreams.streamTest(location)
-//                .subscribeWith(new DisposableObserver<PlaceDetail>() {
-//                    @Override
-//                    public void onNext(PlaceDetail placeDetail) {
-//                        Log.d(TAG, "onNextTest: " + placeDetail.getResult());
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e(TAG, "onError: "+e.getMessage() );
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        Log.e(TAG, "onComplete: ");
-//                    }
-//                });
-//    }
-
 
     // 4 - Dispose subscription
     private void disposeWhenDestroy() {
@@ -331,6 +329,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             if (mLocationPermissionGranted) {
                 mGpsLocation.setVisibility(View.VISIBLE);
                 mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 getDeviceLocation();
             } else {
                 mGpsLocation.setVisibility(View.INVISIBLE);
@@ -359,6 +358,26 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
     }
 
+    private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
+        this.mDetails.addAll(placeDetailList);
+        DataSingleton.getInstance().setPlaceDetail(mDetails);
+        if (placeDetailList.size() != 0) {
+            for (int i = 0; i < placeDetailList.size(); i++) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(placeDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
+                                placeDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
+                        .flat(true));
+            }
+        } else
+            Log.d(TAG, "addMarkerOnMap is empty " + mDetails.size());
+    }
+
+
+    //---------------------------------------------------------------------------------------------//
+    //                                          ACTION                                             //
+    //---------------------------------------------------------------------------------------------//
+
     private void setMyPositionOnMap() {
         this.mGpsLocation.setOnClickListener(v -> {
             Log.d(TAG, "onClick: clicked gps icon");
@@ -366,12 +385,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         });
     }
 
-    //---------------------------------------------------------------------------------------------//
-    //                                          ACTION                                             //
-    //---------------------------------------------------------------------------------------------//
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(getContext(), "You click on marker :"+marker.getId(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "You click on marker :" + marker.getId(), Toast.LENGTH_SHORT).show();
         return false;
     }
 }

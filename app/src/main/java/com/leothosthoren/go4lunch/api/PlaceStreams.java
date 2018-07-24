@@ -32,8 +32,6 @@ public class PlaceStreams {
                 .timeout(10, TimeUnit.SECONDS);
     }
 
-
-
     public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
         return streamFetchNearbyApi(location)
                 .map(new Function<NearbySearch, List<Result>>() {
@@ -58,10 +56,9 @@ public class PlaceStreams {
                 });
     }
 
-
 //    public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
 //        return streamFetchNearbyApi(location)
-//                .map(restaurant -> restaurant.getResults())
+//                .map(NearbySearch::getResults)
 //                .flatMap((Function<List<Result>, Observable<List<PlaceDetail>>>) results -> Observable.fromIterable(results)
 //                        .flatMap((Function<Result, Observable<PlaceDetail>>) result -> streamFetchPlaceDetail(result.getPlaceId()))
 //                        .toList()

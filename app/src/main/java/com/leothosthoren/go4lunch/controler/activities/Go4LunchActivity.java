@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +24,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.UserHelper;
@@ -44,8 +40,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
-    //CONSTANT
+    // CONSTANT
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
     // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -63,20 +58,18 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
 
-        if (isServiceOk()) {
-            switch (item.getItemId()) {
-                case R.id.navigation_map:
-                    //TODO
-                    configureContentFrameFragment(new MapViewFragment());
-                    return true;
-                case R.id.navigation_list:
-                    configureContentFrameFragment(new RestaurantViewFragment());
-                    return true;
-                case R.id.navigation_workmates:
-                    //TODO
-                    configureContentFrameFragment(new WorkMatesViewFragment());
-                    return true;
-            }
+        switch (item.getItemId()) {
+            case R.id.navigation_map:
+                //TODO
+                configureContentFrameFragment(new MapViewFragment());
+                return true;
+            case R.id.navigation_list:
+                configureContentFrameFragment(new RestaurantViewFragment());
+                return true;
+            case R.id.navigation_workmates:
+                //TODO
+                configureContentFrameFragment(new WorkMatesViewFragment());
+                return true;
         }
         return false;
     };
@@ -263,25 +256,6 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     //---------------------
 
 
-    public boolean isServiceOk() {
-        Log.d(TAG, "isServiceOk: checking google service version");
-
-        int availability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
-
-        if (availability == ConnectionResult.SUCCESS) {
-            //We check that the google services is fine and user can make request
-            Log.d(TAG, "isServiceOk: Google Play Services is working");
-            return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(availability)) {
-            //We have to handle the error status
-            Log.d(TAG, "isServiceOk: an error occurred but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, availability,
-                    ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }
-        return false;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -316,7 +290,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                     RC_IMAGE_PERMS, PERMS);
             return;
         }
-        Toast.makeText(this, "Vous avez le droit d'accéder aux images !", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.allow_pick_picture_on_device, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -1,10 +1,12 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,6 +14,8 @@ import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
@@ -25,9 +29,10 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity {
 
 
-    // 1 - Identifier for Sign-In Activity
+    // Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 82; //ASCII 'R'
-    // 1 - Get Coordinator Layout
+    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
+    // Get Coordinator Layout
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.main_button)
@@ -62,7 +67,7 @@ public class MainActivity extends BaseActivity {
     // NAVIGATION
     // --------------------
 
-    // 2 - Launch Sign-In Activity
+    // Launch Sign-In Activity
 
     private void startSignInActivity() {
         startActivityForResult(
@@ -93,7 +98,7 @@ public class MainActivity extends BaseActivity {
     // --------------------
 
     public void onClickLoginButton(View v) {
-        if (this.isCurrentUserLogged()) {
+        if (this.isCurrentUserLogged() && isServiceOk()) {
             this.startActivity(Go4LunchActivity.class);
         } else {
             this.startSignInActivity();
@@ -101,6 +106,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    //TEST
     public void onClickDetailRestaurantButton(View v) {
         this.startActivity(RestaurantInfoActivity.class);
     }
@@ -169,5 +175,25 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
+
+    public boolean isServiceOk() {
+        Log.d(TAG, "isServiceOk: checking google service version");
+
+        int availability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
+        if (availability == ConnectionResult.SUCCESS) {
+            //We check that the google services is fine and user can make request
+            Log.d(TAG, "isServiceOk: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(availability)) {
+            //We have to handle the error status
+            Log.d(TAG, "isServiceOk: an error occurred but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, availability,
+                    ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        return false;
+    }
+
 
 }

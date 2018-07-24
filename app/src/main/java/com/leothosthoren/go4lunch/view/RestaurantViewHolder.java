@@ -53,7 +53,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
 //        this.mRestaurantOpening.setText(restaurantItem.getOpeningInfo());
 //        this.mNbOfWorkmates.setText(restaurantItem.concatWorkmateQuantity(restaurantItem.getWorkmateQuantity()));
 //        this.mRatingBar.setRating(restaurantItem.concatRating(restaurantItem.getRating()));
-//        glide.load(restaurantItem.getUrl()).into(this.mRestaurantPhoto);
+//        glide.load(restaurantItem.getUrlPhoto()).into(this.mRestaurantPhoto);
 //    }
 
     public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide){
