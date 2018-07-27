@@ -11,6 +11,7 @@ import com.bumptech.glide.RequestManager;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
+import com.leothosthoren.go4lunch.model.detail.Close;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 
@@ -59,13 +60,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide, RestaurantAdapter.Listener callback) {
         assert this.mRestaurantName != null;
         this.mRestaurantName.setText(placeDetail.getResult().getName());
-        if (placeDetail.getResult().getPhotos() != null || placeDetail.getResult().getPhotos().size() != 0) {
-            glide.load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference="
+        if (placeDetail.getResult().getPhotos() != null) {
+            glide.load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference="
                     + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + "&key=" + BuildConfig.ApiKey).into(mRestaurantPhoto);
         }
         this.mRestaurantAddress.setText(formatAddress(placeDetail.getResult().getFormattedAddress()));
-//        this.mRestaurantOpening.setText(placeDetail.getResult().getOpeningHours().getWeekdayText().get(0));
         this.mRatingBar.setRating(formatRating(placeDetail.getResult().getRating()));
+//        this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(), placeDetail.getResult().getOpeningHours().getPeriods()));
+        //Todo try to test
 
         // Configure the clicks
         this.mRestaurantPhoto.setOnClickListener(this);

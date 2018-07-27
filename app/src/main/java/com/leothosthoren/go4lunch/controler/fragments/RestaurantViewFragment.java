@@ -58,7 +58,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     protected void configureDesign() {
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
-        //Handle case if array in empty and display info to the user
+        //TODO :Handle case if array in empty and display info to the user
         this.configureRecyclerView();
         this.configureOnclickRecyclerView();
 

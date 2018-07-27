@@ -1,9 +1,14 @@
 package com.leothosthoren.go4lunch;
 
+import com.leothosthoren.go4lunch.model.detail.Close;
+import com.leothosthoren.go4lunch.model.detail.Period;
 import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -48,5 +53,13 @@ public class UnitTest implements HttpRequestTools, DataConvertHelper {
         assertEquals(2.0f, formatRating(4.0d), 0.0);
         assertEquals(1.0f, formatRating(2.0d), 0.0);
 
+    }
+
+    @Test
+    public void displayOpeningHour() throws Exception {
+        List<Period> periods = new ArrayList<>();
+
+        assertEquals("Closed", formatOpeningTime(false, periods));
+//        assertEquals("1730pm", formatOpeningTime(true, periods));
     }
 }
