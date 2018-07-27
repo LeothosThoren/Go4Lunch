@@ -59,10 +59,10 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide){
         assert this.mRestaurantName != null;
         this.mRestaurantName.setText(placeDetail.getResult().getName());
-        if (placeDetail.getResult().getPhotos().get(0).getPhotoReference() != null) {
-            glide.load("https://maps.googleapis.com/maps/api/place/photo?photoreference="
-                    +placeDetail.getResult().getPhotos().get(0).getPhotoReference()+"&key="+ BuildConfig.ApiKey).into(mRestaurantPhoto);
-        }
+//        if (placeDetail.getResult().getPhotos().get(0).getPhotoReference() != null) {
+//            glide.load("https://maps.googleapis.com/maps/api/place/photo?photoreference="
+//                    +placeDetail.getResult().getPhotos().get(0).getPhotoReference()+"&key="+ BuildConfig.ApiKey).into(mRestaurantPhoto);
+//        }
 
     }
 

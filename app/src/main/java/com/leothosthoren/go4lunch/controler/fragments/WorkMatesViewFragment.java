@@ -13,6 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
 import com.leothosthoren.go4lunch.model.firebase.Users;
@@ -47,7 +48,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     @Override
     protected void configureDesign() {
-        this.configureRecyclerView();
+//        this.configureRecyclerView();
 //        this.getCurrentUserFromFirestore();
     }
 
@@ -71,23 +72,20 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     // --------------------
 
     private void configureRecyclerView() {
-        this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsersWorkmates()),
-                Glide.with(Objects.requireNonNull(this)),
-                this,
-                Objects.requireNonNull(this.getCurrentUser()).getUid());
+//        this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(/*RestaurantHelper.getAllUsersWorkmates()*/),
+//                Glide.with(Objects.requireNonNull(this)),
+//                this,
+//                Objects.requireNonNull(this.getCurrentUser()).getUid());
 
-//        mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
-//            }
-//
-//        });
+        mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
+            }
 
-//        mRecyclerView.setHasFixedSize(true);
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
-//        mWorkmateAdapter.notifyDataSetChanged();
 
     }
 

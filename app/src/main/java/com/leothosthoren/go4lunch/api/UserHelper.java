@@ -31,15 +31,6 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
-    public static Task<DocumentSnapshot> getEmail(String uid) {
-        return UserHelper.getUsersCollection().document(uid).get();
-    }
-
-    // --- Try to get All user from collection with query
-    public static Query getAllUsersWorkmates() {
-        return UserHelper.getUsersCollection().orderBy("username");
-    }
-
     // --- UPDATE ---
 
     public static Task<Void> updateUsername(String username, String uid) {

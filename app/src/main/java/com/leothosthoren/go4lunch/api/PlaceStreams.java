@@ -40,11 +40,11 @@ public class PlaceStreams {
                         return restaurant.getResults();
                     }
                 })
-                .flatMap(new Function<List<Result>, Observable<List<PlaceDetail>>>() {
+                .concatMap(new Function<List<Result>, Observable<List<PlaceDetail>>>() {
                     @Override
                     public Observable<List<PlaceDetail>> apply(List<Result> results) throws Exception {
                         return Observable.fromIterable(results)
-                                .flatMap(new Function<Result, Observable<PlaceDetail>>() {
+                                .concatMap(new Function<Result, Observable<PlaceDetail>>() {
                                     @Override
                                     public Observable<PlaceDetail> apply(Result result) throws Exception {
                                         return streamFetchPlaceDetail(result.getPlaceId());

@@ -22,7 +22,7 @@ public interface PlaceService {
             .build();
 
     //NearbySearch api
-    @GET("nearbysearch/json?&radius=300&type=restaurant&key=" + apiKey)
+    @GET("nearbysearch/json?&radius=200&type=restaurant&key=" + apiKey)
     Observable<NearbySearch> getNearbySearch(@Query("location") String location);
 
     //Place Detail api

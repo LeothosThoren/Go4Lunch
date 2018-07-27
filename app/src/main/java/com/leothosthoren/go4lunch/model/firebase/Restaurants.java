@@ -11,25 +11,35 @@ public class Restaurants {
     private String restaurantName;
     private String restaurantPlaceId;
     private String restaurantFoodType;
-//    private boolean restaurantLike;
-//    private boolean restaurantSelection;
+    private boolean restaurantLike;
+    private boolean restaurantSelection;
     private Boolean latitude;
     private Boolean longitude;
 
+    private Users workmate;
+
 
     public Restaurants(Date dateChoice, Users restaurantUsers, String restaurantName,
-                       String restaurantPlaceId, String restaurantFoodType
-                       /*boolean restaurantLike, boolean restaurantSelection*/) {
+                       String restaurantPlaceId, boolean restaurantLike, boolean restaurantSelection,
+                       Boolean latitude, Boolean longitude, Users workmate) {
         this.dateChoice = dateChoice;
         this.restaurantUsers = restaurantUsers;
         this.restaurantName = restaurantName;
         this.restaurantPlaceId = restaurantPlaceId;
-        this.restaurantFoodType = restaurantFoodType;
-//        this.restaurantLike = restaurantLike;
-//        this.restaurantSelection = restaurantSelection;
+        this.restaurantLike = restaurantLike;
+        this.restaurantSelection = restaurantSelection;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.workmate = workmate;
     }
 
-    public Restaurants() {
+    @ServerTimestamp
+    public Date getDateChoice() {
+        return dateChoice;
+    }
+
+    public void setDateChoice(Date dateChoice) {
+        this.dateChoice = dateChoice;
     }
 
     public Users getRestaurantUsers() {
@@ -64,28 +74,43 @@ public class Restaurants {
         this.restaurantFoodType = restaurantFoodType;
     }
 
-    @ServerTimestamp
-    public Date getDateChoice() {
-        return dateChoice;
+    public boolean isRestaurantLike() {
+        return restaurantLike;
     }
 
-    public void setDateChoice(Date dateChoice) {
-        this.dateChoice = dateChoice;
+    public void setRestaurantLike(boolean restaurantLike) {
+        this.restaurantLike = restaurantLike;
     }
-//
-//    public boolean isRestaurantLike() {
-//        return restaurantLike;
-//    }
-//
-//    public void setRestaurantLike(boolean restaurantLike) {
-//        this.restaurantLike = restaurantLike;
-//    }
-//
-//    public boolean isRestaurantSelection() {
-//        return restaurantSelection;
-//    }
-//
-//    public void setRestaurantSelection(boolean restaurantSelection) {
-//        this.restaurantSelection = restaurantSelection;
-//    }
+
+    public boolean isRestaurantSelection() {
+        return restaurantSelection;
+    }
+
+    public void setRestaurantSelection(boolean restaurantSelection) {
+        this.restaurantSelection = restaurantSelection;
+    }
+
+    public Boolean getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Boolean latitude) {
+        this.latitude = latitude;
+    }
+
+    public Boolean getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Boolean longitude) {
+        this.longitude = longitude;
+    }
+
+    public Users getWorkmate() {
+        return workmate;
+    }
+
+    public void setWorkmate(Users workmate) {
+        this.workmate = workmate;
+    }
 }

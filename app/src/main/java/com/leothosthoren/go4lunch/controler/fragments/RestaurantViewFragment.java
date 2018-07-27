@@ -82,8 +82,8 @@ public class RestaurantViewFragment extends BaseFragment {
 
 
     public void configureRecyclerView() {
-        this.mRestaurantItemsList = new ArrayList<>();
-        this.mAdapter = new RestaurantAdapter(this.mRestaurantItemsList, Glide.with(this));
+//        this.mRestaurantItemsList = new ArrayList<>();
+        this.mAdapter = new RestaurantAdapter(this.PlaceDetailListFromSingleton, Glide.with(this));
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -124,28 +124,28 @@ public class RestaurantViewFragment extends BaseFragment {
 
     }
 
-    public void executeHttpRequestWithNearBySearchAndPlaceDetail(String location) {
-        disposable = PlaceStreams.streamFetchListPlaceDetail(location)
-                .subscribeWith(new DisposableObserver<List<PlaceDetail>>() {
-                    @Override
-                    public void onNext(List<PlaceDetail> placeDetail) {
-                        Log.d(TAG, "onNext: ");
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: " + mRestaurantItemsList.size());
-
-                    }
-                });
-    }
+//    public void executeHttpRequestWithNearBySearchAndPlaceDetail(String location) {
+//        disposable = PlaceStreams.streamFetchListPlaceDetail(location)
+//                .subscribeWith(new DisposableObserver<List<PlaceDetail>>() {
+//                    @Override
+//                    public void onNext(List<PlaceDetail> placeDetail) {
+//                        Log.d(TAG, "onNext: ");
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(TAG, "onError: " + e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d(TAG, "onComplete: " + mRestaurantItemsList.size());
+//
+//                    }
+//                });
+//    }
 
     // -------------------------------------------------------------------------------------------//
     //                                      UI                                                    //
@@ -153,7 +153,7 @@ public class RestaurantViewFragment extends BaseFragment {
 
     public void updateUI() {
         this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
-        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
+//        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
         mAdapter.notifyDataSetChanged();
 //        mRestaurantItemsList.add(new RestaurantItem("Le Chalutier", "Française", "15 rue des Ardeches",
 //                "Open", 120, 2,
