@@ -9,12 +9,12 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.firebase.Users;
-import com.leothosthoren.go4lunch.utils.StringHelper;
+import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WorkmateViewHolder extends RecyclerView.ViewHolder implements StringHelper {
+public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataConvertHelper {
 
     //VIEW
     @BindView(R.id.item_workmates_choice)
@@ -37,7 +37,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements Strin
 
         //Update workmate name
         if (workmateItem.getUsername() != null) {
-            this.mTextViewWorkmateName.setText(displayFirstName(workmateItem.getUsername()));
+            this.mTextViewWorkmateName.setText(formatFullName(workmateItem.getUsername()));
         }
     }
 }

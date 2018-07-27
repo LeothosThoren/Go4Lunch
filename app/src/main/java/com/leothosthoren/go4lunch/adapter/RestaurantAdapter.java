@@ -9,26 +9,24 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.model.RestaurantItem;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.view.RestaurantViewHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
 
     // FOR COMMUNICATION
-//    private final Listener callback;
+    private final Listener callback;
     // FOR DATA
     private ArrayList<PlaceDetail> mRestaurantItems;
     private RequestManager glide;
 
-    public RestaurantAdapter(ArrayList<PlaceDetail> restaurantItems, RequestManager glide/*, Listener callback*/) {
+    public RestaurantAdapter(ArrayList<PlaceDetail> restaurantItems, RequestManager glide, Listener callback) {
         this.mRestaurantItems = restaurantItems;
         this.glide = glide;
-//        this.callback = callback;
+        this.callback = callback;
     }
 
     @NonNull
@@ -45,7 +43,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         //RESTAURANT
 //        holder.updateRestaurantList(this.mRestaurantItems.get(position), this.glide);
-        holder.updateRestaurantView(mRestaurantItems.get(position), this.glide);
+        holder.updateRestaurantView(mRestaurantItems.get(position), this.glide, this.callback);
     }
 
     @Override
@@ -53,12 +51,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         return this.mRestaurantItems.size();
     }
 
-    public interface Listener {
-        void onClickItemButton(int position);
+    //Handle click on recycler view list
+    public PlaceDetail getRestaurantItem(int position) {
+        return this.mRestaurantItems.get(position);
     }
 
-    //Handle click
-    public PlaceDetail getRestaurantItem(int position){
-        return this.mRestaurantItems.get(position);
+    // Implementation of the interface
+    public interface Listener {
+        void onClickItemButton(int position);
     }
 }
