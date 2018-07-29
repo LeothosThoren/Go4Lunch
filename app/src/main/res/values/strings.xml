@@ -80,5 +80,6 @@
     <string name="toast_title_no_image_chosen">No image chosen!</string>
     <string name="toast_message_geolocation">Make sure your device got map geolocation activated</string>
     <string name="allow_pick_picture_on_device">You have the right to access the picture on the device!</string>
+    <string name="no_restaurants_available_check_the_map_view">No restaurants available... check the map view</string>
 
 </resources>

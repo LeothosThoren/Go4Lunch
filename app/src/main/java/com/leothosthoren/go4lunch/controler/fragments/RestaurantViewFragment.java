@@ -6,7 +6,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +37,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.restaurant_availability_message)
+    TextView mTextViewRecyclerViewEmpty;
     //VAR
     private RestaurantAdapter mAdapter;
     private Disposable disposable;
@@ -58,9 +62,14 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     protected void configureDesign() {
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
-        //TODO :Handle case if array in empty and display info to the user
-        this.configureRecyclerView();
-        this.configureOnclickRecyclerView();
+        // Handle the case whether the list is empty
+        if (!PlaceDetailListFromSingleton.isEmpty()) {
+            this.configureRecyclerView();
+            this.configureOnclickRecyclerView();
+        } else {
+            mTextViewRecyclerViewEmpty.setVisibility(View.VISIBLE);
+        }
+
 
     }
 

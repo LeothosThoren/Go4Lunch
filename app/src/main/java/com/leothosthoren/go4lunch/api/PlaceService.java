@@ -30,7 +30,7 @@ public interface PlaceService {
     Observable<PlaceDetail> getDetail(@Query("placeid") String placeId);
 
     //Place Photo api
-    @GET("photo?photoreference={photoReference}&key=" + apiKey)
+    @GET("photo?maxwidth=100&maxheight=100&&key=" + apiKey)
     Observable<?> getPlacePhoto(@Query("photoReference") String photoRef);
 
 }
