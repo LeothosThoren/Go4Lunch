@@ -63,12 +63,15 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         {
             this.mRestaurantName.setText(placeDetail.getResult().getName());
             if (placeDetail.getResult().getPhotos() != null) {
-                glide.load(request + placeDetail.getResult().getPhotos().get(1).getPhotoReference() + apiKey).into(mRestaurantPhoto);
+                glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey).into(this.mRestaurantPhoto);
             }
             this.mRestaurantAddress.setText(formatAddress(placeDetail.getResult().getFormattedAddress()));
             this.mRatingBar.setRating(formatRating(placeDetail.getResult().getRating()));
-//        this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(), placeDetail.getResult().getOpeningHours().getPeriods()));
-            //Todo try to test
+            
+//            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
+//                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(), placeDetail.getResult().getOpeningHours().getPeriods()));
+//            } todo apply correction here
+
         }
 
         // Configure the clicks

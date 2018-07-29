@@ -43,9 +43,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     private RestaurantAdapter mAdapter;
     private Disposable disposable;
     //DATA
-    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton =
-            (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetail();
-    private ArrayList<PlaceDetail> mRestaurantItemsList; //TODO : Switch this with above
+    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton = (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetail();
+    private ArrayList<PlaceDetail> mRestaurantItemsList;
 
 
     @Override
@@ -88,8 +87,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
 
     public void configureRecyclerView() {
-//        this.mRestaurantItemsList = new ArrayList<>();
-        this.mAdapter = new RestaurantAdapter(this.PlaceDetailListFromSingleton, Glide.with(this), this);
+        this.mRestaurantItemsList = new ArrayList<>();
+        this.mAdapter = new RestaurantAdapter(mRestaurantItemsList, Glide.with(this), this);
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -104,6 +103,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
         this.mSwipeRefreshLayout.setOnRefreshListener(() -> {
 //                http request to execute
             updateUIWhenStartingHTTPRequest(mProgressBar);
+            updateUI();
         });
     }
 
@@ -144,7 +144,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     public void updateUI() {
         this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
-//        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
+        this.mRestaurantItemsList.clear();
+        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
         mAdapter.notifyDataSetChanged();
 
     }
