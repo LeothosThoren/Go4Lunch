@@ -2,6 +2,7 @@ package com.leothosthoren.go4lunch.utils;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -64,6 +65,5 @@ public interface HttpRequestTools {
     default String setLocationIntoString(Double d1, Double d2) {
         return String.valueOf(d1 + "," + d2);
     }
-
 
 }

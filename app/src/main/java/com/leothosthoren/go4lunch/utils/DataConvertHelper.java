@@ -56,4 +56,10 @@ public interface DataConvertHelper {
         SimpleDateFormat DAY_OF_WEEK = new SimpleDateFormat("u", Locale.getDefault());
         return Integer.valueOf(DAY_OF_WEEK.format(DATE));
     }
+
+    // Change marker id into integer id
+    default int convertStringIdIntoInteger(String s) {
+        String tmp = s.substring(1);
+        return Integer.valueOf(tmp)-1;
+    }
 }

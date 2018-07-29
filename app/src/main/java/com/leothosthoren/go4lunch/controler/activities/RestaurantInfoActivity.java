@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leothosthoren.go4lunch.R;
@@ -29,6 +30,9 @@ public class RestaurantInfoActivity extends BaseActivity {
     Button mWebsiteButton;
     @BindView(R.id.restaurant_info_like_button)
     Button mLikeButton;
+    @BindView(R.id.restaurant_info_name)
+    TextView restaurantName;
+
     // VAR
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
@@ -39,6 +43,7 @@ public class RestaurantInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpText();
         click();
     }
 
@@ -89,15 +94,22 @@ public class RestaurantInfoActivity extends BaseActivity {
     }
 
 
+    private void setUpText() {
+        restaurantName.setText(mDetailList.get(position).getResult().getName());
+    }
+
     private void dialPhoneNumber(String phoneNumber) {
+
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+
     }
 
     public void openWebsitePage(String url) {
+
         Uri webpage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -105,5 +117,6 @@ public class RestaurantInfoActivity extends BaseActivity {
         }
     }
 
+    
 }
 

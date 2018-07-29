@@ -66,8 +66,10 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
                 glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey).into(this.mRestaurantPhoto);
             }
             this.mRestaurantAddress.setText(formatAddress(placeDetail.getResult().getFormattedAddress()));
-            this.mRatingBar.setRating(formatRating(placeDetail.getResult().getRating()));
-            
+            if (placeDetail.getResult().getRating() != null) {
+                this.mRatingBar.setRating(formatRating(placeDetail.getResult().getRating()));
+            }
+
 //            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
 //                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(), placeDetail.getResult().getOpeningHours().getPeriods()));
 //            } todo apply correction here

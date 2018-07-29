@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".controler.activities.RestaurantInfoActivity">
 
+    <!--RESTAURANT INFO PHOTO-->
     <ImageView
         android:id="@+id/restaurant_info_photo"
         android:layout_width="match_parent"
         android:layout_height="230dp" />
 
+    <!--RESTAURANT INFO CHOICE-->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -38,6 +40,7 @@
 
     </RelativeLayout>
 
+    <!--RESTAURANT INFO NAME-->
     <TextView
         android:id="@+id/restaurant_info_name"
         android:layout_width="wrap_content"
@@ -51,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/restaurant_info_photo" />
 
-
+    <!--RESTAURANT INFO ADDRESS-->
     <TextView
         android:id="@+id/restaurant_info_address"
         android:layout_width="wrap_content"
@@ -67,6 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/restaurant_info_name"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!--RESTAURANT INFO RATING BAR-->
     <RatingBar
         android:id="@+id/ratingBar"
         style="?android:attr/ratingBarStyleSmall"
@@ -93,6 +97,7 @@
         android:weightSum="100"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
+        <!--RESTAURANT INFO PHONE-->
         <Button
             android:id="@+id/restaurtant_info_phone_button"
             style="?android:attr/buttonBarButtonStyle"
@@ -107,6 +112,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
+        <!--RESTAURANT INFO LIKE BUTTON-->
         <Button
             android:id="@+id/restaurant_info_like_button"
             style="?android:attr/buttonBarButtonStyle"
@@ -121,7 +127,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
-
+        <!--RESTAURANT INFO WEBSITE-->
         <Button
             android:id="@+id/restaurant_info_website_button"
             style="?android:attr/buttonBarButtonStyle"
@@ -138,6 +144,7 @@
 
     </LinearLayout>
 
+    <!--RESTAURANT INFO WORKMATE LIST-->
     <include
         layout="@layout/recycler_view_layout"
         android:layout_width="match_parent"

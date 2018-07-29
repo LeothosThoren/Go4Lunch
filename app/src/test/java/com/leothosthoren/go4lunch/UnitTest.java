@@ -44,6 +44,11 @@ public class UnitTest implements HttpRequestTools, DataConvertHelper {
 
     }
 
+    @Test
+    public void substringValues () throws Exception {
+        assertEquals(12, convertStringIdIntoInteger("m13") );
+    }
+
     //==========================
     // NUMBER FORMAT OPERATIONS
     //==========================

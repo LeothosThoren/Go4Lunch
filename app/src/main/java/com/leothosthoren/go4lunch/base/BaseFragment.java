@@ -1,5 +1,6 @@
 package com.leothosthoren.go4lunch.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 import com.leothosthoren.go4lunch.utils.FireBaseTools;
 import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
@@ -43,5 +45,11 @@ public abstract class BaseFragment extends Fragment implements HttpRequestTools,
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    //Generic activity launcher method
+    public void startActivity(Class activity) {
+        Intent intent = new Intent(getContext(), activity);
+        startActivity(intent);
     }
 }

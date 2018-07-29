@@ -36,10 +36,9 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
-import com.leothosthoren.go4lunch.model.nearbysearch.NearbySearch;
-import com.leothosthoren.go4lunch.model.nearbysearch.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 15f;
+    public static final float DEFAULT_ZOOM = 16f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
     private static final int MAX_PLACES = 15;
     private static final int REQUEST_PICK_PLACE = 2;
@@ -323,8 +322,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
                                 mDetails.get(i).getResult().getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
-                        .flat(true));
+                ).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon));
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mDetails.size());
@@ -345,7 +343,22 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Toast.makeText(getContext(), "You click on marker :" + marker.getId(), Toast.LENGTH_SHORT).show();
+        compareLatLong(marker);
         return false;
+    }
+
+    public void compareLatLong(Marker marker) {
+        for (int i = 0; i < mDetails.size(); i++) {
+            LatLng restaurantsPos = new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
+                    mDetails.get(i).getResult().getGeometry().getLocation().getLng());
+            Log.d(TAG, "compareLatLong: restaurantPos = " + restaurantsPos + " marker.getPosition = " + marker.getPosition());
+            Log.d(TAG, "compareLatLong: " + mDetails.get(i).getResult().getName());
+            if (restaurantsPos.equals(marker.getPosition())) {
+                DataSingleton.getInstance().setPosition(i);
+                startActivity(RestaurantInfoActivity.class);
+                break;
+            }
+        }
     }
 }
 

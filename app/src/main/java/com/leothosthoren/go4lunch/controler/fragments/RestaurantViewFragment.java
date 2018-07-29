@@ -144,12 +144,6 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     }
 
-    //Generic activity launcher method
-    private void startActivity(Class activity) {
-        Intent intent = new Intent(getContext(), activity);
-        startActivity(intent);
-    }
-
 
     // -------------------------------------------------------------------------------------------//
     //                                      UI                                                    //
