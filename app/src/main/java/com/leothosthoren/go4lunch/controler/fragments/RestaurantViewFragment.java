@@ -1,6 +1,7 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
@@ -116,8 +118,13 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
         ItemClickSupport.addTo(mRecyclerView, R.id.item_restaurant_layout)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     PlaceDetail restaurantItem = mAdapter.getRestaurantItem(position);
+
                     Toast.makeText(getContext(), "CLICK on position: " + position + " name: " +
                             restaurantItem.getResult().getName(), Toast.LENGTH_SHORT).show();
+                    // Get position and launch activity with data from singleton
+                    DataSingleton.getInstance().setPosition(position);
+                    startActivity(RestaurantInfoActivity.class);
+
                 });
     }
 
@@ -129,12 +136,18 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     }
 
     //---------------------
-    // TEST
+    // UTILS
     // --------------------
 
     private void checkSingletonContent() {
         Log.d(TAG, "checkSingletonContent: " + PlaceDetailListFromSingleton.size());
 
+    }
+
+    //Generic activity launcher method
+    private void startActivity(Class activity) {
+        Intent intent = new Intent(getContext(), activity);
+        startActivity(intent);
     }
 
 

@@ -56,15 +56,16 @@ import io.reactivex.observers.DisposableObserver;
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    //CONSTANT
+    // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final float DEFAULT_ZOOM = 15f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
     private static final int MAX_PLACES = 15;
     private static final int REQUEST_PICK_PLACE = 2;
+    // VIEW
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
-    //VAR
+    // VAR
     private MapView mMapView;
     private GoogleMap mMap;
     private boolean mLocationPermissionGranted;
@@ -75,8 +76,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private PlaceDetectionClient mPlaceDetectionClient;
     private GoogleApiClient mGoogleApiClient;
     private Disposable mDisposable;
-    //DATA
-//    private ArrayList<Result> mResults = new ArrayList<>();
+    // DATA
     private ArrayList<PlaceDetail> mDetails = new ArrayList<>();
 
     @Override
@@ -89,7 +89,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         return R.layout.fragment_map_view;
     }
 
-
     @Override
     protected void configureDesign() {
         instantiatePlacesApiClients();
@@ -97,7 +96,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     protected void updateDesign() {
-//        updateUI();
     }
 
     //---------------------------------------------------------------------------------------------//
@@ -134,7 +132,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         }
     }
 
-
     private void instantiatePlacesApiClients() {
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(Objects.requireNonNull(getContext()));
@@ -144,12 +141,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-//        mGoogleApiClient = new GoogleApiClient
-//                .Builder(getContext())
-//                .addApi(Places.GEO_DATA_API)
-//                .addApi(Places.PLACE_DETECTION_API)
-//                .build();
 
     }
 
@@ -170,6 +161,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     }
 
+
     //---------------------------------------------------------------------------------------------//
     //                                      PERMISSION                                             //
     //---------------------------------------------------------------------------------------------//
@@ -180,7 +172,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-//            updateUI();
         } else {
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -188,7 +179,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         }
 
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions
@@ -205,6 +195,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         }
 
     }
+
 
     //---------------------------------------------------------------------------------------------//
     //                                         LOCATION                                            //
@@ -234,7 +225,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 //                            }
                             //HTTP RXJAVA
                             executeHttpRequestWithNearBySearchAndPlaceDetail(setLocationIntoString(latitude, longitude));
-//                            executeHttpRequestWithNearby(setLocationIntoString(latitude, longitude));
 
                         } else {
                             Toast.makeText(getContext(),
@@ -256,30 +246,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         }
     }
 
+
     //---------------------------------------------------------------------------------------------//
     //                                      HTTP RxJava                                            //
     //---------------------------------------------------------------------------------------------//
 
-//    public void executeHttpRequestWithNearby(String location) {
-//        mDisposable = PlaceStreams.streamFetchNearbyApi(location)
-//                .subscribeWith(new DisposableObserver<NearbySearch>() {
-//                    @Override
-//                    public void onNext(NearbySearch nearbySearch) {
-//                        Log.d(TAG, "NearbyOnNext: "+nearbySearch.getResults().size());
-////                        addMarkerOnMap(nearbySearch);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e(TAG, "NearbyOnError: "+e.getMessage() );
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        Log.d(TAG, "NearbyOnComplete: ");
-//                    }
-//                });
-//    }
 
     public void executeHttpRequestWithNearBySearchAndPlaceDetail(String location) {
         mDisposable = PlaceStreams.streamFetchListPlaceDetail(location)
@@ -303,23 +274,24 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 });
     }
 
-    // 4 - Dispose subscription
+    // Dispose subscription
     private void disposeWhenDestroy() {
         if (this.mDisposable != null && !this.mDisposable.isDisposed())
             this.mDisposable.dispose();
     }
 
-
-    //Called for better performances
+    // Called for better performances
     @Override
     public void onDestroy() {
         super.onDestroy();
         this.disposeWhenDestroy();
     }
 
+
     //---------------------------------------------------------------------------------------------//
     //                                          UI                                                 //
     //---------------------------------------------------------------------------------------------//
+
 
     private void updateUI() {
         if (mMap == null) {
@@ -342,21 +314,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             Log.e(TAG, "updateUI: SecurityException " + e.getMessage());
         }
     }
-
-//    private void addMarkerOnMap(NearbySearch nearbySearch) {
-//        this.mResults.addAll(nearbySearch.getResults());
-//        DataSingleton.getInstance().setNearbySearch(mResults);
-//        if (mResults.size() != 0) {
-//            for (int i = 0; i < mResults.size(); i++) {
-//                mMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(mResults.get(i).getGeometry().getLocation().getLat(),
-//                                mResults.get(i).getGeometry().getLocation().getLng()))
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
-//                        .flat(true));
-//            }
-//        } else
-//            Log.d(TAG, "addMarkerOnMap is empty " + mResults.size());
-//    }
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         this.mDetails.addAll(placeDetailList);

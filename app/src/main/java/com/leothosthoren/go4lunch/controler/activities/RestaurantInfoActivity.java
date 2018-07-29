@@ -11,13 +11,16 @@ import android.widget.Toast;
 
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.base.BaseActivity;
+import com.leothosthoren.go4lunch.data.DataSingleton;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+
+import java.util.List;
 
 import butterknife.BindView;
 
 public class RestaurantInfoActivity extends BaseActivity {
 
-    //    private Button mButtonCall = (Button) findViewById(R.id.restaurtant_info_phone_button);
-//    private FloatingActionButton mFloatingActionButton = findViewById(R.id.floatingActionButton);
+    // VIEW
     @BindView(R.id.restaurtant_info_phone_button)
     Button mButtonCall;
     @BindView(R.id.floatingActionButton)
@@ -26,8 +29,12 @@ public class RestaurantInfoActivity extends BaseActivity {
     Button mWebsiteButton;
     @BindView(R.id.restaurant_info_like_button)
     Button mLikeButton;
+    // VAR
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
+    // DATA
+    private List<PlaceDetail> mDetailList = DataSingleton.getInstance().getPlaceDetail();
+    private int position = DataSingleton.getInstance().getPosition();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,10 +81,10 @@ public class RestaurantInfoActivity extends BaseActivity {
         });
 
         //CALLING
-        mButtonCall.setOnClickListener(v -> dialPhoneNumber("0649036635"));
+        mButtonCall.setOnClickListener(v -> dialPhoneNumber(mDetailList.get(position).getResult().getFormattedPhoneNumber()));
 
         //BROWSE URL
-        mWebsiteButton.setOnClickListener(v -> openWebPage("http://google.fr/"));
+        mWebsiteButton.setOnClickListener(v -> openWebsitePage(mDetailList.get(position).getResult().getWebsite()));
 
     }
 
@@ -90,7 +97,7 @@ public class RestaurantInfoActivity extends BaseActivity {
         }
     }
 
-    public void openWebPage(String url) {
+    public void openWebsitePage(String url) {
         Uri webpage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(getPackageManager()) != null) {
