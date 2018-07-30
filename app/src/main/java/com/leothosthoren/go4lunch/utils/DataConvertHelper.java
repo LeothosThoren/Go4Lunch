@@ -62,4 +62,23 @@ public interface DataConvertHelper {
         String tmp = s.substring(1);
         return Integer.valueOf(tmp)-1;
     }
+
+    // Find the distance between two coordinates
+    default String distance(double deviceLat, double restaurantLat, double deviceLng, double restaurantLng) {
+
+        final int R = 6371; // Radius of earth
+        double latDistance = Math.toRadians(restaurantLat - deviceLat);
+        double lonDistance = Math.toRadians(restaurantLng - deviceLng);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(deviceLat)) * Math.cos(Math.toRadians(restaurantLat))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = 0.0 - 0.0;
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+        //Rounded
+        return Math.round(Math.sqrt(distance))+"m";
+    }
+
 }

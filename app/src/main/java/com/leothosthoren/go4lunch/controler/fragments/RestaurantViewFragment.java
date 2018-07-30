@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +43,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     private RestaurantAdapter mAdapter;
     private Disposable disposable;
     //DATA
-    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton = (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetail();
+    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton =
+            (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetailList();
     private ArrayList<PlaceDetail> mRestaurantItemsList;
 
 
@@ -60,6 +60,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     @Override
     protected void configureDesign() {
+
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
         // Handle the case whether the list is empty
@@ -69,19 +70,15 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
         } else {
             mTextViewRecyclerViewEmpty.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override
     protected void updateDesign() {
-//        //TEST
-//        this.checkSingletonContent();
         //Feed Array
         if (mRestaurantItemsList != null )
         this.updateUI();
-
     }
+
 
     // -------------------------------------------------------------------------------------------//
     //                                      CONFIGURATION                                         //
@@ -103,7 +100,6 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     public void configureSwipeRefreshLayout() {
         this.mSwipeRefreshLayout.setOnRefreshListener(() -> {
-//                http request to execute
             updateUIWhenStartingHTTPRequest(mProgressBar);
             updateUI();
         });
@@ -122,7 +118,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
                     Toast.makeText(getContext(), "CLICK on position: " + position + " name: " +
                             restaurantItem.getResult().getName(), Toast.LENGTH_SHORT).show();
                     // Get position and launch activity with data from singleton
-                    DataSingleton.getInstance().setPosition(position);
+                    DataSingleton.getInstance().setIndexPosition(position);
                     startActivity(RestaurantInfoActivity.class);
 
                 });
@@ -135,27 +131,29 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
                 restaurantItem.getResult().getPhotos().get(0).getPhotoReference(), Toast.LENGTH_SHORT).show();
     }
 
-    //---------------------
-    // UTILS
-    // --------------------
-
-//    private void checkSingletonContent() {
-//        Log.d(TAG, "checkSingletonContent: " + PlaceDetailListFromSingleton.size());
-//
-//    }
-
 
     // -------------------------------------------------------------------------------------------//
     //                                      UI                                                    //
     // -------------------------------------------------------------------------------------------//
+
 
     public void updateUI() {
         this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
         this.mRestaurantItemsList.clear();
         mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
         mAdapter.notifyDataSetChanged();
-
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

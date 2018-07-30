@@ -37,8 +37,8 @@ public class RestaurantInfoActivity extends BaseActivity {
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
     // DATA
-    private List<PlaceDetail> mDetailList = DataSingleton.getInstance().getPlaceDetail();
-    private int position = DataSingleton.getInstance().getPosition();
+    private List<PlaceDetail> mDetailList = DataSingleton.getInstance().getPlaceDetailList();
+    private int position = DataSingleton.getInstance().getIndexPosition();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

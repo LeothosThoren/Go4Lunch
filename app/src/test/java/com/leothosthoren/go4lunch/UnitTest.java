@@ -67,4 +67,15 @@ public class UnitTest implements HttpRequestTools, DataConvertHelper {
         assertEquals("Closed", formatOpeningTime(false, periods));
 //        assertEquals("1730pm", formatOpeningTime(true, periods));
     }
+
+    @Test
+    public void computeDistance () throws Exception {
+        //device 48.813326, 2.348383
+        //restaurant Sherazade 48.814640, 2.344735
+        // maison Doisneau 48.814386, 2.347596
+
+        assertEquals("304m", distance(48.813326, 48.814640, 2.348383, 2.344735));
+        assertEquals("131m", distance(48.813326, 48.814386, 2.348383, 2.347596));
+
+    }
 }

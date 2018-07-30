@@ -216,6 +216,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                             Double latitude = mLastKnownLocation.getLatitude();
                             Double longitude = mLastKnownLocation.getLongitude();
+                            DataSingleton.getInstance().setDeviceLatitude(latitude);
+                            DataSingleton.getInstance().setDeviceLongitude(longitude);
 
 //                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
 //                                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
@@ -316,7 +318,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         this.mDetails.addAll(placeDetailList);
-        DataSingleton.getInstance().setPlaceDetail(mDetails);
+        DataSingleton.getInstance().setPlaceDetailList(mDetails);
 
         Marker marker;
 

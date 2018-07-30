@@ -7,9 +7,10 @@ import java.util.List;
 public class DataSingleton {
 
     private static final DataSingleton ourInstance = new DataSingleton();
-
-    private List<PlaceDetail> mPlaceDetail;
-    private int position;
+    private double deviceLatitude;
+    private double deviceLongitude;
+    private List<PlaceDetail> mPlaceDetailList;
+    private int indexPosition;
 
     private DataSingleton() {
     }
@@ -18,19 +19,35 @@ public class DataSingleton {
         return ourInstance;
     }
 
-    public List<PlaceDetail> getPlaceDetail() {
-        return mPlaceDetail;
+    public double getDeviceLatitude() {
+        return deviceLatitude;
     }
 
-    public void setPlaceDetail(List<PlaceDetail> placeDetail) {
-        mPlaceDetail = placeDetail;
+    public void setDeviceLatitude(double deviceLatitude) {
+        this.deviceLatitude = deviceLatitude;
     }
 
-    public int getPosition() {
-        return position;
+    public double getDeviceLongitude() {
+        return deviceLongitude;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setDeviceLongitude(double deviceLongitude) {
+        this.deviceLongitude = deviceLongitude;
+    }
+
+    public List<PlaceDetail> getPlaceDetailList() {
+        return mPlaceDetailList;
+    }
+
+    public void setPlaceDetailList(List<PlaceDetail> placeDetailList) {
+        mPlaceDetailList = placeDetailList;
+    }
+
+    public int getIndexPosition() {
+        return indexPosition;
+    }
+
+    public void setIndexPosition(int indexPosition) {
+        this.indexPosition = indexPosition;
     }
 }
