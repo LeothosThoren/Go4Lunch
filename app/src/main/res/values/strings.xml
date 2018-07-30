@@ -7,13 +7,13 @@
 
     <!-- Main activity -->
     <string name="splash_screen_text">Find a nice restaurant and invite your co-workers for lunch!</string>
-    <string name="error_not_connected">Vous devez vous connecter !</string>
-    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
-    <string name="error_no_internet">Aucune connexion internet !</string>
-    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
-    <string name="connection_succeed">Authentification réussie !</string>
+    <string name="error_not_connected">You must login!</string>
+    <string name="error_authentication_canceled">Login canceled&#8230;</string>
+    <string name="error_no_internet">No internet connection!</string>
+    <string name="error_unknown_error">An unknown error occurred&#8230;</string>
+    <string name="connection_succeed">Connection successful!</string>
     <string name="button_login_text_logged">Find a Restaurant</string>
-    <string name="button_login_text_not_logged">Connexion</string>
+    <string name="button_login_text_not_logged">Connection</string>
 
     <!-- Navigation bottom View -->
     <string name="title_map_view">Map View</string>
@@ -29,8 +29,8 @@
     <string name="logout">LOGOUT</string>
     <string name="user">User name</string>
     <string name="email">Email</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="delete_account">Delete account</string>
     <string name="user_name">User name</string>
     <string name="update_user_name">Update user name</string>
@@ -48,17 +48,17 @@
     <string name="mates_fragment_text">Mates</string>
 
     <!-- GOOGLE MAP -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="default_info_title">title</string>
     <string name="default_info_snippet">snippet</string>
     <string name="map_error_connexion">It seems you have no connection availability</string>
 
     <!-- RecyclerView restaurants item -->
     <string name="opening_time">opening time</string>
-    <string name="distance">%1$sm</string>
-    <string name="nb_workmate_selection">(%1$s)</string>
-    <string name="workmate_icon">workmate_icon</string>
-    <string name="restaurant_type_address">%1$s - %2$s</string>
+    <string name="distance" translatable="false">%1$sm</string>
+    <string name="nb_workmate_selection" translatable="false">(%1$s)</string>
+    <string name="workmate_icon" translatable="false">workmate_icon</string>
+    <string name="restaurant_type_address" translatable="false">%1$s - %2$s</string>
     <string name="restaurant_name">restaurant name</string>
     <string name="restaurant_image">restaurant image</string>
 
@@ -66,12 +66,12 @@
     <!--RecyclerView workmates item-->
     <string name="workmate_default_decision"> %1$s hasn\'t decided yet</string>
     <string name="workmate_profil">workmates_profil</string>
-    <string name="workmate_is_eating">%1$s is eating %2$s (%3$s)</string>
+    <string name="workmate_is_eating">%1$s is eating in %2$s</string>
     <string name="workmate_is_joining">%1$s is joining</string>
 
     <!-- Restaurant information -->
     <string name="call">CALL</string>
-    <string name="like">LIKE</string>
+    <string name="like" translatable="false">LIKE</string>
     <string name="website">WEBSITE</string>
 
     <!--Extras-->
