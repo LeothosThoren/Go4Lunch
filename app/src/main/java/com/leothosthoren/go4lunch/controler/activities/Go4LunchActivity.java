@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -140,6 +141,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     protected void configureToolbar() {
         this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(this.mToolbar);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
     @Override

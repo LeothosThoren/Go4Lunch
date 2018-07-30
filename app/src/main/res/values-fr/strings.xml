@@ -3,7 +3,7 @@
     <string name="app_name">Go4Lunch</string>
     <string name="switch_notifications">Activer les notifications</string>
     <string name="title_activity_maps">Carte</string>
-    <string name="title_action_bar_hungry">J\'ai faim</string>
+    <string name="title_action_bar_hungry">J\'ai faim !</string>
     <string name="title_action_bar_workmate">Collègues disponibles</string>
     <string name="splash_screen_text">Trouvez un restaurant et inviter des collègues à déjeuner !</string>
     <string name="error_not_connected">Vous devez vous authentifier !</string>

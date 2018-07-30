@@ -322,7 +322,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
         Marker marker;
 
-        if (mDetails.size() != 0) {
+        if (mDetails.size() != 0 && mDetails != null) {
             for (int i = 0; i < mDetails.size(); i++) {
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
