@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,7 +63,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
         this.configureSwipeRefreshLayout();
         this.progressBarHandler(mProgressBar, getContext());
         // Handle the case whether the list is empty
-        if (!PlaceDetailListFromSingleton.isEmpty()) {
+        if (mRestaurantItemsList != null) {
             this.configureRecyclerView();
             this.configureOnclickRecyclerView();
         } else {
@@ -76,9 +75,10 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     @Override
     protected void updateDesign() {
-        //TEST
-        this.checkSingletonContent();
+//        //TEST
+//        this.checkSingletonContent();
         //Feed Array
+        if (mRestaurantItemsList != null )
         this.updateUI();
 
     }
@@ -139,10 +139,10 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     // UTILS
     // --------------------
 
-    private void checkSingletonContent() {
-        Log.d(TAG, "checkSingletonContent: " + PlaceDetailListFromSingleton.size());
-
-    }
+//    private void checkSingletonContent() {
+//        Log.d(TAG, "checkSingletonContent: " + PlaceDetailListFromSingleton.size());
+//
+//    }
 
 
     // -------------------------------------------------------------------------------------------//

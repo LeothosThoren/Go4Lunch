@@ -2,7 +2,8 @@
     <!-- Activity name -->
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_bottom_navigation">I AM HUNGRY</string>
+    <string name="title_action_bar_hungry">I\'am hungry!</string>
+    <string name="title_action_bar_workmate">Available workmates</string>
 
     <!-- Main activity -->
     <string name="splash_screen_text">Find a nice restaurant and invite your co-workers for lunch!</string>
@@ -81,5 +82,7 @@
     <string name="toast_message_geolocation">Make sure your device got map geolocation activated</string>
     <string name="allow_pick_picture_on_device">You have the right to access the picture on the device!</string>
     <string name="no_restaurants_available_check_the_map_view">No restaurants available... check the map view</string>
+    <string name="phone_no_available">No phone number available</string>
+    <string name="website_no_available">Website no available</string>
 
 </resources>

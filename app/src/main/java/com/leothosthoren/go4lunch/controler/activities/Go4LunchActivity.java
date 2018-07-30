@@ -61,13 +61,16 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         switch (item.getItemId()) {
             case R.id.navigation_map:
                 //TODO
+                Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.title_action_bar_hungry));
                 configureContentFrameFragment(new MapViewFragment());
                 return true;
             case R.id.navigation_list:
+                Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.title_action_bar_hungry));
                 configureContentFrameFragment(new RestaurantViewFragment());
                 return true;
             case R.id.navigation_workmates:
                 //TODO
+                Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_action_bar_workmate);
                 configureContentFrameFragment(new WorkMatesViewFragment());
                 return true;
         }

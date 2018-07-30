@@ -99,24 +99,32 @@ public class RestaurantInfoActivity extends BaseActivity {
     }
 
     private void dialPhoneNumber(String phoneNumber) {
-
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+        if (phoneNumber != null) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(RestaurantInfoActivity.this, R.string.phone_no_available, Toast.LENGTH_SHORT).show();
+            }
         }
+
 
     }
 
     public void openWebsitePage(String url) {
-
-        Uri webpage = Uri.parse(url);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+        if (url != null) {
+            Uri webpage = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        } else {
+            Toast.makeText(RestaurantInfoActivity.this, R.string.website_no_available, Toast.LENGTH_SHORT).show();
         }
+
     }
 
-    
+
 }
 

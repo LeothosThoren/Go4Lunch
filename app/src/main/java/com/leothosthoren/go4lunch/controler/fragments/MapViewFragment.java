@@ -215,13 +215,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             Double latitude = mLastKnownLocation.getLatitude();
                             Double longitude = mLastKnownLocation.getLongitude();
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
+
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude, longitude), DEFAULT_ZOOM));
-//                            //TEST
-//                            if (mGpsLocation.callOnClick()) {
-//                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                                        new LatLng(latitude, longitude), DEFAULT_ZOOM));
-//                            }
+
                             //HTTP RXJAVA
                             executeHttpRequestWithNearBySearchAndPlaceDetail(setLocationIntoString(latitude, longitude));
 
@@ -316,13 +315,19 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         this.mDetails.addAll(placeDetailList);
-        DataSingleton.getInstance().setPlaceDetail(mDetails);
+
+        if (DataSingleton.getInstance().getPlaceDetail() == null) {
+            DataSingleton.getInstance().setPlaceDetail(mDetails);
+        }
+
         if (mDetails.size() != 0) {
             for (int i = 0; i < mDetails.size(); i++) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
                                 mDetails.get(i).getResult().getGeometry().getLocation().getLng()))
-                ).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon)));
+
+                //THINK ABOUT A HASHMAP
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mDetails.size());
@@ -342,19 +347,23 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(getContext(), "You click on marker :" + marker.getId(), Toast.LENGTH_SHORT).show();
-        compareLatLong(marker);
+        Toast.makeText(getContext(), "You click on marker :" + marker.getId() + " " + marker.getTitle() + " " + marker.getPosition(), Toast.LENGTH_SHORT).show();
+
+//        compareLatLong(marker);
         return false;
     }
 
     public void compareLatLong(Marker marker) {
+        //todo handle with a hashmap use simple intent put and get fot this part
         for (int i = 0; i < mDetails.size(); i++) {
             LatLng restaurantsPos = new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
                     mDetails.get(i).getResult().getGeometry().getLocation().getLng());
             Log.d(TAG, "compareLatLong: restaurantPos = " + restaurantsPos + " marker.getPosition = " + marker.getPosition());
             Log.d(TAG, "compareLatLong: " + mDetails.get(i).getResult().getName());
             if (restaurantsPos.equals(marker.getPosition())) {
+                // Get data from instance
                 DataSingleton.getInstance().setPosition(i);
+                // Launch activity
                 startActivity(RestaurantInfoActivity.class);
                 break;
             }
