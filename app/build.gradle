@@ -33,12 +33,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Place Api
             buildConfigField 'String', "ApiKey", GO4Lunch_PlaceWebApiKey
             resValue 'string', "api_key", GO4Lunch_PlaceWebApiKey
+            // Map Api
+            buildConfigField 'String', "MapApiKey", GO4Lunch_SdkMapApiKey
+            resValue 'string', "map_api_key", GO4Lunch_SdkMapApiKey
         }
         debug {
+            // Place Api
             buildConfigField 'String', "ApiKey", GO4Lunch_PlaceWebApiKey
             resValue 'string', "api_key", GO4Lunch_PlaceWebApiKey
+            // Map Api
+            buildConfigField 'String', "MapApiKey", GO4Lunch_SdkMapApiKey
+            resValue 'string', "map_api_key", GO4Lunch_SdkMapApiKey
         }
     }
     compileOptions {

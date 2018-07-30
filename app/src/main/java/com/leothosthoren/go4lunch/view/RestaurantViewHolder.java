@@ -11,6 +11,7 @@ import com.bumptech.glide.RequestManager;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
+import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 
@@ -37,6 +38,10 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     @BindView(R.id.item_restaurants_ratingbar)
     RatingBar mRatingBar;
 
+    // VAR
+    private double lat = DataSingleton.getInstance().getDeviceLatitude();
+    private double lng = DataSingleton.getInstance().getDeviceLongitude();
+
 
     private WeakReference<RestaurantAdapter.Listener> callbackWeakRef;
 
@@ -56,23 +61,38 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
 //        glide.load(restaurantItem.getUrlPhoto()).into(this.mRestaurantPhoto);
 //    }
 
-    public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide, RestaurantAdapter.Listener callback) {
+    public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide,
+                                     RestaurantAdapter.Listener callback) {
         String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference=";
         String apiKey = "&key=" + BuildConfig.ApiKey;
-        assert this.mRestaurantName != null;
+        assert placeDetail.getResult() != null;
         {
+            //Restaurant name
             this.mRestaurantName.setText(placeDetail.getResult().getName());
             if (placeDetail.getResult().getPhotos() != null) {
-                glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey).into(this.mRestaurantPhoto);
+                glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
+                        .into(this.mRestaurantPhoto);
             }
+
+            // Address
             this.mRestaurantAddress.setText(formatAddress(placeDetail.getResult().getFormattedAddress()));
             if (placeDetail.getResult().getRating() != null) {
                 this.mRatingBar.setRating(formatRating(placeDetail.getResult().getRating()));
             }
 
-//            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
-//                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(), placeDetail.getResult().getOpeningHours().getPeriods()));
-//            } todo apply correction here
+            // Distance
+            if (lat != 0 && lng != 0) {
+                this.mRestaurantDistance.setText(distance(lat, placeDetail.getResult().getGeometry().getLocation().getLat(),
+                        lng, placeDetail.getResult().getGeometry().getLocation().getLng()));
+            }
+
+            // Opening time
+            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
+                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
+                        placeDetail.getResult().getOpeningHours().getPeriods()));
+            }
+
+            // Number of workmates
 
         }
 
