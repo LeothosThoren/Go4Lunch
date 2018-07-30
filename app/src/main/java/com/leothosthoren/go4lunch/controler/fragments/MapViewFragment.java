@@ -36,12 +36,13 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -64,6 +65,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     // VIEW
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
+    Map<String, String> mMarkerMap = new HashMap<>();
     // VAR
     private MapView mMapView;
     private GoogleMap mMap;
@@ -267,7 +269,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "onComplete: " + mDetails.size());
-
                     }
                 });
     }
@@ -315,19 +316,20 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         this.mDetails.addAll(placeDetailList);
+        DataSingleton.getInstance().setPlaceDetail(mDetails);
 
-        if (DataSingleton.getInstance().getPlaceDetail() == null) {
-            DataSingleton.getInstance().setPlaceDetail(mDetails);
-        }
+        Marker marker;
 
         if (mDetails.size() != 0) {
             for (int i = 0; i < mDetails.size(); i++) {
-                mMap.addMarker(new MarkerOptions()
+                marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
                                 mDetails.get(i).getResult().getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
+                        .title(mDetails.get(i).getResult().getName()));
 
                 //THINK ABOUT A HASHMAP
+                mMarkerMap.put(marker.getId(), mDetails.get(i).getResult().getPlaceId());
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty " + mDetails.size());
@@ -348,26 +350,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Toast.makeText(getContext(), "You click on marker :" + marker.getId() + " " + marker.getTitle() + " " + marker.getPosition(), Toast.LENGTH_SHORT).show();
-
-//        compareLatLong(marker);
+        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs" + mMarkerMap.size());
         return false;
     }
 
-    public void compareLatLong(Marker marker) {
-        //todo handle with a hashmap use simple intent put and get fot this part
-        for (int i = 0; i < mDetails.size(); i++) {
-            LatLng restaurantsPos = new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
-                    mDetails.get(i).getResult().getGeometry().getLocation().getLng());
-            Log.d(TAG, "compareLatLong: restaurantPos = " + restaurantsPos + " marker.getPosition = " + marker.getPosition());
-            Log.d(TAG, "compareLatLong: " + mDetails.get(i).getResult().getName());
-            if (restaurantsPos.equals(marker.getPosition())) {
-                // Get data from instance
-                DataSingleton.getInstance().setPosition(i);
-                // Launch activity
-                startActivity(RestaurantInfoActivity.class);
-                break;
-            }
-        }
-    }
 }
 
