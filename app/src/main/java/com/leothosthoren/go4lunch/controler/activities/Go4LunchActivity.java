@@ -11,13 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.adapter.PlaceAutocompleteAdapter;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.controler.fragments.MapViewFragment;
@@ -46,13 +48,15 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final int RC_IMAGE_PERMS = 100;
-    // VAR
+    // WIDGET
     private Toolbar mToolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TextView mTextViewUser;
     private TextView mTextViewEmail;
     private ImageView mImageViewProfile;
+    private AutoCompleteTextView mSearchText;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
 
 
     //BOTTOM NAVIGATION VIEW
@@ -88,6 +92,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         this.configureBottomNavigationView();
         this.configureContentFrameFragment(new MapViewFragment());
         this.updateMenuUIOnCreation();
+        this.mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
     }
 
     @Override
@@ -95,9 +100,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         return R.layout.activity_go4lunch;
     }
 
+
     //---------------------
     // NAVIGATION
     //---------------------
+
 
     //Handle menu drawer on back press button
     @Override
@@ -105,6 +112,8 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         // 5 - Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
+
+            // Todo add a else if here to handle edittext disparition
         } else {
             super.onBackPressed();
         }
@@ -133,9 +142,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         return true;
     }
 
+
     // ---------------------
     // CONFIGURATION
     // ---------------------
+
 
     @Override
     protected void configureToolbar() {
@@ -149,6 +160,16 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         //2 - Inflate the menu and add it to the Toolbar
         getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
+    }
+
+    // Configure click on menu Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search) {
+//            mSearchText.setVisibility(View.VISIBLE);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     // 2 - Configure Drawer Layout
@@ -196,9 +217,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         transaction.replace(R.id.content_frame, fragment).commit();
     }
 
+
     // -----------------------
     // REST REQUESTS FIREBASE
     // -----------------------
+
 
     private void signOutUser() {
         AuthUI.getInstance()
@@ -206,9 +229,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                 .addOnSuccessListener(this, updateUiAfterHttpRequestsCompleted(SIGN_OUT_TASK));
     }
 
+
     //---------------------
     // UI
     //---------------------
+
 
     private void updateMenuUIOnCreation() {
 
@@ -255,6 +280,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
 //            mTextViewEmail.setText(email);
         }
     }
+
 
     //---------------------
     // PERMISSION

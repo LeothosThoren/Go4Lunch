@@ -36,7 +36,6 @@ public class RestaurantInfoActivity extends BaseActivity {
     private boolean isCheckLike = true;
     // DATA
     private PlaceDetail mPlaceDetail = DataSingleton.getInstance().getPlaceDetail();
-//    private int position = DataSingleton.getInstance().getIndexPosition();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

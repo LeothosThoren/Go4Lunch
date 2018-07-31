@@ -10,9 +10,6 @@ import com.leothosthoren.go4lunch.utils.FireBaseTools;
 import butterknife.ButterKnife;
 import butterknife.Optional;
 
-/**
- * Created by Sofiane M. alias Leothos Thoren on 04/05/2018
- */
 public abstract class BaseActivity extends AppCompatActivity implements FireBaseTools {
 
     // --------------------

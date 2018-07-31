@@ -7,8 +7,8 @@ import java.util.List;
 public class DataSingleton {
 
     private static final DataSingleton ourInstance = new DataSingleton();
-    private double deviceLatitude;
-    private double deviceLongitude;
+    private Double deviceLatitude;
+    private Double deviceLongitude;
     private List<PlaceDetail> mPlaceDetailList;
     private PlaceDetail mPlaceDetail;
 
@@ -18,7 +18,6 @@ public class DataSingleton {
     public static DataSingleton getInstance() {
         return ourInstance;
     }
-    //Todo add getter object place frogot about position
 
     public PlaceDetail getPlaceDetail() {
         return mPlaceDetail;
@@ -28,19 +27,19 @@ public class DataSingleton {
         mPlaceDetail = placeDetail;
     }
 
-    public double getDeviceLatitude() {
+    public Double getDeviceLatitude() {
         return deviceLatitude;
     }
 
-    public void setDeviceLatitude(double deviceLatitude) {
+    public void setDeviceLatitude(Double deviceLatitude) {
         this.deviceLatitude = deviceLatitude;
     }
 
-    public double getDeviceLongitude() {
+    public Double getDeviceLongitude() {
         return deviceLongitude;
     }
 
-    public void setDeviceLongitude(double deviceLongitude) {
+    public void setDeviceLongitude(Double deviceLongitude) {
         this.deviceLongitude = deviceLongitude;
     }
 

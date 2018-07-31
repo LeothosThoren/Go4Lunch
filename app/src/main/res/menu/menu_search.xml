@@ -6,5 +6,4 @@
         app:showAsAction="ifRoom"
         android:title="@string/toolbar_icon_search">
     </item>
-
 </menu>

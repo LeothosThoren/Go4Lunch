@@ -56,7 +56,8 @@ import io.reactivex.observers.DisposableObserver;
  * A simple {@link Fragment} subclass.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class MapViewFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -145,6 +146,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
     }
 
     private void setMapStyle(GoogleMap googleMap) {
@@ -213,14 +220,16 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     if (task.isSuccessful()) {
                         // Set the map's camera position to the current location of the device.
                         mLastKnownLocation = task.getResult();
-                        //Move camera toward device position
+
                         if (mLastKnownLocation != null) {
 
+                            // Store device coordinates
                             Double latitude = mLastKnownLocation.getLatitude();
                             Double longitude = mLastKnownLocation.getLongitude();
                             DataSingleton.getInstance().setDeviceLatitude(latitude);
                             DataSingleton.getInstance().setDeviceLongitude(longitude);
 
+                            //Move camera toward device position
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude, longitude), DEFAULT_ZOOM));
 
@@ -325,7 +334,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
                                 mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
                         .title(mPlaceDetailList.get(i).getResult().getName()));
 
                 // Store in HASHMAP for Marker
@@ -343,10 +352,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(getContext(), "You click on marker :" + marker.getId() + " " + marker.getTitle() + " " + marker.getPosition(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs" + mMarkerMap.size());
-        // Try to open activity here
+        // Store PlaceDetail object in Singleton
         DataSingleton.getInstance().setPlaceDetail(mMarkerMap.get(marker.getId()));
+        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs" + mMarkerMap.size());
+        //Launch Activity
         startActivity(RestaurantInfoActivity.class);
         return false;
     }
@@ -354,13 +363,20 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private void setMyPositionOnMap() {
         this.mGpsLocation.setOnClickListener(v -> {
             Log.d(TAG, "onClick: clicked gps icon");
-            double latitude = DataSingleton.getInstance().getDeviceLatitude();
-            double longitude = DataSingleton.getInstance().getDeviceLongitude();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
+            if (DataSingleton.getInstance().getDeviceLatitude() != null || DataSingleton.getInstance().getDeviceLongitude() != null) {
+                Double latitude = DataSingleton.getInstance().getDeviceLatitude();
+                Double longitude = DataSingleton.getInstance().getDeviceLongitude();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(latitude, longitude), DEFAULT_ZOOM));
+            }
+
 
         });
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }
 
