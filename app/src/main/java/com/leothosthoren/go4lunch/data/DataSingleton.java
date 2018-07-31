@@ -10,13 +10,22 @@ public class DataSingleton {
     private double deviceLatitude;
     private double deviceLongitude;
     private List<PlaceDetail> mPlaceDetailList;
-    private int indexPosition;
+    private PlaceDetail mPlaceDetail;
 
     private DataSingleton() {
     }
 
     public static DataSingleton getInstance() {
         return ourInstance;
+    }
+    //Todo add getter object place frogot about position
+
+    public PlaceDetail getPlaceDetail() {
+        return mPlaceDetail;
+    }
+
+    public void setPlaceDetail(PlaceDetail placeDetail) {
+        mPlaceDetail = placeDetail;
     }
 
     public double getDeviceLatitude() {
@@ -41,13 +50,5 @@ public class DataSingleton {
 
     public void setPlaceDetailList(List<PlaceDetail> placeDetailList) {
         mPlaceDetailList = placeDetailList;
-    }
-
-    public int getIndexPosition() {
-        return indexPosition;
-    }
-
-    public void setIndexPosition(int indexPosition) {
-        this.indexPosition = indexPosition;
     }
 }

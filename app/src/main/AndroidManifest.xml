@@ -55,7 +55,6 @@
             android:name=".controler.activities.SettingActivity"
             android:label="Settings"
             android:parentActivityName=".controler.activities.Go4LunchActivity" />
-        <activity android:name=".controler.activities.PlaceActivity" />
         <activity android:name=".controler.activities.RestaurantInfoActivity"/>
     </application>
 

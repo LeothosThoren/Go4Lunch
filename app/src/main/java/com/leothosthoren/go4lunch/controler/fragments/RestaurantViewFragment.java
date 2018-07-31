@@ -19,7 +19,7 @@ import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -43,10 +43,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     private RestaurantAdapter mAdapter;
     private Disposable disposable;
     //DATA
-    private ArrayList<PlaceDetail> PlaceDetailListFromSingleton =
-            (ArrayList<PlaceDetail>) DataSingleton.getInstance().getPlaceDetailList();
-    private ArrayList<PlaceDetail> mRestaurantItemsList;
-
+    private List<PlaceDetail> PlaceDetailListFromSingleton = DataSingleton.getInstance().getPlaceDetailList();
 
     @Override
     protected BaseFragment newInstance() {
@@ -61,10 +58,10 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     @Override
     protected void configureDesign() {
 
-        this.configureSwipeRefreshLayout();
-        this.progressBarHandler(mProgressBar, getContext());
+//        this.configureSwipeRefreshLayout();
+//        this.progressBarHandler(mProgressBar, getContext());
         // Handle the case whether the list is empty
-        if (mRestaurantItemsList != null) {
+        if (PlaceDetailListFromSingleton != null) {
             this.configureRecyclerView();
             this.configureOnclickRecyclerView();
         } else {
@@ -74,8 +71,6 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
     @Override
     protected void updateDesign() {
-        //Feed Array
-        if (mRestaurantItemsList != null )
         this.updateUI();
     }
 
@@ -86,8 +81,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
 
     public void configureRecyclerView() {
-        this.mRestaurantItemsList = new ArrayList<>();
-        this.mAdapter = new RestaurantAdapter(mRestaurantItemsList, Glide.with(this), this);
+        this.mAdapter = new RestaurantAdapter(PlaceDetailListFromSingleton, Glide.with(this)
+                , this);
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -98,12 +93,12 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
      * When the screen is swipe, the http request is executed
      * */
 
-    public void configureSwipeRefreshLayout() {
-        this.mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            updateUIWhenStartingHTTPRequest(mProgressBar);
-            updateUI();
-        });
-    }
+//    public void configureSwipeRefreshLayout() {
+//        this.mSwipeRefreshLayout.setOnRefreshListener(() -> {
+//            updateUIWhenStartingHTTPRequest(mProgressBar);
+//            updateUI();
+//        });
+//    }
 
 
     // -------------------------------------------------------------------------------------------//
@@ -117,8 +112,9 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
                     Toast.makeText(getContext(), "CLICK on position: " + position + " name: " +
                             restaurantItem.getResult().getName(), Toast.LENGTH_SHORT).show();
-                    // Get position and launch activity with data from singleton
-                    DataSingleton.getInstance().setIndexPosition(position);
+
+                    // launch activity with data from singleton
+                    DataSingleton.getInstance().setPlaceDetail(restaurantItem);
                     startActivity(RestaurantInfoActivity.class);
 
                 });
@@ -127,8 +123,11 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     @Override
     public void onClickItemButton(int position) {
         PlaceDetail restaurantItem = mAdapter.getRestaurantItem(position);
-        Toast.makeText(getContext(), "CLICK PICTURE on position: " + position + " name: " +
-                restaurantItem.getResult().getPhotos().get(0).getPhotoReference(), Toast.LENGTH_SHORT).show();
+        if (restaurantItem.getResult().getPhotos().get(0).getPhotoReference() != null) {
+            Toast.makeText(getContext(), "CLICK PICTURE on position: " + position + " name: " +
+                    restaurantItem.getResult().getPhotos().get(0).getPhotoReference(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
@@ -138,22 +137,10 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
 
     public void updateUI() {
-        this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
-        this.mRestaurantItemsList.clear();
-        mRestaurantItemsList.addAll(PlaceDetailListFromSingleton);
+//        this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
+//        this.mRestaurantItemsList.clear();
         mAdapter.notifyDataSetChanged();
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

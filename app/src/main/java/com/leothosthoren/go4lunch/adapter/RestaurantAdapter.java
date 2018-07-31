@@ -13,6 +13,7 @@ import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.view.RestaurantViewHolder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
@@ -20,10 +21,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     // FOR COMMUNICATION
     private final Listener callback;
     // FOR DATA
-    private ArrayList<PlaceDetail> mRestaurantItems;
+    private List<PlaceDetail> mRestaurantItems;
     private RequestManager glide;
 
-    public RestaurantAdapter(ArrayList<PlaceDetail> restaurantItems, RequestManager glide, Listener callback) {
+    public RestaurantAdapter(List<PlaceDetail> restaurantItems, RequestManager glide, Listener callback) {
         this.mRestaurantItems = restaurantItems;
         this.glide = glide;
         this.callback = callback;

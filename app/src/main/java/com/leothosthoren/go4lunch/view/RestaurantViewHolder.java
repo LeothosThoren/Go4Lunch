@@ -87,17 +87,19 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
             }
 
             // Opening time
-            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
-                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
-                        placeDetail.getResult().getOpeningHours().getPeriods()));
-            }
+//            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
+//                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
+//                        placeDetail.getResult().getOpeningHours().getPeriods()));
+//            }
 
             // Number of workmates
 
         }
 
         // Configure the clicks
-        this.mRestaurantPhoto.setOnClickListener(this);
+        if (mRestaurantPhoto != null) {
+            this.mRestaurantPhoto.setOnClickListener(this);
+        }
         this.callbackWeakRef = new WeakReference<RestaurantAdapter.Listener>(callback);
     }
 

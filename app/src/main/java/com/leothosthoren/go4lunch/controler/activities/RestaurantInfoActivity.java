@@ -15,8 +15,6 @@ import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
-import java.util.List;
-
 import butterknife.BindView;
 
 public class RestaurantInfoActivity extends BaseActivity {
@@ -37,8 +35,8 @@ public class RestaurantInfoActivity extends BaseActivity {
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
     // DATA
-    private List<PlaceDetail> mDetailList = DataSingleton.getInstance().getPlaceDetailList();
-    private int position = DataSingleton.getInstance().getIndexPosition();
+    private PlaceDetail mPlaceDetail = DataSingleton.getInstance().getPlaceDetail();
+//    private int position = DataSingleton.getInstance().getIndexPosition();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,16 +84,16 @@ public class RestaurantInfoActivity extends BaseActivity {
         });
 
         //CALLING
-        mButtonCall.setOnClickListener(v -> dialPhoneNumber(mDetailList.get(position).getResult().getFormattedPhoneNumber()));
+        mButtonCall.setOnClickListener(v -> dialPhoneNumber(mPlaceDetail.getResult().getFormattedPhoneNumber()));
 
         //BROWSE URL
-        mWebsiteButton.setOnClickListener(v -> openWebsitePage(mDetailList.get(position).getResult().getWebsite()));
+        mWebsiteButton.setOnClickListener(v -> openWebsitePage(mPlaceDetail.getResult().getWebsite()));
 
     }
 
 
     private void setUpText() {
-        restaurantName.setText(mDetailList.get(position).getResult().getName());
+        restaurantName.setText(mPlaceDetail.getResult().getName());
     }
 
     private void dialPhoneNumber(String phoneNumber) {

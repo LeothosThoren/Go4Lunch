@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
@@ -65,7 +67,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     // VIEW
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
-    Map<String, String> mMarkerMap = new HashMap<>();
     // VAR
     private MapView mMapView;
     private GoogleMap mMap;
@@ -78,7 +79,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private Disposable mDisposable;
     // DATA
-    private ArrayList<PlaceDetail> mDetails = new ArrayList<>();
+    private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
+    private Map<String, PlaceDetail> mMarkerMap = new HashMap<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -219,10 +221,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             DataSingleton.getInstance().setDeviceLatitude(latitude);
                             DataSingleton.getInstance().setDeviceLongitude(longitude);
 
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//                                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
-
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude, longitude), DEFAULT_ZOOM));
 
                             //HTTP RXJAVA
@@ -270,7 +269,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: " + mDetails.size());
+                        Log.d(TAG, "onComplete: " + mPlaceDetailList.size());
                     }
                 });
     }
@@ -317,24 +316,23 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
-        this.mDetails.addAll(placeDetailList);
-        DataSingleton.getInstance().setPlaceDetailList(mDetails);
-
+        this.mPlaceDetailList.addAll(placeDetailList);
+        DataSingleton.getInstance().setPlaceDetailList(mPlaceDetailList);
         Marker marker;
 
-        if (mDetails.size() != 0 && mDetails != null) {
-            for (int i = 0; i < mDetails.size(); i++) {
+        if (mPlaceDetailList.size() != 0 && mPlaceDetailList != null) {
+            for (int i = 0; i < mPlaceDetailList.size(); i++) {
                 marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(mDetails.get(i).getResult().getGeometry().getLocation().getLat(),
-                                mDetails.get(i).getResult().getGeometry().getLocation().getLng()))
+                        .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
+                                mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_map_icon))
-                        .title(mDetails.get(i).getResult().getName()));
+                        .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                //THINK ABOUT A HASHMAP
-                mMarkerMap.put(marker.getId(), mDetails.get(i).getResult().getPlaceId());
+                // Store in HASHMAP for Marker
+                mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
             }
         } else
-            Log.d(TAG, "addMarkerOnMap is empty " + mDetails.size());
+            Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
     }
 
 
@@ -342,18 +340,26 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     //                                          ACTION                                             //
     //---------------------------------------------------------------------------------------------//
 
-    private void setMyPositionOnMap() {
-        this.mGpsLocation.setOnClickListener(v -> {
-            Log.d(TAG, "onClick: clicked gps icon");
-            updateUI();
-        });
-    }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Toast.makeText(getContext(), "You click on marker :" + marker.getId() + " " + marker.getTitle() + " " + marker.getPosition(), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs" + mMarkerMap.size());
+        // Try to open activity here
+        DataSingleton.getInstance().setPlaceDetail(mMarkerMap.get(marker.getId()));
+        startActivity(RestaurantInfoActivity.class);
         return false;
+    }
+
+    private void setMyPositionOnMap() {
+        this.mGpsLocation.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: clicked gps icon");
+            double latitude = DataSingleton.getInstance().getDeviceLatitude();
+            double longitude = DataSingleton.getInstance().getDeviceLongitude();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(latitude, longitude), DEFAULT_ZOOM));
+
+        });
     }
 
 }
