@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -11,27 +11,25 @@
     <!-- TOOLBAR THEME -->
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- Color of the title text in the Toolbar -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:color">@android:color/white</item>
-        <item name="android:colorControlNormal" tools:targetApi="lollipop">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 
     <!-- Toolbar title theme -->
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:color">@color/white</item>
-        <item name="android:titleTextColor" tools:targetApi="m">@color/white</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/colorPrimary</item>
 
     </style>
 
-    <!-- STYLE FOR MAIN ACTIVITY -->
-    <style name="AppTheme.NoTitle" parent="AppTheme">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="actionBarTheme">@null</item>
-    </style>
+    <!--&lt;!&ndash; STYLE FOR MAIN ACTIVITY &ndash;&gt;-->
+    <!--<style name="AppTheme.NoTitle" parent="AppTheme">-->
+    <!--<item name="windowNoTitle">true</item>-->
+    <!--<item name="windowActionBar">false</item>-->
+    <!--<item name="actionBarTheme">@null</item>-->
+    <!--</style>-->
 
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">
@@ -82,7 +80,6 @@
 
     <!--ConstraintLayout style-->
     <style name="marginConstraint">
-
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginLeft">8dp</item>

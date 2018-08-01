@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".controler.activities.RestaurantInfoActivity">
 
+    <include layout="@layout/toolbar"/>
+
     <!--RESTAURANT INFO PHOTO-->
     <ImageView
         android:id="@+id/restaurant_info_photo"

@@ -152,7 +152,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     protected void configureToolbar() {
         this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(this.mToolbar);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
     @Override

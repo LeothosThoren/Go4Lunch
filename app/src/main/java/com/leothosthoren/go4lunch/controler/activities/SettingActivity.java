@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,6 +49,7 @@ public class SettingActivity extends BaseActivity {
     // 1 - Uri of image selected by user
     private Uri uriImageSelected;
 //    @BindView(R.id.email_user) TextInputEditText mTextInputEditTextEmail
+    @BindView(R.id.toolbar)Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,16 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+    // ---------------------
+    // CONFIGURATION
+    // ---------------------
+    @Override
+    protected void configureToolbar() {
+        super.configureToolbar();
+//        this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(this.mToolbar);
+
+    }
 
     // --------------------
     // REST REQUESTS

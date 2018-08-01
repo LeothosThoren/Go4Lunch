@@ -337,7 +337,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
                         .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                // Store in HASHMAP for Marker
+                // Store in HASHMAP for Marker click
                 mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
             }
         } else
@@ -354,7 +354,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     public boolean onMarkerClick(final Marker marker) {
         // Store PlaceDetail object in Singleton
         DataSingleton.getInstance().setPlaceDetail(mMarkerMap.get(marker.getId()));
-        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs" + mMarkerMap.size());
+        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs marker size:" + mMarkerMap.size());
         //Launch Activity
         startActivity(RestaurantInfoActivity.class);
         return false;
@@ -363,7 +363,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private void setMyPositionOnMap() {
         this.mGpsLocation.setOnClickListener(v -> {
             Log.d(TAG, "onClick: clicked gps icon");
-            if (DataSingleton.getInstance().getDeviceLatitude() != null || DataSingleton.getInstance().getDeviceLongitude() != null) {
+            if (DataSingleton.getInstance().getDeviceLatitude() != null
+                    || DataSingleton.getInstance().getDeviceLongitude() != null) {
                 Double latitude = DataSingleton.getInstance().getDeviceLatitude();
                 Double longitude = DataSingleton.getInstance().getDeviceLongitude();
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(

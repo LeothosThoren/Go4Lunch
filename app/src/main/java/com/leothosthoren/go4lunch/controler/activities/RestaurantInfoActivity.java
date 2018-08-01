@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ public class RestaurantInfoActivity extends BaseActivity {
     Button mLikeButton;
     @BindView(R.id.restaurant_info_name)
     TextView restaurantName;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     // VAR
     private boolean isCheckFab = true;
@@ -47,6 +49,20 @@ public class RestaurantInfoActivity extends BaseActivity {
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_restaurant_info;
+    }
+
+
+    // ---------------------
+    // CONFIGURATION
+    // ---------------------
+
+
+    @Override
+    protected void configureToolbar() {
+        super.configureToolbar();
+//        this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(this.mToolbar);
+//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
     //RESTAURANT SELECTION

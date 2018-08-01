@@ -123,7 +123,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     @Override
     public void onClickItemButton(int position) {
         PlaceDetail restaurantItem = mAdapter.getRestaurantItem(position);
-        if (restaurantItem.getResult().getPhotos().get(0).getPhotoReference() != null) {
+        if (restaurantItem.getResult().getPhotos() != null) {
             Toast.makeText(getContext(), "CLICK PICTURE on position: " + position + " name: " +
                     restaurantItem.getResult().getPhotos().get(0).getPhotoReference(), Toast.LENGTH_SHORT).show();
         }
@@ -139,7 +139,10 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     public void updateUI() {
 //        this.updateUIWhenStopingHTTPRequest(mSwipeRefreshLayout, mProgressBar);
 //        this.mRestaurantItemsList.clear();
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
 
 

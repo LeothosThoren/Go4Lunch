@@ -8,9 +8,8 @@
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/ToolbarTheme"
-    app:subtitleTextColor="@color/white"
     app:titleTextAppearance="@style/Toolbar.TitleText"
-    app:titleTextColor="@android:color/white">
+    app:titleTextColor="@color/white">
 
     <!--AutoComplete editText layout-->
     <include layout="@layout/autocomplete_edit_text" />

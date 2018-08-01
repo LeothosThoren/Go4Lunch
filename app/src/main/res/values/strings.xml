@@ -84,5 +84,7 @@
     <string name="no_restaurants_available_check_the_map_view">No restaurants available... check the map view</string>
     <string name="phone_no_available">No phone number available</string>
     <string name="website_no_available">Website no available</string>
+    <string name="manifest_restaurant_info">Restaurant information</string>
+    <string name="manifest_settings">Settings</string>
 
 </resources>

@@ -7,7 +7,8 @@
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
-    android:background="@drawable/white_border">
+    android:background="@drawable/white_border"
+    android:visibility="gone">
 
     <!-- Search ImageView-->
     <ImageView

@@ -106,12 +106,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    //TEST
-    public void onClickDetailRestaurantButton(View v) {
-        this.startActivity(RestaurantInfoActivity.class);
-    }
-
-
     //Generic activity launcher method
     private void startActivity(Class activity) {
         Intent intent = new Intent(this, activity);
