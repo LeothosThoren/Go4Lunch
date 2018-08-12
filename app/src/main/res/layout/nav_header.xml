@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:gravity="bottom">
 
+    <!-- User name -->
     <TextView
         android:id="@+id/menu_drawer_user"
         style="@style/MainStyle"
@@ -19,20 +20,19 @@
         app:layout_constraintBottom_toTopOf="@+id/menu_drawer_email"
         app:layout_constraintStart_toEndOf="@+id/menu_drawer_imageView" />
 
+    <!-- Email -->
     <TextView
         android:id="@+id/menu_drawer_email"
         style="@style/MainStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:text="@string/email"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/menu_drawer_imageView" />
 
+    <!-- Profile picture -->
     <ImageView
         android:id="@+id/menu_drawer_imageView"
         style="@style/MainStyle"

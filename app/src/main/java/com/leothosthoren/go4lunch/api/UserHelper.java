@@ -2,7 +2,6 @@ package com.leothosthoren.go4lunch.api;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,10 +24,19 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
+    public static Task<Void> createUserWithoutPicture(String uid, String username, String email) {
+        Users userToCreate = new Users(uid, username, email);
+        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
+    }
+
     // --- GET ---
 
     public static Task<DocumentSnapshot> getUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).get();
+    }
+
+    public static Query getAllUsers() {
+        return UserHelper.getUsersCollection().limit(50);
     }
 
     // --- UPDATE ---

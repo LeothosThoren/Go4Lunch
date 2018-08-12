@@ -20,6 +20,12 @@ public class Users {
         this.urlPicture = urlPicture;
     }
 
+    public Users(String uid, String username, String email) {
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+    }
+
     public String getUid() {
         return uid;
     }
@@ -40,7 +46,7 @@ public class Users {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setUserEmail(String email) {
         this.email = email;
     }
 

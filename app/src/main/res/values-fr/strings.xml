@@ -31,7 +31,7 @@
     <string name="popup_title">Supprimer le compte ?</string>
     <string name="popup_message_choice_yes">Oui</string>
     <string name="popup_message_choice_no">Non !</string>
-    <string name="info_no_email_found">Pas d\'email</string>
+    <string name="info_no_email_found">Pas d\'email trouvé</string>
     <string name="map_fragment_text">Carte</string>
     <string name="list_fragment_text">Liste</string>
     <string name="mates_fragment_text">Collègues</string>
@@ -58,4 +58,7 @@
     <string name="website_no_available">Aucun siteweb disponible</string>
     <string name="manifest_restaurant_info">Information du restaurant</string>
     <string name="manifest_settings">Paramètres</string>
+    <string name="update_email">Modifier email</string>
+    <string name="search_something">Rechercher restaurant</string>
+    <string name="no_restaurant_found">Aucun restaurant trouvé !</string>
 </resources>

@@ -2,12 +2,10 @@ package com.leothosthoren.go4lunch.utils;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 

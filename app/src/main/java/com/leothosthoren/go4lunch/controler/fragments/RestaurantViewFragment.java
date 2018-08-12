@@ -61,11 +61,11 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 //        this.configureSwipeRefreshLayout();
 //        this.progressBarHandler(mProgressBar, getContext());
         // Handle the case whether the list is empty
-        if (PlaceDetailListFromSingleton != null) {
+        if (PlaceDetailListFromSingleton == null || PlaceDetailListFromSingleton.size() == 0) {
+            mTextViewRecyclerViewEmpty.setVisibility(View.VISIBLE);
+        } else {
             this.configureRecyclerView();
             this.configureOnclickRecyclerView();
-        } else {
-            mTextViewRecyclerViewEmpty.setVisibility(View.VISIBLE);
         }
     }
 

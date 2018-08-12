@@ -14,12 +14,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- TOOLBAR -->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_main_toolbar"
-            style="@style/Toolbar.TitleText"
+        <!-- AUTOCOMPLETE ZONE -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="wrap_content">
+            <!-- TOOLBAR -->
+            <include layout="@layout/toolbar" />
+            <!--AutoComplete editText layout-->
+            <include layout="@layout/autocomplete_edit_text" />
+        </RelativeLayout>
+
 
         <!-- FRAME LAYOUT MAIN CONTENT -->
         <FrameLayout
@@ -34,7 +38,7 @@
                 <FrameLayout
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <!-- BOTTOM NAVIGATION VIEW -->
                 <android.support.design.widget.BottomNavigationView

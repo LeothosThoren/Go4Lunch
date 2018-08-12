@@ -13,14 +13,14 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
-import com.leothosthoren.go4lunch.utils.DataConvertHelper;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 
 import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DataConvertHelper {
+public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DataConverterHelper {
     @BindView(R.id.item_restaurant_layout)
     ConstraintLayout mLayout;
     @BindView(R.id.item_restaurants_name)
@@ -50,16 +50,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         ButterKnife.bind(this, itemView);
     }
 
-//    public void updateRestaurantList(RestaurantItem restaurantItem, RequestManager glide) {
-//        assert this.mRestaurantName != null;
-//        this.mRestaurantName.setText(restaurantItem.getName());
-//        this.mRestaurantAddress.setText(restaurantItem.concatTypeAndAdress(restaurantItem.getFoodType(), restaurantItem.getAddress()));
-//        this.mRestaurantDistance.setText(restaurantItem.concatDistance(restaurantItem.getDistance()));
-//        this.mRestaurantOpening.setText(restaurantItem.getOpeningInfo());
-//        this.mNbOfWorkmates.setText(restaurantItem.concatWorkmateQuantity(restaurantItem.getWorkmateQuantity()));
-//        this.mRatingBar.setRating(restaurantItem.formatRating(restaurantItem.getRating()));
-//        glide.load(restaurantItem.getUrlPhoto()).into(this.mRestaurantPhoto);
-//    }
 
     public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide,
                                      RestaurantAdapter.Listener callback) {
@@ -69,6 +59,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         {
             //Restaurant name
             this.mRestaurantName.setText(placeDetail.getResult().getName());
+
+            //Restaurant photo
             if (placeDetail.getResult().getPhotos() != null) {
                 glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
                         .into(this.mRestaurantPhoto);

@@ -2,6 +2,8 @@ package com.leothosthoren.go4lunch.controler.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,18 +16,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.PlaceAutocompleteAdapter;
@@ -36,12 +47,16 @@ import com.leothosthoren.go4lunch.controler.fragments.RestaurantViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.WorkMatesViewFragment;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class Go4LunchActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Go4LunchActivity extends BaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     // CONSTANT
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
@@ -57,6 +72,10 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     private ImageView mImageViewProfile;
     private AutoCompleteTextView mSearchText;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private RelativeLayout relativeLayout;
+    // VAR
+    private GoogleApiClient mGoogleApiClient;
+    private LatLng mDefaultLocation = new LatLng(48.813326, 2.348383);
 
 
     //BOTTOM NAVIGATION VIEW
@@ -85,14 +104,11 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.configureToolbar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-        this.configureNavHeader();
-        this.configureBottomNavigationView();
-        this.configureContentFrameFragment(new MapViewFragment());
-        this.updateMenuUIOnCreation();
+        //For autocomplete researching
+        this.relativeLayout = (RelativeLayout) findViewById(R.id.autocomplete_relative_layout);
         this.mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
+        this.init();
+
     }
 
     @Override
@@ -100,6 +116,85 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         return R.layout.activity_go4lunch;
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+    }
+
+    //---------------------
+    // INIT
+    //---------------------
+
+    private void init() {
+        this.configureToolbar();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+        this.configureNavHeader();
+        this.configureBottomNavigationView();
+        this.configureContentFrameFragment(new MapViewFragment());
+        this.updateMenuUIOnCreation();
+        this.configureAutocomplete();
+    }
+
+    private void configureAutocomplete() {
+        Log.d(TAG, "configureAutocomplete: ok");
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        mSearchText.setOnEditorActionListener((v, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                    || actionId == EditorInfo.IME_ACTION_DONE
+                    || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+
+                //execute our method for searching
+                // Try query autocomplete
+                // geoLocate();
+                hideSoftKeyboard();
+
+            }
+            return false;
+        });
+
+        // Handle the adapter for custom search
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
+                new LatLngBounds(mDefaultLocation, mDefaultLocation), null);
+
+        if (mSearchText != null) {
+            mSearchText.setAdapter(mPlaceAutocompleteAdapter);
+        }
+
+
+    }
+
+
+    private void geoLocate() {
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = mSearchText.getText().toString();
+
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+        }
+
+        if (list.size() > 0) {
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate: found a location: " + address.toString());
+            Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+
+        hideSoftKeyboard();
+    }
 
     //---------------------
     // NAVIGATION
@@ -109,20 +204,21 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     //Handle menu drawer on back press button
     @Override
     public void onBackPressed() {
-        // 5 - Handle back click to close menu
+        // Handle back clickHandler to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
-
-            // Todo add a else if here to handle edittext disparition
+        } else if (relativeLayout.getVisibility() == View.VISIBLE) {
+            this.relativeLayout.setVisibility(View.GONE);
+            this.hideSoftKeyboard();
         } else {
             super.onBackPressed();
         }
     }
 
-    //Handle the click on MENU DRAWER
+    //Handle the clickHandler on MENU DRAWER
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // 4 - Handle Navigation Item Click
+        // Handle Navigation Item Click
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_lunch:
@@ -147,32 +243,20 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     // CONFIGURATION
     // ---------------------
 
-
-    @Override
     protected void configureToolbar() {
-        this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(this.mToolbar);
-//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //2 - Inflate the menu and add it to the Toolbar
+        // Inflate the menu and add it to the Toolbar
         getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
-    // Configure click on menu Toolbar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_search) {
-//            mSearchText.setVisibility(View.VISIBLE);
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    // 2 - Configure Drawer Layout
+    // Configure Drawer Layout
     private void configureDrawerLayout() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
@@ -181,7 +265,7 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         toggle.syncState();
     }
 
-    // 3 - Configure NavigationView
+    // Configure NavigationView
     private void configureNavigationView() {
         this.navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -262,33 +346,27 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
                 String username = TextUtils.isEmpty(currentUser.getUsername()) ?
                         getString(R.string.info_no_user_name_found) : currentUser.getUsername();
 
-                String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
-                        getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+                String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
+                        getString(R.string.info_no_email_found) : getCurrentUser().getEmail();
                 mTextViewUser.setText(username);
                 mTextViewEmail.setText(email);
 
             });
-
-//            //Get user 's name
-//            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
-//                    getString(R.string.info_no_user_name_found) : this.getCurrentUser().getDisplayName();
-//
-//            String email = TextUtils.isEmpty(this.getCurrentUser().getUserEmail()) ?
-//                    getString(R.string.info_no_email_found) : this.getCurrentUser().getUserEmail();
-//            //Update view with data
-//            mTextViewUser.setText(username);
-//            mTextViewEmail.setText(email);
         }
     }
 
+    private void hideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+    }
     //---------------------
     // PERMISSION
     //---------------------
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
@@ -312,6 +390,14 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
     // ACTION
     // ---------------------
 
+    // Configure clickHandler on menu Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search && relativeLayout.getVisibility() == View.GONE) {
+            relativeLayout.setVisibility(View.VISIBLE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // Ask permission when accessing to this listener
     @AfterPermissionGranted(RC_IMAGE_PERMS)
@@ -323,5 +409,6 @@ public class Go4LunchActivity extends BaseActivity implements NavigationView.OnN
         }
         Toast.makeText(this, R.string.allow_pick_picture_on_device, Toast.LENGTH_SHORT).show();
     }
+
 
 }

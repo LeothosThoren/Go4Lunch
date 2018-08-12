@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.leothosthoren.go4lunch.utils.DataConvertHelper;
 import com.leothosthoren.go4lunch.utils.FireBaseTools;
 import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
@@ -17,8 +16,11 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment implements HttpRequestTools, FireBaseTools {
     // 1 - Force developer implement those methods
     protected abstract BaseFragment newInstance();
+
     protected abstract int getFragmentLayout();
+
     protected abstract void configureDesign();
+
     protected abstract void updateDesign();
 
     @Override
@@ -29,7 +31,7 @@ public abstract class BaseFragment extends Fragment implements HttpRequestTools,
         ButterKnife.bind(this, view);
         // 4 - Configure Design (Developer will call this method instead of override onCreateView())
         this.configureDesign();
-        return(view);
+        return (view);
     }
 
     @Override

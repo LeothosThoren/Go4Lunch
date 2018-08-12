@@ -29,9 +29,9 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity {
 
 
+    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
     // Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 82; //ASCII 'R'
-    public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
     // Get Coordinator Layout
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -41,11 +41,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void configureToolbar() {
-        super.configureToolbar();
     }
 
     @Override
@@ -116,7 +111,7 @@ public class MainActivity extends BaseActivity {
     // UI
     // --------------------
 
-    // 2 - Show Snack Bar with a message
+    // Show Snack Bar with a message
     private void showSnackBar(CoordinatorLayout coordinatorLayout, String message) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
     }
@@ -141,7 +136,12 @@ public class MainActivity extends BaseActivity {
             String uid = this.getCurrentUser().getUid();
 
             // Allow the creation on the data base
-            UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
+            if (urlPicture != null) {
+                UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
+            } else {
+                UserHelper.createUserWithoutPicture(uid, username, email).addOnFailureListener(this.onFailureListener());
+            }
+
         }
     }
 
@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
     // UTILS
     // --------------------
 
-    // 3 - Method that handles response after SignIn Activity close
+    // Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
 

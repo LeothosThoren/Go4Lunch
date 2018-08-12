@@ -9,12 +9,12 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.firebase.Users;
-import com.leothosthoren.go4lunch.utils.DataConvertHelper;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataConvertHelper {
+public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataConverterHelper {
 
     //VIEW
     @BindView(R.id.item_workmates_choice)

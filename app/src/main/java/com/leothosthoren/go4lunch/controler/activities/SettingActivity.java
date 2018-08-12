@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,24 +36,25 @@ public class SettingActivity extends BaseActivity {
 
     public static final int DELETE_USER_TASK = 68; //ASCII 'D'
     public static final int UPDATE_USERNAME = 85; //ASCII 'U'
+    public static final int UPDATE_EMAIL = 86; //Simple ;)
     // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final int RC_IMAGE_PERMS = 100;
     private static final int RC_CHOOSE_PHOTO = 200;
-    // 2 - STATIC DATA FOR PICTURE
+    // WIDGET
     @BindView(R.id.placeholder)
     ImageView mImageViewProfile;
-    @BindView(R.id.username)
+    @BindView(R.id.setting_username)
     TextInputEditText mTextInputEditTextUsername;
-    // 1 - Uri of image selected by user
+    @BindView(R.id.setting_email)
+    TextInputEditText mTextInputEditTextEmail;
+    // Uri of image selected by user
     private Uri uriImageSelected;
-//    @BindView(R.id.email_user) TextInputEditText mTextInputEditTextEmail
-    @BindView(R.id.toolbar)Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.configureToolbar();
         this.updateUIOnCreation();
     }
 
@@ -68,8 +68,13 @@ public class SettingActivity extends BaseActivity {
     // --------------------
 
     @OnClick(R.id.update_username)
-    public void onClickUpdateButton(View view) {
+    public void onClickUpdateUsernameButton(View view) {
         this.updateUserNameInFireBase();
+    }
+
+    @OnClick(R.id.update_email)
+    public void onClickUpdateEmailButton(View view) {
+        this.updateEmailInFireBase();
     }
 
     @OnClick(R.id.delete_account)
@@ -87,17 +92,6 @@ public class SettingActivity extends BaseActivity {
     @OnClick(R.id.placeholder)
     public void onClickSettingPicture(View view) {
         this.chooseImageFromPhone();
-
-    }
-
-    // ---------------------
-    // CONFIGURATION
-    // ---------------------
-    @Override
-    protected void configureToolbar() {
-        super.configureToolbar();
-//        this.mToolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-        setSupportActionBar(this.mToolbar);
 
     }
 
@@ -130,7 +124,7 @@ public class SettingActivity extends BaseActivity {
                 .addOnFailureListener(this.onFailureListener());
     }
 
-    //Create or update on Firestore
+    //Create or update username on Firestore
     private void updateUserNameInFireBase() {
         String username = this.mTextInputEditTextUsername.getText().toString();
 
@@ -138,6 +132,18 @@ public class SettingActivity extends BaseActivity {
             if (!username.isEmpty() && !username.equals(getString(R.string.info_no_user_name_found))) {
                 UserHelper.updateUsername(username, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener())
                         .addOnSuccessListener(this.updateUiAfterHttpRequestsCompleted(UPDATE_USERNAME));
+            }
+        }
+    }
+
+    //Create or update username on Firestore
+    private void updateEmailInFireBase() {
+        String email = this.mTextInputEditTextEmail.getText().toString();
+
+        if (this.getCurrentUser() != null) {
+            if (!email.isEmpty() && !email.equals(getString(R.string.info_no_email_found))) {
+                UserHelper.updateEmail(email, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener())
+                        .addOnSuccessListener(this.updateUiAfterHttpRequestsCompleted(UPDATE_EMAIL));
             }
         }
     }
@@ -162,9 +168,15 @@ public class SettingActivity extends BaseActivity {
                             .apply(RequestOptions.circleCropTransform())
                             .into(this.mImageViewProfile);
                 }
+                //Get username
                 String username = TextUtils.isEmpty(currentUser.getUsername()) ?
                         getString(R.string.info_no_user_name_found) : currentUser.getUsername();
+                //Get email
+                String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
+                        getString(R.string.info_no_email_found) : getCurrentUser().getEmail();
+
                 mTextInputEditTextUsername.setText(username);
+                mTextInputEditTextEmail.setText(email);
             });
         }
     }
@@ -178,6 +190,9 @@ public class SettingActivity extends BaseActivity {
         return aVoid -> {
             switch (taskId) {
                 case UPDATE_USERNAME:
+                    Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
+                    break;
+                case UPDATE_EMAIL:
                     Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
                     break;
                 case DELETE_USER_TASK:
@@ -237,4 +252,6 @@ public class SettingActivity extends BaseActivity {
             }
         }
     }
+
+
 }

@@ -11,7 +11,4 @@
     app:titleTextAppearance="@style/Toolbar.TitleText"
     app:titleTextColor="@color/white">
 
-    <!--AutoComplete editText layout-->
-    <include layout="@layout/autocomplete_edit_text" />
-
 </android.support.v7.widget.Toolbar>

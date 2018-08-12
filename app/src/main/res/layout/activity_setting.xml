@@ -6,24 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".controler.activities.SettingActivity">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar" />
-
+    <!-- Picture PlaceHolder -->
     <ImageView
         android:id="@+id/placeholder"
         style="@style/MainStyle"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/login_image"
         android:onClick="onClickSettingPicture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
 
+    <!-- TextInput username -->
     <android.support.design.widget.TextInputEditText
-        android:id="@+id/username"
+        android:id="@+id/setting_username"
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +34,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/placeholder" />
 
+    <!-- TextInput email -->
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/setting_email"
+        style="@style/MainStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_username" />
+
+    <!-- Button update username -->
     <Button
         android:id="@+id/update_username"
         style="@style/MainStyle"
@@ -45,10 +59,26 @@
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:onClick="onClickUpdateButton"
+        app:layout_constraintTop_toBottomOf="@+id/setting_email"
+        android:onClick="onClickUpdateUsernameButton"
         />
 
+    <!-- Button update email -->
+    <Button
+        android:id="@+id/update_email"
+        style="@style/MainStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_buttons"
+        android:text="@string/update_email"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/update_username"
+        android:onClick="onClickUpdateEmailButton"
+        />
+
+    <!-- Button update delete -->
     <Button
         android:id="@+id/delete_account"
         style="@style/MainStyle"
@@ -60,10 +90,10 @@
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_username"
+        app:layout_constraintTop_toBottomOf="@+id/update_email"
         android:onClick="onClickDeleteButton"/>
 
-
+    <!-- Separation -->
     <View
         android:id="@+id/view"
         style="@style/MainStyle"
@@ -74,6 +104,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delete_account" />
 
+    <!-- Switch button -->
     <Switch
         android:id="@+id/switch_button"
         style="@style/MainStyle"

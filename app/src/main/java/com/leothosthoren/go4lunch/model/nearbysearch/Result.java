@@ -1,8 +1,9 @@
 package com.leothosthoren.go4lunch.model.nearbysearch;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Result {
 

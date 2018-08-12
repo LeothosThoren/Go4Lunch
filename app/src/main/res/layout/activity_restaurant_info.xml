@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".controler.activities.RestaurantInfoActivity">
 
-    <include layout="@layout/toolbar"/>
-
     <!--RESTAURANT INFO PHOTO-->
     <ImageView
         android:id="@+id/restaurant_info_photo"
@@ -74,7 +72,7 @@
 
     <!--RESTAURANT INFO RATING BAR-->
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/restaurant_info_rating_bar"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,7 +99,7 @@
 
         <!--RESTAURANT INFO PHONE-->
         <Button
-            android:id="@+id/restaurtant_info_phone_button"
+            android:id="@+id/restaurant_info_phone_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

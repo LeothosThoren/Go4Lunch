@@ -28,6 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity implements FireBase
     // --------------------
     // UI
     // --------------------
+
     @Optional
     protected void configureToolbar() {
         ActionBar ab = getSupportActionBar();

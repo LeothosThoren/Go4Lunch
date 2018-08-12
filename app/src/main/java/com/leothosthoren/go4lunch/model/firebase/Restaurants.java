@@ -3,35 +3,36 @@ package com.leothosthoren.go4lunch.model.firebase;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class Restaurants {
 
     private Date dateChoice;
-    private Users restaurantUsers;
-    private String restaurantName;
-    private String restaurantPlaceId;
-    private String restaurantFoodType;
-    private boolean restaurantLike;
+    private HashMap<String, Boolean> restaurantLike;
     private boolean restaurantSelection;
-    private Boolean latitude;
-    private Boolean longitude;
-
+    private String placeId;
     private Users workmate;
 
+    public Restaurants() {
+    }
 
-    public Restaurants(Date dateChoice, Users restaurantUsers, String restaurantName,
-                       String restaurantPlaceId, boolean restaurantLike, boolean restaurantSelection,
-                       Boolean latitude, Boolean longitude, Users workmate) {
+    public Restaurants(Date dateChoice, HashMap<String, Boolean> restaurantLike,
+                       boolean restaurantSelection, String placeId, Users workmate) {
         this.dateChoice = dateChoice;
-        this.restaurantUsers = restaurantUsers;
-        this.restaurantName = restaurantName;
-        this.restaurantPlaceId = restaurantPlaceId;
         this.restaurantLike = restaurantLike;
         this.restaurantSelection = restaurantSelection;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.placeId = placeId;
         this.workmate = workmate;
     }
+
+    public Restaurants(Date dateChoice, boolean restaurantSelection, String placeId, Users workmate) {
+        this.dateChoice = dateChoice;
+        this.restaurantSelection = restaurantSelection;
+        this.placeId = placeId;
+        this.workmate = workmate;
+    }
+
+    // GETTERS
 
     @ServerTimestamp
     public Date getDateChoice() {
@@ -42,43 +43,11 @@ public class Restaurants {
         this.dateChoice = dateChoice;
     }
 
-    public Users getRestaurantUsers() {
-        return restaurantUsers;
-    }
-
-    public void setRestaurantUsers(Users restaurantUsers) {
-        this.restaurantUsers = restaurantUsers;
-    }
-
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
-
-    public String getRestaurantPlaceId() {
-        return restaurantPlaceId;
-    }
-
-    public void setRestaurantPlaceId(String restaurantPlaceId) {
-        this.restaurantPlaceId = restaurantPlaceId;
-    }
-
-    public String getRestaurantFoodType() {
-        return restaurantFoodType;
-    }
-
-    public void setRestaurantFoodType(String restaurantFoodType) {
-        this.restaurantFoodType = restaurantFoodType;
-    }
-
-    public boolean isRestaurantLike() {
+    public HashMap<String, Boolean> getRestaurantLike() {
         return restaurantLike;
     }
 
-    public void setRestaurantLike(boolean restaurantLike) {
+    public void setRestaurantLike(HashMap<String, Boolean> restaurantLike) {
         this.restaurantLike = restaurantLike;
     }
 
@@ -86,24 +55,14 @@ public class Restaurants {
         return restaurantSelection;
     }
 
+    // SETTERS
+
     public void setRestaurantSelection(boolean restaurantSelection) {
         this.restaurantSelection = restaurantSelection;
     }
 
-    public Boolean getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Boolean latitude) {
-        this.latitude = latitude;
-    }
-
-    public Boolean getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Boolean longitude) {
-        this.longitude = longitude;
+    public String getPlaceID() {
+        return placeId;
     }
 
     public Users getWorkmate() {
@@ -112,5 +71,9 @@ public class Restaurants {
 
     public void setWorkmate(Users workmate) {
         this.workmate = workmate;
+    }
+
+    public void setPlaceId(String placeDetail) {
+        this.placeId = placeDetail;
     }
 }

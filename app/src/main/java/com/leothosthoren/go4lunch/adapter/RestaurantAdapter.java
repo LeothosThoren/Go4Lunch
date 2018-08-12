@@ -12,7 +12,6 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.view.RestaurantViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {

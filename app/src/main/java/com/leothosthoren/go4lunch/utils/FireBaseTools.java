@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public interface FireBaseTools {
 
-     String TAG = FireBaseTools.class.getSimpleName();
+    String TAG = FireBaseTools.class.getSimpleName();
 
     // --------------------
     // UTILS

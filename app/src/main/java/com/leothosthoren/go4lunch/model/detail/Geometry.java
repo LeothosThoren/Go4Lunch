@@ -1,4 +1,3 @@
-
 package com.leothosthoren.go4lunch.model.detail;
 
 import com.google.gson.annotations.Expose;

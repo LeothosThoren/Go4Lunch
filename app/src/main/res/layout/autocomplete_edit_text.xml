@@ -2,11 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/autocomplete_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp"
+    android:layout_height="40dp"
+    android:layout_margin="8dp"
     android:background="@drawable/white_border"
     android:visibility="gone">
 
@@ -24,13 +21,13 @@
     <!-- Autocomplete editText-->
     <AutoCompleteTextView
         android:id="@+id/input_search"
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/ic_search_icon"
         android:layout_toRightOf="@id/ic_search_icon"
         android:background="@null"
-        android:hint="Search something"
+        android:hint="@string/search_something"
         android:imeOptions="actionSearch"
         android:textColor="#000"
         android:textSize="15sp" />

@@ -1,4 +1,3 @@
-
 package com.leothosthoren.go4lunch.model.nearbysearch;
 
 import com.google.gson.annotations.Expose;

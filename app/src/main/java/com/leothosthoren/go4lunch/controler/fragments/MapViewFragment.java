@@ -17,8 +17,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -57,15 +55,13 @@ import io.reactivex.observers.DisposableObserver;
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleApiClient.OnConnectionFailedListener {
+        GoogleMap.OnMarkerClickListener {
 
     // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 16f;
+    public static final float DEFAULT_ZOOM = 15f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
-    private static final int MAX_PLACES = 15;
-    private static final int REQUEST_PICK_PLACE = 2;
-    // VIEW
+    // WIDGET
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
     // VAR
@@ -74,11 +70,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LatLng mDefaultLocation = new LatLng(48.7927684, 2.3591994999999315);
+    private LatLng mDefaultLocation = new LatLng(48.813326, 2.348383);
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
-    private GoogleApiClient mGoogleApiClient;
+
     private Disposable mDisposable;
+    private Marker mMarker;
     // DATA
     private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
     private Map<String, PlaceDetail> mMarkerMap = new HashMap<>();
@@ -145,12 +142,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
 
     }
 
@@ -268,7 +259,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onNext(List<PlaceDetail> placeDetail) {
                         Log.d(TAG, "onNext: " + placeDetail.size());
-                        addMarkerOnMap(placeDetail);
+                        if (!placeDetail.isEmpty())
+                            addMarkerOnMap(placeDetail);
                     }
 
                     @Override
@@ -279,6 +271,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "onComplete: " + mPlaceDetailList.size());
+                        if (mPlaceDetailList.isEmpty() || mPlaceDetailList == null) {
+                            Toast.makeText(getContext(), R.string.no_restaurant_found, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
@@ -327,18 +322,17 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         this.mPlaceDetailList.addAll(placeDetailList);
         DataSingleton.getInstance().setPlaceDetailList(mPlaceDetailList);
-        Marker marker;
 
-        if (mPlaceDetailList.size() != 0 && mPlaceDetailList != null) {
+        if (!mPlaceDetailList.isEmpty() || mPlaceDetailList != null) {
             for (int i = 0; i < mPlaceDetailList.size(); i++) {
-                marker = mMap.addMarker(new MarkerOptions()
+                mMarker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
                                 mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
                         .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                // Store in HASHMAP for Marker click
-                mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
+                // Store in HASHMAP for Marker clickHandler
+                mMarkerMap.put(mMarker.getId(), mPlaceDetailList.get(i));
             }
         } else
             Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
@@ -354,7 +348,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     public boolean onMarkerClick(final Marker marker) {
         // Store PlaceDetail object in Singleton
         DataSingleton.getInstance().setPlaceDetail(mMarkerMap.get(marker.getId()));
-        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs marker size:" + mMarkerMap.size());
+        Log.d(TAG, "onMarkerClick: " + mMarkerMap.get(marker.getId()) + " Vs mMarker size:" + mMarkerMap.size());
         //Launch Activity
         startActivity(RestaurantInfoActivity.class);
         return false;
@@ -369,15 +363,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 Double longitude = DataSingleton.getInstance().getDeviceLongitude();
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(latitude, longitude), DEFAULT_ZOOM));
+            } else {
+                Toast.makeText(getContext(), "An error occurred, please clickHandler on map view button", Toast.LENGTH_SHORT).show();
             }
-
-
         });
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 }
 
