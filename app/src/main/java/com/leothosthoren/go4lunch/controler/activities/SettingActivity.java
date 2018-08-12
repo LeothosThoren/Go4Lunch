@@ -9,8 +9,10 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +39,7 @@ public class SettingActivity extends BaseActivity {
     public static final int DELETE_USER_TASK = 68; //ASCII 'D'
     public static final int UPDATE_USERNAME = 85; //ASCII 'U'
     public static final int UPDATE_EMAIL = 86; //Simple ;)
+    public static final int UPDATE_NOTIFICATION = 87; //Lazy ...
     // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final int RC_IMAGE_PERMS = 100;
@@ -48,6 +51,8 @@ public class SettingActivity extends BaseActivity {
     TextInputEditText mTextInputEditTextUsername;
     @BindView(R.id.setting_email)
     TextInputEditText mTextInputEditTextEmail;
+    @BindView(R.id.switch_button)
+    Switch mNotificationSwitch;
     // Uri of image selected by user
     private Uri uriImageSelected;
 
@@ -56,6 +61,7 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.updateUIOnCreation();
+        this.notificationSwitchHandler();
     }
 
     @Override
@@ -95,13 +101,27 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+    public void notificationSwitchHandler() {
+        mNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // do some stuff
+                updateNotificationSwitchOnFirebase(true, "Notification enabled");
+            } else {
+                // do other stuff
+                updateNotificationSwitchOnFirebase(false, "Notification disabled");
+            }
+        });
+
+    }
+
     // --------------------
     // REST REQUESTS
     // --------------------
 
+
     private void deleteUserFromFireBase() {
         if (this.getCurrentUser() != null) {
-            UserHelper.deleteUser(this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
+            UserHelper.deleteUser(this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener(this));
 
             AuthUI.getInstance()
                     .delete(this)
@@ -117,11 +137,11 @@ public class SettingActivity extends BaseActivity {
                     String linkImageSavedInFireBase = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
 
                     //Update picture
-                    UserHelper.updateProfilPicture(linkImageSavedInFireBase,
+                    UserHelper.updateProfilePicture(linkImageSavedInFireBase,
                             Objects.requireNonNull(this.getCurrentUser()).getUid())
-                            .addOnFailureListener(this.onFailureListener());
+                            .addOnFailureListener(this.onFailureListener(this));
                 })
-                .addOnFailureListener(this.onFailureListener());
+                .addOnFailureListener(this.onFailureListener(this));
     }
 
     //Create or update username on Firestore
@@ -130,7 +150,7 @@ public class SettingActivity extends BaseActivity {
 
         if (this.getCurrentUser() != null) {
             if (!username.isEmpty() && !username.equals(getString(R.string.info_no_user_name_found))) {
-                UserHelper.updateUsername(username, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener())
+                UserHelper.updateUsername(username, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener(this))
                         .addOnSuccessListener(this.updateUiAfterHttpRequestsCompleted(UPDATE_USERNAME));
             }
         }
@@ -142,15 +162,28 @@ public class SettingActivity extends BaseActivity {
 
         if (this.getCurrentUser() != null) {
             if (!email.isEmpty() && !email.equals(getString(R.string.info_no_email_found))) {
-                UserHelper.updateEmail(email, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener())
+                UserHelper.updateEmail(email, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener(this))
                         .addOnSuccessListener(this.updateUiAfterHttpRequestsCompleted(UPDATE_EMAIL));
             }
         }
     }
 
+    // Create or update notification on Firestore
+    private void updateNotificationSwitchOnFirebase(boolean check, String s) {
+        if (this.getCurrentUser() != null) {
+            UserHelper.updateNotification(Objects.requireNonNull(getCurrentUser()).getUid(), check)
+                    .addOnSuccessListener(updateUiAfterHttpRequestsCompleted(UPDATE_NOTIFICATION))
+                    .addOnCompleteListener(this.onCompleteListener(this, s))
+                    .addOnFailureListener(this.onFailureListener(this));
+        }
+
+    }
+
+
     // --------------------
     // UI
     // --------------------
+
 
     private void updateUIOnCreation() {
 
@@ -169,14 +202,21 @@ public class SettingActivity extends BaseActivity {
                             .into(this.mImageViewProfile);
                 }
                 //Get username
-                String username = TextUtils.isEmpty(currentUser.getUsername()) ?
-                        getString(R.string.info_no_user_name_found) : currentUser.getUsername();
+                String username = TextUtils.isEmpty(currentUser.getUserName()) ?
+                        getString(R.string.info_no_user_name_found) : currentUser.getUserName();
                 //Get email
                 String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
                         getString(R.string.info_no_email_found) : getCurrentUser().getEmail();
+                //Get notification switch position
+                Boolean isSwitchChecked = false;
+                if (currentUser.getNotificationEnabled() != null) {
+                    isSwitchChecked = currentUser.getNotificationEnabled();
+                    Log.d(TAG, "updateUIOnCreation: switch = " + currentUser.getNotificationEnabled());
+                }
 
-                mTextInputEditTextUsername.setText(username);
-                mTextInputEditTextEmail.setText(email);
+                this.mNotificationSwitch.setChecked(isSwitchChecked);
+                this.mTextInputEditTextUsername.setText(username);
+                this.mTextInputEditTextEmail.setText(email);
             });
         }
     }
@@ -186,6 +226,7 @@ public class SettingActivity extends BaseActivity {
     // UTILS
     // --------------------
 
+
     private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
         return aVoid -> {
             switch (taskId) {
@@ -193,6 +234,9 @@ public class SettingActivity extends BaseActivity {
                     Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_EMAIL:
+                    Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
+                    break;
+                case UPDATE_NOTIFICATION:
                     Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
                     break;
                 case DELETE_USER_TASK:
@@ -226,6 +270,7 @@ public class SettingActivity extends BaseActivity {
     // --------------------
     // FILE MANAGEMENT
     // --------------------
+
 
     private void chooseImageFromPhone() {
         if (!EasyPermissions.hasPermissions(this, PERMS)) {

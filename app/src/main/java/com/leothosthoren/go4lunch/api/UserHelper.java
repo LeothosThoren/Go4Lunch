@@ -11,11 +11,13 @@ public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
 
+
     // --- COLLECTION REFERENCE ---
 
     public static CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
+
 
     // --- CREATE ---
 
@@ -29,6 +31,7 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
+
     // --- GET ---
 
     public static Task<DocumentSnapshot> getUser(String uid) {
@@ -36,8 +39,9 @@ public class UserHelper {
     }
 
     public static Query getAllUsers() {
-        return UserHelper.getUsersCollection().limit(50);
+        return UserHelper.getUsersCollection().limit(10);
     }
+
 
     // --- UPDATE ---
 
@@ -49,9 +53,14 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("email", email);
     }
 
-    public static Task<Void> updateProfilPicture(String urlPicture, String uid) {
+    public static Task<Void> updateProfilePicture(String urlPicture, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("urlPicture", urlPicture);
     }
+
+    public static Task<Void> updateNotification(String uid, Boolean enabled) {
+        return UserHelper.getUsersCollection().document(uid).update("notificationEnabled", enabled);
+    }
+
 
     // --- DELETE ---
 

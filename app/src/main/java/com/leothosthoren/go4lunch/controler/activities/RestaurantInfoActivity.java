@@ -84,7 +84,10 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             if (isCheckFab) {
                 //Firestore
                 RestaurantHelper.saveRestaurantChoice(FirebaseAuth.getInstance().getUid(), mPlaceDetail.getResult().getPlaceId(),
-                        true, null, currentUser).addOnCompleteListener(task -> {
+                        true, null, currentUser)
+                        .addOnCompleteListener(onCompleteListener(this, "Choice saved"))
+                        .addOnFailureListener(onFailureListener(this));
+                /*.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         mFloatingActionButton.setImageResource(R.drawable.ic_check_circle);
                         isCheckFab = false;
@@ -95,7 +98,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                         Log.d(TAG, "clickHandler: fab :" + task.getException());
                     }
 
-                }).addOnFailureListener(this.onFailureListener());
+                }).addOnFailureListener(this.onFailureListener(v));*/
 
             } else {
 

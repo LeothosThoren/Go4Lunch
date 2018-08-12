@@ -135,12 +135,13 @@ public class MainActivity extends BaseActivity {
             String email = this.getCurrentUser().getEmail();
             String uid = this.getCurrentUser().getUid();
 
+
             // Allow the creation on the data base
-            if (urlPicture != null) {
-                UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener());
-            } else {
-                UserHelper.createUserWithoutPicture(uid, username, email).addOnFailureListener(this.onFailureListener());
-            }
+
+            //todo not necessary
+            if (urlPicture == null)
+            UserHelper.createUser(uid, username, email, "https://firebasestorage.googleapis.com/v0/b/go4lunch-a07dd.appspot.com/o/joker.jpeg?alt=media&token=4ab965da-e5c0-4c17-9aca-2458f769b62b").addOnFailureListener(this.onFailureListener(this));
+
 
         }
     }

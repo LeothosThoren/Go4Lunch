@@ -5,25 +5,34 @@ import android.support.annotation.Nullable;
 public class Users {
 
     private String uid;
-    private String username;
-    private String email;
-    @Nullable
+    private String userName;
+    private String userEmail;
+//    @Nullable
     private String urlPicture;
+    private Boolean isNotificationEnabled;
 
     public Users() {
     }
 
-    public Users(String uid, String username, String email, @Nullable String urlPicture) {
+    public Users(String uid, String userName, String userEmail, /*@Nullable*/ String urlPicture) {
         this.uid = uid;
-        this.username = username;
-        this.email = email;
+        this.userName = userName;
+        this.userEmail = userEmail;
         this.urlPicture = urlPicture;
     }
 
-    public Users(String uid, String username, String email) {
+    public Users(String uid, String userName, String userEmail) {
         this.uid = uid;
-        this.username = username;
-        this.email = email;
+        this.userName = userName;
+        this.userEmail = userEmail;
+    }
+
+    public Users(String uid, String userName, String userEmail, /*@Nullable*/ String urlPicture, Boolean isNotificationEnabled) {
+        this.uid = uid;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.urlPicture = urlPicture;
+        this.isNotificationEnabled = isNotificationEnabled;
     }
 
     public String getUid() {
@@ -34,20 +43,20 @@ public class Users {
         this.uid = uid;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUserEmail() {
-        return email;
+        return userEmail;
     }
 
-    public void setUserEmail(String email) {
-        this.email = email;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     @Nullable
@@ -57,5 +66,13 @@ public class Users {
 
     public void setUrlPicture(@Nullable String urlPicture) {
         this.urlPicture = urlPicture;
+    }
+
+    public Boolean getNotificationEnabled() {
+        return isNotificationEnabled;
+    }
+
+    public void setNotificationEnabled(Boolean notificationEnabled) {
+        isNotificationEnabled = notificationEnabled;
     }
 }

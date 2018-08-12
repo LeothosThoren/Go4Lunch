@@ -26,7 +26,7 @@
         style="@style/MainStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/email"
+        android:text="@string/userEmail"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

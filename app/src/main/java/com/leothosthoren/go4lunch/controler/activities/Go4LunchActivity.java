@@ -338,13 +338,13 @@ public class Go4LunchActivity extends BaseActivity implements
 
                 //Update picture when registration contain empty photo
                 if (currentUser.getUrlPicture() != null) {
-                    UserHelper.updateProfilPicture(currentUser.getUrlPicture(),
+                    UserHelper.updateProfilePicture(currentUser.getUrlPicture(),
                             Objects.requireNonNull(this.getCurrentUser()).getUid())
-                            .addOnFailureListener(this.onFailureListener());
+                            .addOnFailureListener(this.onFailureListener(this));
                 }
 
-                String username = TextUtils.isEmpty(currentUser.getUsername()) ?
-                        getString(R.string.info_no_user_name_found) : currentUser.getUsername();
+                String username = TextUtils.isEmpty(currentUser.getUserName()) ?
+                        getString(R.string.info_no_user_name_found) : currentUser.getUserName();
 
                 String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
                         getString(R.string.info_no_email_found) : getCurrentUser().getEmail();

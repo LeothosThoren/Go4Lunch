@@ -33,7 +33,7 @@ android {
         release {
             // Jacoco
             testCoverageEnabled true
-            
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // Place Api

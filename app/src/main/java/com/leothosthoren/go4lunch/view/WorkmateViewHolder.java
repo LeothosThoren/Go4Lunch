@@ -36,8 +36,8 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         }
 
         //Update workmate name
-        if (workmateItem.getUsername() != null) {
-            this.mTextViewWorkmateName.setText(formatFullName(workmateItem.getUsername()));
+        if (workmateItem.getUserName() != null) {
+            this.mTextViewWorkmateName.setText(formatFullName(workmateItem.getUserName()));
         }
     }
 }
