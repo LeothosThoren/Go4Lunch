@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
@@ -22,6 +20,7 @@ import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 import com.leothosthoren.go4lunch.utils.FireBaseTools;
@@ -64,6 +63,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         }
 
         this.getCurrentUserFromFirestore();
+        this.getUserSelectionPlaceFromFirestore();
         this.clickHandler();
     }
 
@@ -74,7 +74,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
 
     // ---------------------
-    // CONFIGURATION
+    // ACTION
     // ---------------------
 
     //RESTAURANT SELECTION
@@ -83,29 +83,18 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
             if (isCheckFab) {
                 //Firestore
-                RestaurantHelper.saveRestaurantChoice(FirebaseAuth.getInstance().getUid(), mPlaceDetail.getResult().getPlaceId(),
+                RestaurantHelper.saveRestaurantChoice(Objects.requireNonNull(getCurrentUser()).getUid(), mPlaceDetail,
                         true, null, currentUser)
                         .addOnCompleteListener(onCompleteListener(this, "Choice saved"))
                         .addOnFailureListener(onFailureListener(this));
-                /*.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        mFloatingActionButton.setImageResource(R.drawable.ic_check_circle);
-                        isCheckFab = false;
-                        Snackbar.make(v, "checkFab true", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    } else {
-                        Toast.makeText(this, "Something is wrong check the log", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "clickHandler: fab :" + task.getException());
-                    }
-
-                }).addOnFailureListener(this.onFailureListener(v));*/
 
             } else {
 
                 // Firestore
-//                RestaurantHelper.saveRestaurantChoice(FirebaseAuth.getInstance().getUid(), null,
-//                        false, null, currentUser);
-
+                if (getCurrentUser() != null) {
+                    RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid());
+                    //Update or delete ?
+                }
                 mFloatingActionButton.setImageResource(R.drawable.ic_uncheck_circle);
                 isCheckFab = true;
                 Snackbar.make(v, "checkFab false", Snackbar.LENGTH_LONG)
@@ -137,41 +126,6 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
     }
 
-    // --------------------
-    // REST REQUESTS
-    // --------------------
-
-    // Get Current User from Firestore
-    private void getCurrentUserFromFirestore() {
-        UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid())
-                .addOnSuccessListener(documentSnapshot ->
-                        currentUser = documentSnapshot.toObject(Users.class));
-    }
-
-    // ---------------------
-    // UI
-    // ---------------------
-
-    private void setUpViews() {
-        //Restaurant name
-        restaurantName.setText(mPlaceDetail.getResult().getName());
-        //Restaurant address
-        restaurantAddress.setText(formatAddress(mPlaceDetail.getResult().getFormattedAddress()));
-        //Restaurant rating
-        restaurantRatingBar.setRating(formatRating(mPlaceDetail.getResult().getRating()));
-        //Restaurant Photo
-        if (mPlaceDetail.getResult().getPhotos() != null) {
-            String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400" +
-                    "&photoreference=";
-            String apiKey = "&key=" + BuildConfig.ApiKey;
-            Glide.with(this)
-                    .load(request + mPlaceDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
-                    .into(this.restaurantPhoto);
-        }
-
-
-    }
-
     private void dialPhoneNumber(String phoneNumber) {
         if (phoneNumber != null) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -199,6 +153,54 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
     }
 
+    // --------------------
+    // REST REQUESTS
+    // --------------------
+
+    // Get Current User from Firestore
+    private void getCurrentUserFromFirestore() {
+        UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid())
+                .addOnSuccessListener(documentSnapshot ->
+                        currentUser = documentSnapshot.toObject(Users.class));
+    }
+
+    // Get Restaurant selection from Firestore
+    private void getUserSelectionPlaceFromFirestore() {
+        if (getCurrentUser() != null) {
+            RestaurantHelper.getRestaurantSelection(getCurrentUser().getUid())
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
+                        assert restaurants != null;
+//                        mPlaceDetail = restaurants.getPlaceDetail();
+
+                    }).addOnFailureListener(this.onFailureListener(this));
+        }
+
+    }
+
+    // ---------------------
+    // UI
+    // ---------------------
+
+    private void setUpViews() {
+        //Restaurant name
+        restaurantName.setText(mPlaceDetail.getResult().getName());
+        //Restaurant address
+        restaurantAddress.setText(formatAddress(mPlaceDetail.getResult().getFormattedAddress()));
+        //Restaurant rating
+        restaurantRatingBar.setRating(formatRating(mPlaceDetail.getResult().getRating()));
+        //Restaurant Photo
+        if (mPlaceDetail.getResult().getPhotos() != null) {
+            String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400" +
+                    "&photoreference=";
+            String apiKey = "&key=" + BuildConfig.ApiKey;
+            Glide.with(this)
+                    .load(request + mPlaceDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
+                    .into(this.restaurantPhoto);
+        }
+
+
+    }
 
 }
 

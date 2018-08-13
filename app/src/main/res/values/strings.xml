@@ -92,4 +92,6 @@
 
     <!-- Credits -->
     <string name="Icons_made_by_Freepik_from_flaticon_is_licensed_by_Creative_Commons_BY_3.0"> credit : licence by http://creativecommons.org/licenses/by/3.0/ made by http://www.freepik.com</string>
+    <string name="default_notification_channel_id">notification channel</string>
+    <string name="text_notification">It\'s time to lunch!</string>
 </resources>

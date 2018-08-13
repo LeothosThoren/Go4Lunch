@@ -1,8 +1,13 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,7 +30,9 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.model.firebase.Users;
+import com.leothosthoren.go4lunch.services.ScheduledNotificationSender;
 
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,6 +43,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class SettingActivity extends BaseActivity {
 
+    // CONSTANT
     public static final int DELETE_USER_TASK = 68; //ASCII 'D'
     public static final int UPDATE_USERNAME = 85; //ASCII 'U'
     public static final int UPDATE_EMAIL = 86; //Simple ;)
@@ -55,6 +63,9 @@ public class SettingActivity extends BaseActivity {
     Switch mNotificationSwitch;
     // Uri of image selected by user
     private Uri uriImageSelected;
+    // VAR
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
 
     @Override
@@ -62,6 +73,7 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.updateUIOnCreation();
         this.notificationSwitchHandler();
+        this.configureAlarmManager(this);
     }
 
     @Override
@@ -106,13 +118,16 @@ public class SettingActivity extends BaseActivity {
             if (isChecked) {
                 // do some stuff
                 updateNotificationSwitchOnFirebase(true, "Notification enabled");
+                startAlarm(this);
             } else {
                 // do other stuff
                 updateNotificationSwitchOnFirebase(false, "Notification disabled");
+                stopAlarm(this);
             }
         });
 
     }
+
 
     // --------------------
     // REST REQUESTS
@@ -186,12 +201,10 @@ public class SettingActivity extends BaseActivity {
     private void updateUIOnCreation() {
 
         if (this.getCurrentUser() != null) {
-
             //data from firestore
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
                 Users currentUser = documentSnapshot.toObject(Users.class);
                 assert currentUser != null;
-
                 //Get user picture from providers on Firebase
                 if (currentUser.getUrlPicture() != null) {
                     Glide.with(this)
@@ -211,7 +224,7 @@ public class SettingActivity extends BaseActivity {
                     isSwitchChecked = currentUser.getNotificationEnabled();
                     Log.d(TAG, "updateUIOnCreation: switch = " + currentUser.getNotificationEnabled());
                 }
-
+                //Set Widgets
                 this.mNotificationSwitch.setChecked(isSwitchChecked);
                 this.mTextInputEditTextUsername.setText(username);
                 this.mTextInputEditTextEmail.setText(email);
@@ -275,12 +288,12 @@ public class SettingActivity extends BaseActivity {
             EasyPermissions.requestPermissions(this, getString(R.string.popup_title_permission_files_access), RC_IMAGE_PERMS, PERMS);
             return;
         }
-        // 3 - Launch an "Selection Image" Activity
+        // Launch an "Selection Image" Activity
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RC_CHOOSE_PHOTO);
     }
 
-    // 4 - Handle activity response (after user has chosen or not a picture)
+    // Handle activity response (after user has chosen or not a picture)
     private void handleResponse(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) { //SUCCESS
@@ -293,6 +306,55 @@ public class SettingActivity extends BaseActivity {
             } else {
                 Toast.makeText(this, getString(R.string.toast_title_no_image_chosen), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+
+    // --------------------
+    // SCHEDULED ALARM
+    // --------------------
+
+    private void configureAlarmManager(Context context) {
+        alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ScheduledNotificationSender.class);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    private void startAlarm(Context context) {
+        // Set the alarm to start at approximately 12:00 p.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+
+        // SetInexactRepeating()
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        //Enable notification even after rebooting
+        ComponentName receiver = new ComponentName(context, ScheduledNotificationSender.class);
+        PackageManager pm = context.getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+
+        Toast.makeText(context, "Alarm set !", Toast.LENGTH_SHORT).show();
+    }
+
+    private void stopAlarm(Context context) {
+        // If the alarm has been set, cancel it.
+        if (alarmMgr!= null) {
+            alarmMgr.cancel(alarmIntent);
+
+            //Disable notification even after rebooting
+            ComponentName receiver = new ComponentName(context, ScheduledNotificationSender.class);
+            PackageManager pm = context.getPackageManager();
+
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+
+            Toast.makeText(this, "Alarm Canceled !", Toast.LENGTH_SHORT).show();
         }
     }
 

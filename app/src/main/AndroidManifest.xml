@@ -7,8 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -24,8 +25,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Main Activity -->
-        <activity
-            android:name=".controler.activities.MainActivity">
+        <activity android:name=".controler.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,7 +59,16 @@
         <activity
             android:name=".controler.activities.RestaurantInfoActivity"
             android:label="@string/manifest_restaurant_info"
-            android:parentActivityName=".controler.activities.Go4LunchActivity"/>
+            android:parentActivityName=".controler.activities.Go4LunchActivity" />
+
+        <!--ALARM MANAGER -->
+        <receiver
+            android:name=".services.ScheduledNotificationSender"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

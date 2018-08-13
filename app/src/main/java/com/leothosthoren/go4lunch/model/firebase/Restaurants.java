@@ -1,6 +1,9 @@
 package com.leothosthoren.go4lunch.model.firebase;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.firestore.ServerTimestamp;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -8,27 +11,28 @@ import java.util.HashMap;
 public class Restaurants {
 
     private Date dateChoice;
+    @Nullable
     private HashMap<String, Boolean> restaurantLike;
     private boolean restaurantSelection;
-    private String placeId;
+    private PlaceDetail placeDetail;
     private Users workmate;
 
     public Restaurants() {
     }
 
-    public Restaurants(Date dateChoice, HashMap<String, Boolean> restaurantLike,
-                       boolean restaurantSelection, String placeId, Users workmate) {
+    public Restaurants(Date dateChoice, boolean restaurantSelection, PlaceDetail placeDetail, Users workmate) {
         this.dateChoice = dateChoice;
-        this.restaurantLike = restaurantLike;
         this.restaurantSelection = restaurantSelection;
-        this.placeId = placeId;
+        this.placeDetail = placeDetail;
         this.workmate = workmate;
     }
 
-    public Restaurants(Date dateChoice, boolean restaurantSelection, String placeId, Users workmate) {
+    public Restaurants(Date dateChoice, @Nullable HashMap<String, Boolean> restaurantLike,
+                       boolean restaurantSelection, PlaceDetail placeDetail, Users workmate) {
         this.dateChoice = dateChoice;
+        this.restaurantLike = restaurantLike;
         this.restaurantSelection = restaurantSelection;
-        this.placeId = placeId;
+        this.placeDetail = placeDetail;
         this.workmate = workmate;
     }
 
@@ -43,11 +47,13 @@ public class Restaurants {
         this.dateChoice = dateChoice;
     }
 
+    @Nullable
     public HashMap<String, Boolean> getRestaurantLike() {
         return restaurantLike;
     }
 
-    public void setRestaurantLike(HashMap<String, Boolean> restaurantLike) {
+
+    public void setRestaurantLike(@Nullable HashMap<String, Boolean> restaurantLike) {
         this.restaurantLike = restaurantLike;
     }
 
@@ -61,8 +67,12 @@ public class Restaurants {
         this.restaurantSelection = restaurantSelection;
     }
 
-    public String getPlaceID() {
-        return placeId;
+    public PlaceDetail getPlaceDetail() {
+        return placeDetail;
+    }
+
+    public void setPlaceDetail(PlaceDetail placeDetail) {
+        this.placeDetail = placeDetail;
     }
 
     public Users getWorkmate() {
@@ -71,9 +81,5 @@ public class Restaurants {
 
     public void setWorkmate(Users workmate) {
         this.workmate = workmate;
-    }
-
-    public void setPlaceId(String placeDetail) {
-        this.placeId = placeDetail;
     }
 }
