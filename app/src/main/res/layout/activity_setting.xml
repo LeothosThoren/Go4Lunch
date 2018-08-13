@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
 
-    <!-- TextInput userName -->
+    <!-- TextInput username -->
     <android.support.design.widget.TextInputEditText
         android:id="@+id/setting_username"
         style="@style/MainStyle"
@@ -48,7 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setting_username" />
 
-    <!-- Button update userName -->
+    <!-- Button update username -->
     <Button
         android:id="@+id/update_username"
         style="@style/MainStyle"

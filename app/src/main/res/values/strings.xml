@@ -75,13 +75,13 @@
     <string name="website">WEBSITE</string>
 
     <!--Extras-->
-    <string name="dowloading">Downloading...</string>
+    <string name="dowloading">Downloading&#8230;</string>
     <string name="no_workmate_available">No workmate available</string>
     <string name="popup_title_permission_files_access">File is accessible</string>
     <string name="toast_title_no_image_chosen">No image chosen!</string>
     <string name="toast_message_geolocation">Make sure your device got map geolocation activated</string>
     <string name="allow_pick_picture_on_device">You have the right to access the picture on the device!</string>
-    <string name="no_restaurants_available_check_the_map_view">No restaurants available... check the map view</string>
+    <string name="no_restaurants_available_check_the_map_view">No restaurants available&#8230; check the map view</string>
     <string name="phone_no_available">No phone number available</string>
     <string name="website_no_available">Website no available</string>
     <string name="manifest_restaurant_info">Restaurant information</string>
@@ -90,4 +90,6 @@
     <string name="search_something">Search something</string>
     <string name="no_restaurant_found">No restaurant found!</string>
 
+    <!-- Credits -->
+    <string name="Icons_made_by_Freepik_from_flaticon_is_licensed_by_Creative_Commons_BY_3.0"> credit : licence by http://creativecommons.org/licenses/by/3.0/ made by http://www.freepik.com</string>
 </resources>

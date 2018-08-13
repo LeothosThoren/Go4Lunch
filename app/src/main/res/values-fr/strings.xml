@@ -58,7 +58,7 @@
     <string name="website_no_available">Aucun siteweb disponible</string>
     <string name="manifest_restaurant_info">Information du restaurant</string>
     <string name="manifest_settings">Paramètres</string>
-    <string name="update_email">Modifier userEmail</string>
+    <string name="update_email">Modifier email</string>
     <string name="search_something">Rechercher restaurant</string>
     <string name="no_restaurant_found">Aucun restaurant trouvé !</string>
 </resources>
