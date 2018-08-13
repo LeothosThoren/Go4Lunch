@@ -16,6 +16,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
@@ -32,7 +33,7 @@ public class MainActivity extends BaseActivity {
     public static final int ERROR_DIALOG_REQUEST = 69; //ASCII 'E'
     // Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 82; //ASCII 'R'
-    // Get Coordinator Layout
+    // Widget
     @BindView(R.id.main_activity_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.main_button)
@@ -135,17 +136,26 @@ public class MainActivity extends BaseActivity {
             String email = this.getCurrentUser().getEmail();
             String uid = this.getCurrentUser().getUid();
 
-
             // Allow the creation on the data base
-
-            //todo not necessary
-            if (urlPicture == null)
-            UserHelper.createUser(uid, username, email, "https://firebasestorage.googleapis.com/v0/b/go4lunch-a07dd.appspot.com/o/joker.jpeg?alt=media&token=4ab965da-e5c0-4c17-9aca-2458f769b62b").addOnFailureListener(this.onFailureListener(this));
-
+            UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener(this));
 
         }
     }
 
+    private void checkIfUserExistsInDatabase() {
+        UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot snapshot = task.getResult();
+                        if (snapshot.exists()) {
+                            Log.d(TAG, "checkIfUserExistsInDatabase: on success" + snapshot.getData());
+                        } else {
+                            Log.d(TAG, "checkIfUserExistsInDatabase: no such document need to create one");
+                            this.createUserInFirestore();
+                        }
+                    }
+                }).addOnFailureListener(this.onFailureListener(this));
+    }
 
     // --------------------
     // UTILS
@@ -157,7 +167,7 @@ public class MainActivity extends BaseActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                this.createUserInFirestore();
+                this.checkIfUserExistsInDatabase();
                 showSnackBar(this.coordinatorLayout, getString(R.string.connection_succeed));
             } else { // ERRORS
                 if (response == null) {

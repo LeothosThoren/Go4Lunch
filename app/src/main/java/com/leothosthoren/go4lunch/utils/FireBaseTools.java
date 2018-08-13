@@ -38,21 +38,21 @@ public interface FireBaseTools {
     // --------------------
 
     // Complete
-    default OnCompleteListener<Void> onCompleteListener(Context c, String s) {
+    default OnCompleteListener<Void> onCompleteListener(Context context, String s) {
         return task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "onCompleteListener: it is successful");
-                Toast.makeText(c, s, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
             }
         };
     }
 
     // Failure
-    default OnFailureListener onFailureListener(Context c) {
+    default OnFailureListener onFailureListener(Context context) {
         return e -> {
             //Handle it
             Log.e(TAG, "onFailure: an error occurred... " + e.getMessage());
-            Toast.makeText(c, R.string.error_unknown_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_unknown_error, Toast.LENGTH_SHORT).show();
         };
     }
 

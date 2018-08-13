@@ -5,34 +5,34 @@ import android.support.annotation.Nullable;
 public class Users {
 
     private String uid;
-    private String userName;
+    private String username;
     private String userEmail;
-//    @Nullable
+    @Nullable
     private String urlPicture;
-    private Boolean isNotificationEnabled;
+    private Boolean notificationEnabled;
 
     public Users() {
     }
 
-    public Users(String uid, String userName, String userEmail, /*@Nullable*/ String urlPicture) {
+    public Users(String uid, String username, String userEmail, @Nullable String urlPicture) {
         this.uid = uid;
-        this.userName = userName;
+        this.username = username;
         this.userEmail = userEmail;
         this.urlPicture = urlPicture;
     }
 
-    public Users(String uid, String userName, String userEmail) {
+    public Users(String uid, String username, String userEmail) {
         this.uid = uid;
-        this.userName = userName;
+        this.username = username;
         this.userEmail = userEmail;
     }
 
-    public Users(String uid, String userName, String userEmail, /*@Nullable*/ String urlPicture, Boolean isNotificationEnabled) {
+    public Users(String uid, String username, String userEmail, @Nullable String urlPicture, Boolean notificationEnabled) {
         this.uid = uid;
-        this.userName = userName;
+        this.username = username;
         this.userEmail = userEmail;
         this.urlPicture = urlPicture;
-        this.isNotificationEnabled = isNotificationEnabled;
+        this.notificationEnabled = notificationEnabled;
     }
 
     public String getUid() {
@@ -43,12 +43,12 @@ public class Users {
         this.uid = uid;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getUserEmail() {
@@ -69,10 +69,10 @@ public class Users {
     }
 
     public Boolean getNotificationEnabled() {
-        return isNotificationEnabled;
+        return notificationEnabled;
     }
 
     public void setNotificationEnabled(Boolean notificationEnabled) {
-        isNotificationEnabled = notificationEnabled;
+        this.notificationEnabled = notificationEnabled;
     }
 }

@@ -259,7 +259,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onNext(List<PlaceDetail> placeDetail) {
                         Log.d(TAG, "onNext: " + placeDetail.size());
-                        if (!placeDetail.isEmpty())
+                        if (placeDetail.size() != 0)
                             addMarkerOnMap(placeDetail);
                     }
 

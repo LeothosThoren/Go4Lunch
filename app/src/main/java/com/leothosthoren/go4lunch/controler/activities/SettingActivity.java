@@ -172,11 +172,9 @@ public class SettingActivity extends BaseActivity {
     private void updateNotificationSwitchOnFirebase(boolean check, String s) {
         if (this.getCurrentUser() != null) {
             UserHelper.updateNotification(Objects.requireNonNull(getCurrentUser()).getUid(), check)
-                    .addOnSuccessListener(updateUiAfterHttpRequestsCompleted(UPDATE_NOTIFICATION))
                     .addOnCompleteListener(this.onCompleteListener(this, s))
                     .addOnFailureListener(this.onFailureListener(this));
         }
-
     }
 
 
@@ -202,8 +200,8 @@ public class SettingActivity extends BaseActivity {
                             .into(this.mImageViewProfile);
                 }
                 //Get username
-                String username = TextUtils.isEmpty(currentUser.getUserName()) ?
-                        getString(R.string.info_no_user_name_found) : currentUser.getUserName();
+                String username = TextUtils.isEmpty(getCurrentUser().getDisplayName()) ?
+                        getString(R.string.info_no_user_name_found) : currentUser.getUsername();
                 //Get email
                 String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
                         getString(R.string.info_no_email_found) : getCurrentUser().getEmail();

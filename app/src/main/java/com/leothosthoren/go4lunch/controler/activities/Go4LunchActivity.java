@@ -343,8 +343,8 @@ public class Go4LunchActivity extends BaseActivity implements
                             .addOnFailureListener(this.onFailureListener(this));
                 }
 
-                String username = TextUtils.isEmpty(currentUser.getUserName()) ?
-                        getString(R.string.info_no_user_name_found) : currentUser.getUserName();
+                String username = TextUtils.isEmpty(currentUser.getUsername()) ?
+                        getString(R.string.info_no_user_name_found) : currentUser.getUsername();
 
                 String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
                         getString(R.string.info_no_email_found) : getCurrentUser().getEmail();
