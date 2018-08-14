@@ -43,7 +43,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         //RESTAURANT
 //        holder.updateRestaurantList(this.mRestaurantItems.get(position), this.glide);
-        holder.updateRestaurantView(mRestaurantItems.get(position), this.glide, this.callback);
+        holder.updateRestaurantListView(mRestaurantItems.get(position), this.glide, this.callback);
     }
 
     @Override
