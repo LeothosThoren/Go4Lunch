@@ -94,4 +94,6 @@
     <string name="Icons_made_by_Freepik_from_flaticon_is_licensed_by_Creative_Commons_BY_3.0"> credit : licence by http://creativecommons.org/licenses/by/3.0/ made by http://www.freepik.com</string>
     <string name="default_notification_channel_id">notification channel</string>
     <string name="text_notification">It\'s time to lunch!</string>
+    <string name="location_button_error">An error occurred, please click on map view button</string>
+    <string name="save_place_selection">Choice saved</string>
 </resources>

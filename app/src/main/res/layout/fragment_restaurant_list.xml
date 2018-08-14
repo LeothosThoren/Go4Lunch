@@ -6,12 +6,12 @@
     tools:context=".controler.fragments.RestaurantViewFragment">
 
     <!--Recycler view fragment -->
-   <include layout="@layout/recycler_view_layout"/>
+    <include layout="@layout/recycler_view_layout" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="100dip"
-        android:layout_height="100dip"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:visibility="gone" />
 
