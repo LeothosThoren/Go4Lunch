@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
@@ -25,6 +27,7 @@ import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 import com.leothosthoren.go4lunch.utils.FireBaseTools;
 
+import java.util.Date;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -35,7 +38,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     @BindView(R.id.restaurant_info_phone_button)
     Button mButtonCall;
     @BindView(R.id.floatingActionButton)
-    FloatingActionButton mFloatingActionButton;
+    FloatingActionButton mFab;
     @BindView(R.id.restaurant_info_website_button)
     Button mWebsiteButton;
     @BindView(R.id.restaurant_info_like_button)
@@ -51,21 +54,25 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     // VAR
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
-    private Users currentUser;
     // DATA
     private PlaceDetail mPlaceDetail = DataSingleton.getInstance().getPlaceDetail();
+    private Users mCurrentUser;
+    private Date mDate;
+    private String mPlaceID;
+    private Boolean mRestaurantSelection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mPlaceDetail.getResult() != null) {
-            setUpViews();
-        }
 
-        this.getCurrentUserFromFirestore();
-        this.getUserSelectionPlaceFromFirestore();
+        if (mPlaceDetail.getResult() != null) {
+            this.getCurrentUserFromFirestore();
+            this.getUserSelectionPlaceFromFirestore();
+            this.setUpViewsWithPlaceApi();
+        }
         this.clickHandler();
     }
+
 
     @Override
     public int getFragmentLayout() {
@@ -74,57 +81,9 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
 
     // ---------------------
-    // ACTION
+    // CONFIGURATION
     // ---------------------
 
-    //RESTAURANT SELECTION
-    public void clickHandler() {
-        mFloatingActionButton.setOnClickListener(v -> {
-
-            if (isCheckFab) {
-                //Firestore
-                RestaurantHelper.saveRestaurantChoice(Objects.requireNonNull(getCurrentUser()).getUid(), mPlaceDetail,
-                        true, null, currentUser)
-                        .addOnCompleteListener(onCompleteListener(this, "Choice saved"))
-                        .addOnFailureListener(onFailureListener(this));
-
-            } else {
-
-                // Firestore
-                if (getCurrentUser() != null) {
-                    RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid());
-                    //Update or delete ?
-                }
-                mFloatingActionButton.setImageResource(R.drawable.ic_uncheck_circle);
-                isCheckFab = true;
-                Snackbar.make(v, "checkFab false", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-
-        });
-
-        //LIKE BUTTON
-        mLikeButton.setOnClickListener(v -> {
-
-            if (isCheckLike) {
-                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
-                isCheckLike = false;
-                Toast.makeText(this, "clickHandler on star button true", Toast.LENGTH_SHORT).show();
-            } else {
-                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border, 0, 0);
-                isCheckLike = true;
-                Toast.makeText(this, "clickHandler on star button false", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
-        //CALLING
-        mButtonCall.setOnClickListener(v -> dialPhoneNumber(mPlaceDetail.getResult().getFormattedPhoneNumber()));
-
-        //BROWSE URL
-        mWebsiteButton.setOnClickListener(v -> openWebsitePage(mPlaceDetail.getResult().getWebsite()));
-
-    }
 
     private void dialPhoneNumber(String phoneNumber) {
         if (phoneNumber != null) {
@@ -153,15 +112,79 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
     }
 
+
+    // ---------------------
+    // ACTION
+    // ---------------------
+
+
+    //RESTAURANT SELECTION
+    public void clickHandler() {
+        mFab.setOnClickListener(v -> {
+
+            if (isCheckFab) {
+
+                mFab.setImageResource(R.drawable.ic_check_circle);
+                isCheckFab = false;
+                Snackbar.make(v, "checkFab true", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                //Firestore
+                RestaurantHelper.saveRestaurantChoice(Objects.requireNonNull(getCurrentUser()).getUid(), mPlaceDetail,
+                        true, null, mCurrentUser)
+                        .addOnCompleteListener(onCompleteListener(this, getString(R.string.save_place_selection)))
+                        .addOnFailureListener(onFailureListener(this));
+
+            } else {
+
+                mFab.setImageResource(R.drawable.ic_uncheck_circle);
+                isCheckFab = true;
+                Snackbar.make(v, "checkFab false", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                // Firestore
+                if (getCurrentUser() != null) {
+                    RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid())
+                            .addOnFailureListener(this.onFailureListener(this));
+                    //Update or delete ? test
+                }
+
+            }
+
+        });
+
+        //LIKE BUTTON
+        mLikeButton.setOnClickListener(v -> {
+
+            if (isCheckLike) {
+                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
+                isCheckLike = false;
+                Toast.makeText(this, "clickHandler on star button true", Toast.LENGTH_SHORT).show();
+            } else {
+                mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border, 0, 0);
+                isCheckLike = true;
+                Toast.makeText(this, "clickHandler on star button false", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        //CALLING
+        mButtonCall.setOnClickListener(v -> dialPhoneNumber(mPlaceDetail.getResult().getFormattedPhoneNumber()));
+
+        //BROWSE URL
+        mWebsiteButton.setOnClickListener(v -> openWebsitePage(mPlaceDetail.getResult().getWebsite()));
+
+    }
+
+
     // --------------------
     // REST REQUESTS
     // --------------------
+
 
     // Get Current User from Firestore
     private void getCurrentUserFromFirestore() {
         UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid())
                 .addOnSuccessListener(documentSnapshot ->
-                        currentUser = documentSnapshot.toObject(Users.class));
+                        mCurrentUser = documentSnapshot.toObject(Users.class));
     }
 
     // Get Restaurant selection from Firestore
@@ -170,23 +193,29 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             RestaurantHelper.getRestaurantSelection(getCurrentUser().getUid())
                     .addOnSuccessListener(documentSnapshot -> {
                         Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                        assert restaurants != null;
-//                        mPlaceDetail = restaurants.getPlaceDetail();
+                        if (restaurants != null) {
+                            this.mDate = restaurants.getDateChoice();
+                            this.mPlaceID = restaurants.getPlaceDetail().getResult().getPlaceId();
+                            this.mRestaurantSelection = restaurants.getRestaurantSelection();
 
+                            // Update view after calling database to check user choice
+                            this.setUpViewsWithFirestoreDatabase(mPlaceID, mRestaurantSelection, mDate);
+                        }
                     }).addOnFailureListener(this.onFailureListener(this));
         }
 
     }
 
+
     // ---------------------
     // UI
     // ---------------------
 
-    private void setUpViews() {
+    private void setUpViewsWithPlaceApi() {
         //Restaurant name
         restaurantName.setText(mPlaceDetail.getResult().getName());
         //Restaurant address
-        restaurantAddress.setText(formatAddress(mPlaceDetail.getResult().getFormattedAddress()));
+        restaurantAddress.setText(mPlaceDetail.getResult().getVicinity());
         //Restaurant rating
         restaurantRatingBar.setRating(formatRating(mPlaceDetail.getResult().getRating()));
         //Restaurant Photo
@@ -196,10 +225,25 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             String apiKey = "&key=" + BuildConfig.ApiKey;
             Glide.with(this)
                     .load(request + mPlaceDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
+                    .apply(RequestOptions.centerCropTransform())
                     .into(this.restaurantPhoto);
         }
 
+    }
 
+    private void setUpViewsWithFirestoreDatabase(String placeID, Boolean selection, Date date) {
+        // FAB
+        // if selection is true and date is from today and the placeId restaurant equal placeID from singleton
+        if (mPlaceDetail.getResult().getPlaceId().equals(placeID)) {
+            mFab.setImageResource(R.drawable.ic_check_circle);
+            Log.d(TAG, "setUpViewsWithFirestoreDatabase: compare place id from google = "
+                    + mPlaceDetail.getResult().getPlaceId()
+                    + " VS from Firebase = " + placeID);
+        }
+
+        //LIKE
+        // when parcouring hash map you find the same placeID with placeID from singleton
+//        mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
     }
 
 }

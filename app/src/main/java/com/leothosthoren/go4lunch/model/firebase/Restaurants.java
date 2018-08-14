@@ -43,22 +43,21 @@ public class Restaurants {
         return dateChoice;
     }
 
-    public void setDateChoice(Date dateChoice) {
-        this.dateChoice = dateChoice;
-    }
-
     @Nullable
     public HashMap<String, Boolean> getRestaurantLike() {
         return restaurantLike;
     }
 
-
-    public void setRestaurantLike(@Nullable HashMap<String, Boolean> restaurantLike) {
-        this.restaurantLike = restaurantLike;
+    public PlaceDetail getPlaceDetail() {
+        return placeDetail;
     }
 
-    public boolean isRestaurantSelection() {
+    public boolean getRestaurantSelection() {
         return restaurantSelection;
+    }
+
+    public Users getWorkmate() {
+        return workmate;
     }
 
     // SETTERS
@@ -67,16 +66,16 @@ public class Restaurants {
         this.restaurantSelection = restaurantSelection;
     }
 
-    public PlaceDetail getPlaceDetail() {
-        return placeDetail;
+    public void setRestaurantLike(@Nullable HashMap<String, Boolean> restaurantLike) {
+        this.restaurantLike = restaurantLike;
+    }
+
+    public void setDateChoice(Date dateChoice) {
+        this.dateChoice = dateChoice;
     }
 
     public void setPlaceDetail(PlaceDetail placeDetail) {
         this.placeDetail = placeDetail;
-    }
-
-    public Users getWorkmate() {
-        return workmate;
     }
 
     public void setWorkmate(Users workmate) {

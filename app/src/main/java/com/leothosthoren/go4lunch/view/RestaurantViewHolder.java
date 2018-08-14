@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.RestaurantAdapter;
@@ -51,8 +52,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     }
 
 
-    public void updateRestaurantView(PlaceDetail placeDetail, RequestManager glide,
-                                     RestaurantAdapter.Listener callback) {
+    public void updateRestaurantListView(PlaceDetail placeDetail, RequestManager glide,
+                                         RestaurantAdapter.Listener callback) {
         String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference=";
         String apiKey = "&key=" + BuildConfig.ApiKey;
         assert placeDetail.getResult() != null;
@@ -63,6 +64,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
             //Restaurant photo
             if (placeDetail.getResult().getPhotos() != null) {
                 glide.load(request + placeDetail.getResult().getPhotos().get(0).getPhotoReference() + apiKey)
+                        .apply(RequestOptions.centerCropTransform())
                         .into(this.mRestaurantPhoto);
             }
 

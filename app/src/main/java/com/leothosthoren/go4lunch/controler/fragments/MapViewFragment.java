@@ -59,7 +59,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    public static final float DEFAULT_ZOOM = 15f;
+    public static final float DEFAULT_ZOOM = 16f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
     // WIDGET
     @BindView(R.id.position_icon)
@@ -73,11 +73,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private LatLng mDefaultLocation = new LatLng(48.813326, 2.348383);
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
-
     private Disposable mDisposable;
-    private Marker mMarker;
     // DATA
-    private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
+    private List<PlaceDetail> mPlaceDetailList;
     private Map<String, PlaceDetail> mMarkerMap = new HashMap<>();
 
     @Override
@@ -169,14 +167,16 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
 
     private void getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        if (getContext() != null) {
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            }
         }
 
     }
@@ -224,8 +224,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude, longitude), DEFAULT_ZOOM));
 
-                            //HTTP RXJAVA
-                            executeHttpRequestWithNearBySearchAndPlaceDetail(setLocationIntoString(latitude, longitude));
+                            //Execute http request with retrofit and RxJava2
+                            this.executeHttpRequestWithNearBySearchAndPlaceDetail(setLocationIntoString(latitude, longitude));
 
                         } else {
                             Toast.makeText(getContext(),
@@ -259,8 +259,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onNext(List<PlaceDetail> placeDetail) {
                         Log.d(TAG, "onNext: " + placeDetail.size());
-                        if (placeDetail.size() != 0)
-                            addMarkerOnMap(placeDetail);
+                        addMarkerOnMap(placeDetail);
                     }
 
                     @Override
@@ -271,9 +270,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "onComplete: " + mPlaceDetailList.size());
-                        if (mPlaceDetailList.isEmpty() || mPlaceDetailList == null) {
+                        if (mPlaceDetailList.isEmpty())
                             Toast.makeText(getContext(), R.string.no_restaurant_found, Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
     }
@@ -320,22 +318,32 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
-        this.mPlaceDetailList.addAll(placeDetailList);
+        //Initialize and store data in both array and singleton
+        this.mPlaceDetailList = new ArrayList<>();
+        mPlaceDetailList.addAll(placeDetailList);
         DataSingleton.getInstance().setPlaceDetailList(mPlaceDetailList);
+        //Call for Marker object to handle marker view and click
+        Marker marker;
 
-        if (!mPlaceDetailList.isEmpty() || mPlaceDetailList != null) {
+        if (mPlaceDetailList.size() != 0 || mPlaceDetailList != null) {
             for (int i = 0; i < mPlaceDetailList.size(); i++) {
-                mMarker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
-                                mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
-                        .title(mPlaceDetailList.get(i).getResult().getName()));
+                if (mPlaceDetailList.get(i).getResult() != null) {
+                    marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
+                                    mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
+                            .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                // Store in HASHMAP for Marker clickHandler
-                mMarkerMap.put(mMarker.getId(), mPlaceDetailList.get(i));
+                    // Store in HashMap for Marker clickHandler
+                    mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
+                }
+
             }
-        } else
+        } else {
             Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
+        }
+
+
     }
 
 
@@ -364,7 +372,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(latitude, longitude), DEFAULT_ZOOM));
             } else {
-                Toast.makeText(getContext(), "An error occurred, please clickHandler on map view button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.location_button_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

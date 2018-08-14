@@ -56,7 +56,7 @@ public class ScheduledNotificationSender extends BroadcastReceiver{
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, channelID)
-                        .setSmallIcon(R.mipmap.ic_launcher_go4lunch)
+                        .setSmallIcon(R.drawable.ic_restaurant_map_icon)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(context.getString(R.string.text_notification))
                         .setSubText(subText)
