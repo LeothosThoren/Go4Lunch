@@ -34,13 +34,11 @@ public interface DataConverterHelper {
         } else {
             if (listPeriod.size() == 7 || listPeriod.size() == 0) {
                 return "Open 24/7";
-            } else {
-                for (Period period : listPeriod) {
-                    if (period.getClose().getDay().equals(convertStringIntoInteger(dayOfWeek())))
-                        return "Open until " + period.getClose().getTime() + "pm";
-                }
+            } else if (listPeriod.size() <= 6){
+                return "Open until " + listPeriod.get(dayOfWeek()).getClose().getTime() + "pm";
             }
         }
+
         return "Closed Soon";
     }
 
@@ -49,10 +47,11 @@ public interface DataConverterHelper {
         return "";
     }
 
-    default String dayOfWeek() {
+    default Integer dayOfWeek() {
         Date date = new Date();
         SimpleDateFormat dayOfWeek = new SimpleDateFormat("u", Locale.getDefault());
-        return dayOfWeek.format(date);
+        //Day number of week (1 = Monday, ..., 7 = Sunday) != Place api 0 = Monday
+        return Integer.valueOf(dayOfWeek.format(date)) - 1;
     }
 
     // Change marker id into integer id

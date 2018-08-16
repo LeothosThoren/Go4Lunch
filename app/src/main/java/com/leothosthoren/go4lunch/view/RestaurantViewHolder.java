@@ -80,11 +80,11 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
                         lng, placeDetail.getResult().getGeometry().getLocation().getLng()));
             }
 
-            // Opening time
-//            if (placeDetail.getResult().getOpeningHours().getOpenNow() != null) {
-//                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
-//                        placeDetail.getResult().getOpeningHours().getPeriods()));
-//            }
+//             Opening time
+            if (placeDetail.getResult().getOpeningHours().getPeriods() != null || placeDetail.getResult().getOpeningHours().getPeriods().size() > 0) {
+                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
+                        placeDetail.getResult().getOpeningHours().getPeriods()));
+            }
 
             // Number of workmates
 

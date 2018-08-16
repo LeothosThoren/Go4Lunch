@@ -20,10 +20,6 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class UnitTest implements HttpRequestTools, DataConverterHelper {
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
-    }
 
     //==========================
     // STRING FORMAT OPERATIONS
@@ -63,14 +59,6 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
     }
 
     @Test
-    public void displayOpeningHour() throws Exception {
-        List<Period> periods = new ArrayList<>();
-
-        assertEquals("Closed", formatOpeningTime(false, periods));
-//        assertEquals("1730pm", formatOpeningTime(true, periods));
-    }
-
-    @Test
     public void computeDistance() throws Exception {
         //device 48.813326, 2.348383
         //restaurant Sherazade 48.814640, 2.344735
@@ -86,8 +74,21 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
     //==========================
 
     @Test
-    public void formatDate() {
-
+    public void formatDate() throws Exception {
         assertEquals("16/08/2018", formatDate(Calendar.getInstance().getTime()));
+    }
+
+    @Test
+    public void displayOpeningHour() throws Exception {
+        List<Period> periods = new ArrayList<>();
+
+        assertEquals("Closed", formatOpeningTime(false, periods));
+//        assertEquals("1730pm", formatOpeningTime(true, periods));
+    }
+
+    @Test
+    public void getCurrentDayOftheWeek() throws Exception {
+        //
+        assertEquals(3, dayOfWeek(), 0.0);
     }
 }
