@@ -1,5 +1,5 @@
 language: android
-jdk: oraclejdk8
+#jdk: oraclejdk8
 email: false
 
 env:
@@ -39,7 +39,7 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew build jacocoTestReport assembleAndroidTest
+#  - ./gradlew build jacocoTestReport assembleAndroidTest
   - ./gradlew connectedCheck
 
 after_success:
