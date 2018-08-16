@@ -26,12 +26,6 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
-    public static Task<Void> createUserWithoutPicture(String uid, String username, String email) {
-        Users userToCreate = new Users(uid, username, email);
-        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
-    }
-
-
     // --- GET ---
 
     public static Task<DocumentSnapshot> getUser(String uid) {
@@ -39,7 +33,7 @@ public class UserHelper {
     }
 
     public static Query getAllUsers() {
-        return UserHelper.getUsersCollection().limit(10);
+        return UserHelper.getUsersCollection().orderBy("username").limit(15);
     }
 
 
@@ -47,10 +41,6 @@ public class UserHelper {
 
     public static Task<Void> updateUsername(String username, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("username", username);
-    }
-
-    public static Task<Void> updateEmail(String email, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("email", email);
     }
 
     public static Task<Void> updateProfilePicture(String urlPicture, String uid) {
