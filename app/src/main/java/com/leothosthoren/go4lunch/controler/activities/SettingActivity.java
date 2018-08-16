@@ -58,8 +58,6 @@ public class SettingActivity extends BaseActivity {
     ImageView mImageViewProfile;
     @BindView(R.id.setting_username)
     TextInputEditText mTextInputEditTextUsername;
-    @BindView(R.id.setting_email)
-    TextInputEditText mTextInputEditTextEmail;
     @BindView(R.id.switch_button)
     Switch mNotificationSwitch;
     // Uri of image selected by user
@@ -200,9 +198,7 @@ public class SettingActivity extends BaseActivity {
                 //Get username
                 String username = TextUtils.isEmpty(getCurrentUser().getDisplayName()) ?
                         getString(R.string.info_no_user_name_found) : currentUser.getUsername();
-                //Get email
-                String email = TextUtils.isEmpty(getCurrentUser().getEmail()) ?
-                        getString(R.string.info_no_email_found) : getCurrentUser().getEmail();
+              
                 //Get notification switch position
                 Boolean isSwitchChecked = false;
                 if (currentUser.getNotificationEnabled() != null) {
@@ -212,7 +208,6 @@ public class SettingActivity extends BaseActivity {
                 //Set Widgets
                 this.mNotificationSwitch.setChecked(isSwitchChecked);
                 this.mTextInputEditTextUsername.setText(username);
-                this.mTextInputEditTextEmail.setText(email);
             });
         }
     }

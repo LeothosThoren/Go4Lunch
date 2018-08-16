@@ -7,12 +7,6 @@ import java.util.List;
 
 public class Result {
 
-    @SerializedName("address_components")
-    @Expose
-    private List<AddressComponent> addressComponents = null;
-    @SerializedName("adr_address")
-    @Expose
-    private String adrAddress;
     @SerializedName("formatted_address")
     @Expose
     private String formattedAddress;
@@ -43,18 +37,12 @@ public class Result {
     @SerializedName("place_id")
     @Expose
     private String placeId;
-    @SerializedName("plus_code")
-    @Expose
-    private PlusCode plusCode;
     @SerializedName("rating")
     @Expose
     private Double rating;
     @SerializedName("reference")
     @Expose
     private String reference;
-    @SerializedName("reviews")
-    @Expose
-    private List<Review> reviews = null;
     @SerializedName("scope")
     @Expose
     private String scope;
@@ -73,22 +61,6 @@ public class Result {
     @SerializedName("website")
     @Expose
     private String website;
-
-    public List<AddressComponent> getAddressComponents() {
-        return addressComponents;
-    }
-
-    public void setAddressComponents(List<AddressComponent> addressComponents) {
-        this.addressComponents = addressComponents;
-    }
-
-    public String getAdrAddress() {
-        return adrAddress;
-    }
-
-    public void setAdrAddress(String adrAddress) {
-        this.adrAddress = adrAddress;
-    }
 
     public String getFormattedAddress() {
         return formattedAddress;
@@ -170,14 +142,6 @@ public class Result {
         this.placeId = placeId;
     }
 
-    public PlusCode getPlusCode() {
-        return plusCode;
-    }
-
-    public void setPlusCode(PlusCode plusCode) {
-        this.plusCode = plusCode;
-    }
-
     public Double getRating() {
         return rating;
     }
@@ -192,14 +156,6 @@ public class Result {
 
     public void setReference(String reference) {
         this.reference = reference;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
     }
 
     public String getScope() {
