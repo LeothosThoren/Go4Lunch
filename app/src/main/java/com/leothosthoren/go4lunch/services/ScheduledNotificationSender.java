@@ -13,12 +13,11 @@ import android.support.v4.app.NotificationCompat;
 
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
-import com.leothosthoren.go4lunch.data.DataSingleton;
 
 import java.util.Objects;
 
 
-public class ScheduledNotificationSender extends BroadcastReceiver{
+public class ScheduledNotificationSender extends BroadcastReceiver {
 
     // VAR
     private String subText = "test"; // Info from firebase ...

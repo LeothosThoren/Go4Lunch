@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
 import android.Manifest;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -40,15 +39,21 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.PlaceAutocompleteAdapter;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.controler.fragments.MapViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.RestaurantViewFragment;
 import com.leothosthoren.go4lunch.controler.fragments.WorkMatesViewFragment;
+import com.leothosthoren.go4lunch.data.DataSingleton;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,22 +89,21 @@ public class Go4LunchActivity extends BaseActivity implements
 
         switch (item.getItemId()) {
             case R.id.navigation_map:
-                //TODO
-                Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.title_action_bar_hungry));
+                updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
                 configureContentFrameFragment(new MapViewFragment());
                 return true;
             case R.id.navigation_list:
-                Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.title_action_bar_hungry));
+                updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
                 configureContentFrameFragment(new RestaurantViewFragment());
                 return true;
             case R.id.navigation_workmates:
-                //TODO
-                Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_action_bar_workmate);
+                updateUI(R.string.title_action_bar_workmate, R.string.search_workmates);
                 configureContentFrameFragment(new WorkMatesViewFragment());
                 return true;
         }
         return false;
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +140,115 @@ public class Go4LunchActivity extends BaseActivity implements
         this.configureAutocomplete();
     }
 
+
+    //---------------------
+    // NAVIGATION
+    //---------------------
+
+
+    //Handle menu drawer on back press button
+    @Override
+    public void onBackPressed() {
+        // Handle back clickHandler to close menu
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (relativeLayout.getVisibility() == View.VISIBLE) {
+            this.relativeLayout.setVisibility(View.GONE);
+            this.hideSoftKeyboard();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //Handle the clickHandler on MENU DRAWER
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle Navigation Item Click
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_lunch:
+                this.showUserLunch();
+                break;
+            case R.id.nav_settings:
+                this.startActivity(SettingActivity.class);
+                break;
+            case R.id.nav_logout:
+                this.signOutUser();
+                break;
+            default:
+                break;
+        }
+
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+
+    // ---------------------
+    // CONFIGURATION
+    // ---------------------
+
+
+    protected void configureToolbar() {
+        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(this.mToolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu and add it to the Toolbar
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
+    }
+
+    // Configure Drawer Layout
+    private void configureDrawerLayout() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    // Configure NavigationView
+    private void configureNavigationView() {
+        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void configureNavHeader() {
+        // 3 bis - Handle navigation header items
+        View headView = navigationView.getHeaderView(0);
+        mTextViewUser = (TextView) headView.findViewById(R.id.menu_drawer_user);
+        mTextViewEmail = (TextView) headView.findViewById(R.id.menu_drawer_email);
+        mImageViewProfile = (ImageView) headView.findViewById(R.id.menu_drawer_imageView);
+    }
+
+    // Configure BottomNavigationView
+    public void configureBottomNavigationView() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    // Configure click on menu Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search && relativeLayout.getVisibility() == View.GONE) {
+            relativeLayout.setVisibility(View.VISIBLE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Launch fragments
+    private void configureContentFrameFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, fragment).commit();
+    }
+
+    // Configure sdk place autocomplete
     private void configureAutocomplete() {
         Log.d(TAG, "configureAutocomplete: ok");
         mGoogleApiClient = new GoogleApiClient
@@ -171,7 +284,6 @@ public class Go4LunchActivity extends BaseActivity implements
 
     }
 
-
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
 
@@ -196,114 +308,9 @@ public class Go4LunchActivity extends BaseActivity implements
         hideSoftKeyboard();
     }
 
-    //---------------------
-    // NAVIGATION
-    //---------------------
-
-
-    //Handle menu drawer on back press button
-    @Override
-    public void onBackPressed() {
-        // Handle back clickHandler to close menu
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (relativeLayout.getVisibility() == View.VISIBLE) {
-            this.relativeLayout.setVisibility(View.GONE);
-            this.hideSoftKeyboard();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    //Handle the clickHandler on MENU DRAWER
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle Navigation Item Click
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.nav_lunch:
-                break;
-            case R.id.nav_settings:
-                this.startActivitySettings();
-                break;
-            case R.id.nav_logout:
-                this.signOutUser();
-                break;
-            default:
-                break;
-        }
-
-        this.drawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
-
-
-    // ---------------------
-    // CONFIGURATION
-    // ---------------------
-
-    protected void configureToolbar() {
-        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(this.mToolbar);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu and add it to the Toolbar
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
-    }
-
-
-    // Configure Drawer Layout
-    private void configureDrawerLayout() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    // Configure NavigationView
-    private void configureNavigationView() {
-        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-    }
-
-    private void configureNavHeader() {
-        // 3 bis - Handle navigation header items
-        View headView = navigationView.getHeaderView(0);
-        mTextViewUser = (TextView) headView.findViewById(R.id.menu_drawer_user);
-        mTextViewEmail = (TextView) headView.findViewById(R.id.menu_drawer_email);
-        mImageViewProfile = (ImageView) headView.findViewById(R.id.menu_drawer_imageView);
-
-
-    }
-
-    // 4 - Configure BottomNavigationView
-    public void configureBottomNavigationView() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-    //Launch activity
-    private void startActivitySettings() {
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-    }
-
-    //Launch fragments
-    private void configureContentFrameFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content_frame, fragment).commit();
-    }
-
 
     // -----------------------
-    // REST REQUESTS FIREBASE
+    // REST REQUESTS
     // -----------------------
 
 
@@ -313,6 +320,36 @@ public class Go4LunchActivity extends BaseActivity implements
                 .addOnSuccessListener(this, updateUiAfterHttpRequestsCompleted(SIGN_OUT_TASK));
     }
 
+    // Get Restaurant selection from Firestore
+    private void showUserLunch() {
+        if (getCurrentUser() != null) {
+            RestaurantHelper.getRestaurantSelection(getCurrentUser().getUid())
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
+                        if (restaurants != null) {
+                            Date dateChoice = restaurants.getDateChoice();
+                            PlaceDetail placeDetail = restaurants.getPlaceDetail();
+
+                            if (formatDate(dateChoice).equals(formatDate(Calendar.getInstance().getTime()))) {
+                                Log.d(TAG, "showUserLunch: FB date = " + formatDate(dateChoice)
+                                        + "VS currentDate = " + formatDate(Calendar.getInstance().getTime()));
+
+                                //Set Singleton
+                                DataSingleton.getInstance().setPlaceDetail(placeDetail);
+                                this.startActivity(RestaurantInfoActivity.class);
+                            } else {
+                                Toast.makeText(this, R.string.restaurant_selection_availability, Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        } else {
+                            Toast.makeText(this, R.string.restaurant_selection_availability, Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(this.onFailureListener(this));
+        }
+
+    }
+
 
     //---------------------
     // UI
@@ -320,9 +357,7 @@ public class Go4LunchActivity extends BaseActivity implements
 
 
     private void updateMenuUIOnCreation() {
-
         if (this.getCurrentUser() != null) {
-
             //data from Firestore
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
                 Users currentUser = documentSnapshot.toObject(Users.class);
@@ -359,6 +394,13 @@ public class Go4LunchActivity extends BaseActivity implements
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
+
+    private void updateUI(int title, int hint) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(title));
+        mSearchText.setCompletionHint(getString(hint));
+    }
+
+
     //---------------------
     // PERMISSION
     //---------------------
@@ -389,15 +431,6 @@ public class Go4LunchActivity extends BaseActivity implements
     // ---------------------
     // ACTION
     // ---------------------
-
-    // Configure clickHandler on menu Toolbar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_search && relativeLayout.getVisibility() == View.GONE) {
-            relativeLayout.setVisibility(View.VISIBLE);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     // Ask permission when accessing to this listener
     @AfterPermissionGranted(RC_IMAGE_PERMS)

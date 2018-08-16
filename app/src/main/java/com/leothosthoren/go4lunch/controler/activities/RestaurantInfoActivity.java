@@ -27,6 +27,7 @@ import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 import com.leothosthoren.go4lunch.utils.FireBaseTools;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -118,35 +119,32 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     // ---------------------
 
 
-    //RESTAURANT SELECTION
+
     public void clickHandler() {
+        //RESTAURANT SELECTION
         mFab.setOnClickListener(v -> {
-
             if (isCheckFab) {
-
                 mFab.setImageResource(R.drawable.ic_check_circle);
-                isCheckFab = false;
-                Snackbar.make(v, "checkFab true", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, getString(R.string.save_place_selection), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 //Firestore
                 RestaurantHelper.saveRestaurantChoice(Objects.requireNonNull(getCurrentUser()).getUid(), mPlaceDetail,
                         true, null, mCurrentUser)
-                        .addOnCompleteListener(onCompleteListener(this, getString(R.string.save_place_selection)))
                         .addOnFailureListener(onFailureListener(this));
 
-            } else {
+                isCheckFab = false;
 
+            } else {
                 mFab.setImageResource(R.drawable.ic_uncheck_circle);
-                isCheckFab = true;
-                Snackbar.make(v, "checkFab false", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, getString(R.string.delete_place_selection), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 // Firestore
                 if (getCurrentUser() != null) {
                     RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid())
                             .addOnFailureListener(this.onFailureListener(this));
-                    //Update or delete ? test
+                    //Update
                 }
-
+                isCheckFab = true;
             }
 
         });
@@ -234,7 +232,8 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     private void setUpViewsWithFirestoreDatabase(String placeID, Boolean selection, Date date) {
         // FAB
         // if selection is true and date is from today and the placeId restaurant equal placeID from singleton
-        if (mPlaceDetail.getResult().getPlaceId().equals(placeID)) {
+        Date d = Calendar.getInstance().getTime();
+        if (selection && mPlaceDetail.getResult().getPlaceId().equals(placeID) && formatDate(d).equals(formatDate(date))) {
             mFab.setImageResource(R.drawable.ic_check_circle);
             Log.d(TAG, "setUpViewsWithFirestoreDatabase: compare place id from google = "
                     + mPlaceDetail.getResult().getPlaceId()

@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity {
     }
 
     //Generic activity launcher method
-    private void startActivity(Class activity) {
+    public void startActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
     }

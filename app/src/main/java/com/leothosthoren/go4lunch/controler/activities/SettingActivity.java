@@ -274,7 +274,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 6 - Calling the appropriate method after activity result
+        // Calling the appropriate method after activity result
         this.handleResponse(requestCode, resultCode, data);
     }
 

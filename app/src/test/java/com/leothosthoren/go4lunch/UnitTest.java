@@ -6,7 +6,10 @@ import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -76,5 +79,15 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
         assertEquals("304m", distance(48.813326, 48.814640, 2.348383, 2.344735));
         assertEquals("131m", distance(48.813326, 48.814386, 2.348383, 2.347596));
 
+    }
+
+    //==========================
+    // NUMBER FORMAT OPERATIONS
+    //==========================
+
+    @Test
+    public void formatDate() {
+
+        assertEquals("16/08/2018", formatDate(Calendar.getInstance().getTime()));
     }
 }

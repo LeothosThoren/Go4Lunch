@@ -83,4 +83,9 @@ public interface DataConverterHelper {
         return Math.round(Math.sqrt(distance)) + "m";
     }
 
+    default String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(date);
+    }
+
 }
