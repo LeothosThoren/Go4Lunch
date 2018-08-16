@@ -17,6 +17,7 @@ import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +43,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
     // VAR
     private double lat = DataSingleton.getInstance().getDeviceLatitude();
     private double lng = DataSingleton.getInstance().getDeviceLongitude();
+    private Date date = new Date();
 
 
     private WeakReference<RestaurantAdapter.Listener> callbackWeakRef;
@@ -76,17 +78,17 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
 
             // Distance
             if (lat != 0 && lng != 0) {
-                this.mRestaurantDistance.setText(distance(lat, placeDetail.getResult().getGeometry().getLocation().getLat(),
+                this.mRestaurantDistance.setText(computeDistance(lat, placeDetail.getResult().getGeometry().getLocation().getLat(),
                         lng, placeDetail.getResult().getGeometry().getLocation().getLng()));
             }
 
-//             Opening time
-            if (placeDetail.getResult().getOpeningHours().getPeriods() != null || placeDetail.getResult().getOpeningHours().getPeriods().size() > 0) {
-                this.mRestaurantOpening.setText(formatOpeningTime(placeDetail.getResult().getOpeningHours().getOpenNow(),
-                        placeDetail.getResult().getOpeningHours().getPeriods()));
+            //Opening time
+            if (placeDetail.getResult().getOpeningHours() != null) {
+                this.mRestaurantOpening.setText(formatWeekDayText(placeDetail.getResult().getOpeningHours().getWeekdayText()));
             }
 
             // Number of workmates
+
 
         }
 

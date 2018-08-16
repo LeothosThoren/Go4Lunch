@@ -16,11 +16,12 @@ import butterknife.ButterKnife;
 
 public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataConverterHelper {
 
-    //VIEW
+    // Widgets
     @BindView(R.id.item_workmates_choice)
     TextView mTextViewWorkmateName;
     @BindView(R.id.item_workmates_photo)
     ImageView mImageViewWorkmatePhoto;
+    private TextView.BufferType mType;
 
     public WorkmateViewHolder(View itemView) {
         super(itemView);
@@ -28,16 +29,17 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
     }
 
     public void updateWithWorkmateItem(Users workmateItem, String currentUserId, RequestManager glide) {
-        //Update workmate profil picture
+        //Update workmate profile picture
         if (workmateItem.getUrlPicture() != null) {
             glide.load(workmateItem.getUrlPicture())
-                    .apply(RequestOptions.centerCropTransform())
+                    .apply(RequestOptions.circleCropTransform())
                     .into(this.mImageViewWorkmatePhoto);
         }
 
         //Update workmate name
         if (workmateItem.getUsername() != null) {
             this.mTextViewWorkmateName.setText(formatFullName(workmateItem.getUsername()));
+
         }
     }
 }

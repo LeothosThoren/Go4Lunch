@@ -3,6 +3,9 @@ package com.leothosthoren.go4lunch.utils;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * Utility class to handle click in a recycler view which handle memory leaks
+ */
 
 public class ItemClickSupport {
     private final RecyclerView mRecyclerView;

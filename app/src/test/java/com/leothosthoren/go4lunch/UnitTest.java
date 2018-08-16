@@ -6,10 +6,8 @@ import com.leothosthoren.go4lunch.utils.HttpRequestTools;
 
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -44,7 +42,19 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
 
     @Test
     public void substringValues() throws Exception {
+        //Format weekDayText
+        List<String> l = new ArrayList<>();
+        l.add("Monday: 10:00 AM – 5:00 PM");
+        l.add("Tuesday: 10:00 AM – 5:00 PM");
+        l.add("Wednesday: 10:00 AM – 5:00 PM");
+        l.add("Thursday: 12:00 – 2:00 PM, 7:30 – 10:00 PM");
+        l.add("Friday: 10:00 AM – 5:00 PM");
+        l.add("Saturday: 10:00 AM – 5:00 PM");
+        l.add("Sunday: 10:00 AM – 5:00 PM");
+
+
         assertEquals(12, convertStringIdIntoInteger("m13"));
+        assertEquals("12:00 – 2:00 pm,7:30 – 10:00 pm", formatWeekDayText(l));
     }
 
     //==========================
@@ -64,8 +74,8 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
         //restaurant Sherazade 48.814640, 2.344735
         // maison Doisneau 48.814386, 2.347596
 
-        assertEquals("304m", distance(48.813326, 48.814640, 2.348383, 2.344735));
-        assertEquals("131m", distance(48.813326, 48.814386, 2.348383, 2.347596));
+        assertEquals("304m", computeDistance(48.813326, 48.814640, 2.348383, 2.344735));
+        assertEquals("131m", computeDistance(48.813326, 48.814386, 2.348383, 2.347596));
 
     }
 
@@ -88,7 +98,7 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
 
     @Test
     public void getCurrentDayOftheWeek() throws Exception {
-        //
+        //Change the expected result with the current day
         assertEquals(3, dayOfWeek(), 0.0);
     }
 }

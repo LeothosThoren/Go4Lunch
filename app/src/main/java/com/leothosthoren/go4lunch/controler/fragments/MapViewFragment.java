@@ -147,13 +147,15 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            Objects.requireNonNull(getContext()), R.raw.style_json));
-
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
+            if (getContext() != null) {
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getContext(), R.raw.style_json));
+                if (!success) {
+                    Log.e(TAG, "Style parsing failed.");
+                }
             }
+
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }

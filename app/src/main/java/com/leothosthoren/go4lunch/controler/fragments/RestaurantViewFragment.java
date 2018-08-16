@@ -61,7 +61,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 //        this.configureSwipeRefreshLayout();
 //        this.progressBarHandler(mProgressBar, getContext());
         // Handle the case whether the list is empty
-        if (PlaceDetailListFromSingleton == null || PlaceDetailListFromSingleton.size() == 0) {
+        if (PlaceDetailListFromSingleton == null || PlaceDetailListFromSingleton.isEmpty()) {
             mTextViewRecyclerViewEmpty.setVisibility(View.VISIBLE);
         } else {
             this.configureRecyclerView();
@@ -87,7 +87,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    /*
+    /**
      * @method configureSwipeRefreshLayout
      *
      * When the screen is swipe, the http request is executed
@@ -124,7 +124,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
     public void onClickItemButton(int position) {
         PlaceDetail restaurantItem = mAdapter.getRestaurantItem(position);
         if (restaurantItem.getResult().getPhotos() != null) {
-            Toast.makeText(getContext(), "CLICK PICTURE on position: " + position + " name: " +
+            Toast.makeText(getContext(), "CLICK PICTURE on position: " + position + " reference: " +
                     restaurantItem.getResult().getPhotos().get(0).getPhotoReference(), Toast.LENGTH_SHORT).show();
         }
 

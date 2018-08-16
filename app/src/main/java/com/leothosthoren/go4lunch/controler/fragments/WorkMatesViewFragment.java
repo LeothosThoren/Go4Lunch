@@ -56,19 +56,32 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     }
 
+
     // --------------------
     // REST REQUESTS
     // --------------------
-    // 4 - Get Current User from Firestore
+
+
+    // Get Current User from Firestore
     private void getCurrentUserFromFirestore() {
         UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid())
                 .addOnSuccessListener(documentSnapshot ->
                         modelCurrentUser = documentSnapshot.toObject(Users.class));
     }
 
+    // Create options for RecyclerView from a Query
+    private FirestoreRecyclerOptions<Users> generateOptionsForAdapter(Query query) {
+        return new FirestoreRecyclerOptions.Builder<Users>()
+                .setQuery(query, Users.class)
+                .setLifecycleOwner(this)
+                .build();
+    }
+
+
     // --------------------
     // UI
     // --------------------
+
 
     private void configureRecyclerView() {
         this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
@@ -85,20 +98,13 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
-
     }
 
-    // 6 - Create options for RecyclerView from a Query
-    private FirestoreRecyclerOptions<Users> generateOptionsForAdapter(Query query) {
-        return new FirestoreRecyclerOptions.Builder<Users>()
-                .setQuery(query, Users.class)
-                .setLifecycleOwner(this)
-                .build();
-    }
 
     // --------------------
     // CALLBACK
     // --------------------
+
 
     @Override
     public void onDataChanged() {
