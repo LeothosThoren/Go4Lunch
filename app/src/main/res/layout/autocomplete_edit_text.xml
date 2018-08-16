@@ -27,7 +27,7 @@
         android:layout_toEndOf="@id/ic_search_icon"
         android:layout_toRightOf="@id/ic_search_icon"
         android:background="@null"
-        android:hint="@string/search_something"
+        android:hint="@string/search_restaurant"
         android:imeOptions="actionSearch"
         android:textColor="#000"
         android:textSize="15sp" />
