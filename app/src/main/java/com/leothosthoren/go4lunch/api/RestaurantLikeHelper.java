@@ -1,7 +1,7 @@
 package com.leothosthoren.go4lunch.api;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.leothosthoren.go4lunch.model.firebase.RestaurantsLike;
 
 public class RestaurantLikeHelper {
@@ -10,9 +10,9 @@ public class RestaurantLikeHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> likeRestaurant(String uid, String placeID, Boolean isStarChecked) {
+    public static Task<Void> likeRestaurant(String uid, String restaurantName, String placeID, Boolean isStarChecked) {
 
-        RestaurantsLike like = new RestaurantsLike(placeID, isStarChecked);
+        RestaurantsLike like = new RestaurantsLike(restaurantName, placeID, isStarChecked);
 
         return UserHelper.getUsersCollection()
                 .document(uid)
@@ -23,11 +23,11 @@ public class RestaurantLikeHelper {
 
     // --- GET ---
 
-    public static Query getRestaurantLike(String uid, String currentPlaceId) {
+    public static Task<DocumentSnapshot> getRestaurantLike(String uid, String currentPlaceId) {
         return UserHelper.getUsersCollection()
                 .document(uid)
                 .collection(COLLECTION_NAME)
-                .whereEqualTo("placeId", currentPlaceId);
+                .document(currentPlaceId).get();
     }
 
     // --- DELETE ---

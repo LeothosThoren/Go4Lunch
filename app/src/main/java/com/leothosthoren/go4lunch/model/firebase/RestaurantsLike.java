@@ -4,13 +4,24 @@ public class RestaurantsLike {
 
     private String placeId;
     private Boolean isStarChecked;
+    private String restaurantName;
 
     public RestaurantsLike() {
     }
 
-    public RestaurantsLike(String placeId, Boolean isStarChecked) {
+    public RestaurantsLike(String restaurantName, String placeId, Boolean isStarChecked) {
         this.placeId = placeId;
         this.isStarChecked = isStarChecked;
+        this.restaurantName = restaurantName;
+
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 
     public String getPlaceId() {
@@ -21,11 +32,11 @@ public class RestaurantsLike {
         this.placeId = placeId;
     }
 
-    public Boolean getChecked() {
+    public Boolean getStarChecked() {
         return isStarChecked;
     }
 
-    public void setChecked(Boolean checked) {
-        isStarChecked = checked;
+    public void setStarChecked(Boolean starChecked) {
+        isStarChecked = starChecked;
     }
 }
