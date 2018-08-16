@@ -10,11 +10,13 @@
     <ImageView
         android:id="@+id/placeholder"
         style="@style/MainStyle"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/login_image"
         android:onClick="onClickSettingPicture"
+        app:layout_constraintBottom_toTopOf="@+id/setting_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,27 +28,17 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/user_name"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/update_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/placeholder" />
 
-    <!-- TextInput userEmail -->
-    <android.support.design.widget.TextInputEditText
-        android:id="@+id/setting_email"
-        style="@style/MainStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/userEmail"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setting_username" />
 
     <!-- Button update username -->
     <Button
@@ -54,29 +46,17 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/custom_buttons"
+        android:onClick="onClickUpdateUsernameButton"
         android:text="@string/update_user_name"
         android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/delete_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setting_email"
-        android:onClick="onClickUpdateUsernameButton"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/setting_username" />
 
-    <!-- Button update userEmail -->
-    <Button
-        android:id="@+id/update_email"
-        style="@style/MainStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_buttons"
-        android:text="@string/update_email"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_username"
-        android:onClick="onClickUpdateEmailButton"
-        />
 
     <!-- Button update delete -->
     <Button
@@ -84,14 +64,17 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorPrimaryDark"
+        android:onClick="onClickDeleteButton"
         android:padding="@dimen/activity_horizontal_margin"
         android:text="@string/delete_account"
         android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_email"
-        android:onClick="onClickDeleteButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/update_username" />
 
     <!-- Separation -->
     <View
@@ -99,11 +82,12 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/switch_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delete_account" />
 
     <!-- Switch button -->
@@ -112,9 +96,14 @@
         style="@style/MainStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="185dp"
+        android:layout_marginTop="8dp"
         android:text="@string/switch_notifications"
-        android:textSize="16sp"
+        android:textSize="17sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold|italic"
         android:theme="@style/switchButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />

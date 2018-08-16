@@ -41,12 +41,13 @@ import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+// TODO : handle
+
 public class SettingActivity extends BaseActivity {
 
     // CONSTANT
     public static final int DELETE_USER_TASK = 68; //ASCII 'D'
     public static final int UPDATE_USERNAME = 85; //ASCII 'U'
-    public static final int UPDATE_EMAIL = 86; //Simple ;)
     public static final int UPDATE_NOTIFICATION = 87; //Lazy ...
     // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -90,10 +91,6 @@ public class SettingActivity extends BaseActivity {
         this.updateUserNameInFireBase();
     }
 
-    @OnClick(R.id.update_email)
-    public void onClickUpdateEmailButton(View view) {
-        this.updateEmailInFireBase();
-    }
 
     @OnClick(R.id.delete_account)
     public void onClickDeleteButton(View view) {
@@ -171,18 +168,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    //Create or update username on Firestore
-    private void updateEmailInFireBase() {
-        String email = this.mTextInputEditTextEmail.getText().toString();
-
-        if (this.getCurrentUser() != null) {
-            if (!email.isEmpty() && !email.equals(getString(R.string.info_no_email_found))) {
-                UserHelper.updateEmail(email, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener(this))
-                        .addOnSuccessListener(this.updateUiAfterHttpRequestsCompleted(UPDATE_EMAIL));
-            }
-        }
-    }
-
     // Create or update notification on Firestore
     private void updateNotificationSwitchOnFirebase(boolean check, String s) {
         if (this.getCurrentUser() != null) {
@@ -242,9 +227,6 @@ public class SettingActivity extends BaseActivity {
         return aVoid -> {
             switch (taskId) {
                 case UPDATE_USERNAME:
-                    Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
-                    break;
-                case UPDATE_EMAIL:
                     Toast.makeText(this, getString(R.string.dowloading), Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_NOTIFICATION:
