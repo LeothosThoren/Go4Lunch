@@ -25,11 +25,11 @@ public abstract class BaseFragment extends Fragment implements HttpRequestTools,
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 2 - Get layout identifier from abstract method
+        // Get layout identifier from abstract method
         View view = inflater.inflate(getFragmentLayout(), container, false);
-        // 3 - Binding Views
+        // Binding Views
         ButterKnife.bind(this, view);
-        // 4 - Configure Design (Developer will call this method instead of override onCreateView())
+        // Configure Design (Developer will call this method instead of override onCreateView())
         this.configureDesign();
         return (view);
     }
@@ -37,7 +37,7 @@ public abstract class BaseFragment extends Fragment implements HttpRequestTools,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // 7 - Update Design (Developer will call this method instead of override onActivityCreated())
+        // Update Design (Developer will call this method instead of override onActivityCreated())
         this.updateDesign();
     }
 

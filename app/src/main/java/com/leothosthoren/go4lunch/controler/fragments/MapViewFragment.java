@@ -1,6 +1,7 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -35,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.controler.activities.Go4LunchActivity;
 import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
@@ -49,7 +51,6 @@ import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -61,6 +62,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final float DEFAULT_ZOOM = 16f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
+    private static final String KEY_LOCATION = "location";
+    public static final String SENDER_KEY = TAG;
+    public static final String LATITUDE_BOUND = "latitude bound";
+    public static final String LONGITUDE_BOUND = "longitude bound";
     // WIDGET
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
@@ -75,12 +80,21 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private PlaceDetectionClient mPlaceDetectionClient;
     private Disposable mDisposable;
     // DATA
-    private List<PlaceDetail> mPlaceDetailList;
+    private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
     private Map<String, PlaceDetail> mMarkerMap = new HashMap<>();
 
     @Override
     protected BaseFragment newInstance() {
         return new MapViewFragment();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+        }
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
@@ -113,15 +127,39 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     }
 
+    private void setMapStyle(GoogleMap googleMap) {
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            if (getContext() != null) {
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getContext(), R.raw.style_json));
+                if (!success) {
+                    Log.e(TAG, "Style parsing failed.");
+                }
+            }
+
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
+    }
+
     //---------------------------------------------------------------------------------------------//
     //                                     CONFIGURATION                                           //
     //---------------------------------------------------------------------------------------------//
 
 
-    //Useful to initiate a map inside a fragment != Activity
+    //Useful to initiate a map inside a fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //To retrieve data when device rotate
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+        }
 
         mMapView = (MapView) view.findViewById(R.id.map);
         if (mMapView != null) {
@@ -140,25 +178,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-    }
-
-    private void setMapStyle(GoogleMap googleMap) {
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            if (getContext() != null) {
-                boolean success = googleMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(
-                                getContext(), R.raw.style_json));
-                if (!success) {
-                    Log.e(TAG, "Style parsing failed.");
-                }
-            }
-
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
 
     }
 
@@ -221,6 +240,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             Double longitude = mLastKnownLocation.getLongitude();
                             DataSingleton.getInstance().setDeviceLatitude(latitude);
                             DataSingleton.getInstance().setDeviceLongitude(longitude);
+
+                            Intent i = new Intent(getActivity().getBaseContext(), Go4LunchActivity.class);
+                            i.putExtra(SENDER_KEY, "MapViewFragment");
+                            i.putExtra(LATITUDE_BOUND, latitude);
+                            i.putExtra(LONGITUDE_BOUND, longitude);
 
                             //Move camera toward device position
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -321,8 +345,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void addMarkerOnMap(List<PlaceDetail> placeDetailList) {
         //Initialize and store data in both array and singleton
-        this.mPlaceDetailList = new ArrayList<>();
-        mPlaceDetailList.addAll(placeDetailList);
+        this.mPlaceDetailList.addAll(placeDetailList);
         DataSingleton.getInstance().setPlaceDetailList(mPlaceDetailList);
         //Call for Marker object to handle marker view and click
         Marker marker;
@@ -344,8 +367,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         } else {
             Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
         }
-
-
     }
 
 

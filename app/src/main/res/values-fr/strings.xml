@@ -59,7 +59,7 @@
     <string name="manifest_restaurant_info">Information du restaurant</string>
     <string name="manifest_settings">Paramètres</string>
     <string name="update_email">Modifier email</string>
-    <string name="search_restaurant">Rechercher restaurant</string>
+    <string name="search_restaurant">Rechercher un restaurant</string>
     <string name="no_restaurant_found">Aucun restaurant trouvé !</string>
     <string name="text_notification">C\'est l\'heure de déjeuner !</string>
     <string name="location_button_error">Une erreur est survenue, merci d\'appuyer sur le bouton vue carte</string>

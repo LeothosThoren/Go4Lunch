@@ -1,10 +1,11 @@
 package com.leothosthoren.go4lunch.controler.activities;
 
 import android.Manifest;
-import android.location.Address;
-import android.location.Geocoder;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,12 +35,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.PlaceAutocompleteAdapter;
+import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
@@ -50,22 +59,24 @@ import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+//import static com.leothosthoren.go4lunch.controler.fragments.MapViewFragment.LATITUDE_BOUND;
+//import static com.leothosthoren.go4lunch.controler.fragments.MapViewFragment.LONGITUDE_BOUND;
+//import static com.leothosthoren.go4lunch.controler.fragments.MapViewFragment.SENDER_KEY;
 
 public class Go4LunchActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     // CONSTANT
     private static final int SIGN_OUT_TASK = 83; //ASCII 'S'
-    // STATIC DATA FOR PICTURE
     private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final int RC_IMAGE_PERMS = 100;
     // WIDGET
@@ -76,34 +87,11 @@ public class Go4LunchActivity extends BaseActivity implements
     private TextView mTextViewEmail;
     private ImageView mImageViewProfile;
     private AutoCompleteTextView mSearchText;
-    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private RelativeLayout relativeLayout;
     // VAR
     private GoogleApiClient mGoogleApiClient;
-    private LatLng mDefaultLocation = new LatLng(48.813326, 2.348383);
-
-
-    //BOTTOM NAVIGATION VIEW
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = item -> {
-
-        switch (item.getItemId()) {
-            case R.id.navigation_map:
-                updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
-                configureContentFrameFragment(new MapViewFragment());
-                return true;
-            case R.id.navigation_list:
-                updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
-                configureContentFrameFragment(new RestaurantViewFragment());
-                return true;
-            case R.id.navigation_workmates:
-                updateUI(R.string.title_action_bar_workmate, R.string.search_workmates);
-                configureContentFrameFragment(new WorkMatesViewFragment());
-                return true;
-        }
-        return false;
-    };
-
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private Disposable mDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,45 +108,9 @@ public class Go4LunchActivity extends BaseActivity implements
         return R.layout.activity_go4lunch;
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
-    }
-
-    //---------------------
-    // INIT
-    //---------------------
-
-    private void init() {
-        this.configureToolbar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-        this.configureNavHeader();
-        this.configureBottomNavigationView();
-        this.configureContentFrameFragment(new MapViewFragment());
-        this.updateMenuUIOnCreation();
-        this.configureAutocomplete();
-    }
-
-
     //---------------------
     // NAVIGATION
     //---------------------
-
-
-    //Handle menu drawer on back press button
-    @Override
-    public void onBackPressed() {
-        // Handle back clickHandler to close menu
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (relativeLayout.getVisibility() == View.VISIBLE) {
-            this.relativeLayout.setVisibility(View.GONE);
-            this.hideSoftKeyboard();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     //Handle the clickHandler on MENU DRAWER
     @Override
@@ -184,11 +136,72 @@ public class Go4LunchActivity extends BaseActivity implements
         return true;
     }
 
+    //Handle menu drawer on back press button
+    @Override
+    public void onBackPressed() {
+        // Handle back clickHandler to close menu
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (relativeLayout.getVisibility() == View.VISIBLE) {
+           updateAutocompleteEditText();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //BOTTOM NAVIGATION VIEW
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+
+        switch (item.getItemId()) {
+            case R.id.navigation_map:
+                this.updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
+                this.configureContentFrameFragment(new MapViewFragment());
+                return true;
+            case R.id.navigation_list:
+                this.updateUI(R.string.title_action_bar_hungry, R.string.search_restaurant);
+                this.configureContentFrameFragment(new RestaurantViewFragment());
+                return true;
+            case R.id.navigation_workmates:
+                this.updateUI(R.string.title_action_bar_workmate, R.string.search_workmates);
+                this.configureContentFrameFragment(new WorkMatesViewFragment());
+                return true;
+        }
+        return false;
+    };
+
+
+    //---------------------
+    // INIT
+    //---------------------
+
+
+    private void init() {
+        this.configureToolbar();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+        this.configureNavHeader();
+        this.configureBottomNavigationView();
+        this.configureContentFrameFragment(new MapViewFragment());
+        this.updateMenuUIOnCreation();
+        this.searchPlaceWithAutocomplete();
+    }
+
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        final String sender = Objects.requireNonNull(this.getIntent().getExtras()).getString(SENDER_KEY);
+//
+//        Log.d(TAG, "onResume: "+sender);
+//        if (sender != null) {
+//            this.searchPlaceWithAutocomplete();
+//        }
+//    }
 
     // ---------------------
     // CONFIGURATION
     // ---------------------
-
 
     protected void configureToolbar() {
         this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -232,15 +245,6 @@ public class Go4LunchActivity extends BaseActivity implements
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    // Configure click on menu Toolbar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_search && relativeLayout.getVisibility() == View.GONE) {
-            relativeLayout.setVisibility(View.VISIBLE);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     // Launch fragments
     private void configureContentFrameFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -248,7 +252,8 @@ public class Go4LunchActivity extends BaseActivity implements
         transaction.replace(R.id.content_frame, fragment).commit();
     }
 
-    // Configure sdk place autocomplete
+
+   // Handle GoogleApiClient, filter and autocomplete Adapter
     private void configureAutocomplete() {
         Log.d(TAG, "configureAutocomplete: ok");
         mGoogleApiClient = new GoogleApiClient
@@ -258,61 +263,32 @@ public class Go4LunchActivity extends BaseActivity implements
                 .enableAutoManage(this, this)
                 .build();
 
-        mSearchText.setOnEditorActionListener((v, actionId, keyEvent) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH
-                    || actionId == EditorInfo.IME_ACTION_DONE
-                    || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+        // Set a filter
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(Place.TYPE_RESTAURANT)
+                .build();
 
-                //execute our method for searching
-                // Try query autocomplete
-                // geoLocate();
-                hideSoftKeyboard();
+        //TODO find how to send data fom fragment to activity
+//        //Retrieve coordinates from fragment map
+//        Intent i = getIntent();
+//        Double lat = i.getDoubleExtra(LATITUDE_BOUND, 48.8566);
+//        Double lng = i.getDoubleExtra(LONGITUDE_BOUND, 2.35222);
 
-            }
-            return false;
-        });
+        // Determine latitude and longitude bound from intent
+        LatLng deviceBound = new LatLng(48.8566, 2.35222);
 
         // Handle the adapter for custom search
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
-                new LatLngBounds(mDefaultLocation, mDefaultLocation), null);
-
+                new LatLngBounds(deviceBound, deviceBound), typeFilter);
         if (mSearchText != null) {
             mSearchText.setAdapter(mPlaceAutocompleteAdapter);
         }
-
-
-    }
-
-    private void geoLocate() {
-        Log.d(TAG, "geoLocate: geolocating");
-
-        String searchString = mSearchText.getText().toString();
-
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-        } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
-        }
-
-        if (list.size() > 0) {
-            Address address = list.get(0);
-
-            Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
-        hideSoftKeyboard();
     }
 
 
     // -----------------------
     // REST REQUESTS
     // -----------------------
-
 
     private void signOutUser() {
         AuthUI.getInstance()
@@ -350,6 +326,67 @@ public class Go4LunchActivity extends BaseActivity implements
 
     }
 
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = places -> {
+        if (!places.getStatus().isSuccess()) {
+            Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
+            places.release();
+            return;
+        }
+        final Place place = places.get(0);
+        try {
+            Log.d(TAG, "onResult: see placeID: " + place.getId());
+            //Get the place id and launch a request to get the placeDetail from placeDetail Api
+            this.executeHttpRequestWithPlaceDetail(place.getId());
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onResult: NullPointerException: " + e.getMessage());
+        }
+
+        places.release();
+    };
+
+
+    //------------------------
+    // HTTP RxJava
+    //------------------------
+
+
+    public void executeHttpRequestWithPlaceDetail(String placeID) {
+        mDisposable = PlaceStreams.streamFetchPlaceDetail(placeID)
+                .subscribeWith(new DisposableObserver<PlaceDetail>() {
+                    @Override
+                    public void onNext(PlaceDetail placeDetail) {
+                        Log.d(TAG, "onNext: "+placeDetail.getResult().getName());
+                        DataSingleton.getInstance().setPlaceDetail(placeDetail);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: " + placeID);
+                        updateAutocompleteEditText();
+                        Toast.makeText(getApplicationContext(), "Search action done", Toast.LENGTH_SHORT).show();
+                        startActivity(RestaurantInfoActivity.class);
+                    }
+                });
+    }
+
+    // Dispose subscription
+    private void disposeWhenDestroy() {
+        if (this.mDisposable != null && !this.mDisposable.isDisposed())
+            this.mDisposable.dispose();
+    }
+
+    // Called for better performances
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
+    }
 
     //---------------------
     // UI
@@ -390,14 +427,29 @@ public class Go4LunchActivity extends BaseActivity implements
         }
     }
 
-    private void hideSoftKeyboard() {
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-    }
-
     private void updateUI(int title, int hint) {
         Objects.requireNonNull(getSupportActionBar()).setTitle(getString(title));
-        mSearchText.setCompletionHint(getString(hint));
+        mSearchText.setHint(getString(hint));
+    }
+
+    private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
+        return aVoid -> {
+            switch (taskId) {
+                case SIGN_OUT_TASK:
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+
+    private void updateAutocompleteEditText() {
+        if (relativeLayout.getVisibility() == View.VISIBLE) {
+            this.mSearchText.setText("");
+            this.relativeLayout.setVisibility(View.GONE);
+            this.hideSoftKeyboard();
+        }
     }
 
 
@@ -415,22 +467,19 @@ public class Go4LunchActivity extends BaseActivity implements
     }
 
 
-    private OnSuccessListener<Void> updateUiAfterHttpRequestsCompleted(final int taskId) {
-        return aVoid -> {
-            switch (taskId) {
-                case SIGN_OUT_TASK:
-                    finish();
-                    break;
-                default:
-                    break;
-            }
-        };
-    }
-
-
     // ---------------------
     // ACTION
     // ---------------------
+
+
+    // Configure click on menu Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search && relativeLayout.getVisibility() == View.GONE) {
+            relativeLayout.setVisibility(View.VISIBLE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // Ask permission when accessing to this listener
     @AfterPermissionGranted(RC_IMAGE_PERMS)
@@ -442,6 +491,58 @@ public class Go4LunchActivity extends BaseActivity implements
         }
         Toast.makeText(this, R.string.allow_pick_picture_on_device, Toast.LENGTH_SHORT).show();
     }
+
+
+    private void searchPlaceWithAutocomplete() {
+        this.configureAutocomplete();
+        // Autocomplete edit text to perform the search
+        mSearchText.setOnEditorActionListener((v, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                    || actionId == EditorInfo.IME_ACTION_DONE
+                    || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                //Handle the click adapter
+                mSearchText.setOnItemClickListener(mAutocompleteClickListener);
+                hideSoftKeyboard();
+            }
+
+            return false;
+        });
+    }
+
+
+    // ---------------------
+    // UTILS
+    // ---------------------
+
+
+    //Handle autocomplete adapter clickListener
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            hideSoftKeyboard();
+
+            final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(i);
+            assert item != null;
+            final String placeId = item.getPlaceId();
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+
+    //When user finished to edit text keyboard disappear
+    private void hideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+    }
+
 
 
 }
