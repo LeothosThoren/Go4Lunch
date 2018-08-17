@@ -80,6 +80,17 @@ public class SettingActivity extends BaseActivity {
         return R.layout.activity_setting;
     }
 
+
+    // --------------------
+    // CONFIGURATION
+    // --------------------
+
+    @Override
+    protected void configureToolbar() {
+        super.configureToolbar();
+    }
+
+
     // --------------------
     // ACTIONS
     // --------------------
@@ -110,13 +121,13 @@ public class SettingActivity extends BaseActivity {
 
     public void notificationSwitchHandler() {
         mNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (buttonView.isChecked()) {
                 // do some stuff
-                updateNotificationSwitchOnFirebase(true, "Notification enabled");
+                updateNotificationSwitchOnFirebase(true);
                 startAlarm(this);
             } else {
                 // do other stuff
-                updateNotificationSwitchOnFirebase(false, "Notification disabled");
+                updateNotificationSwitchOnFirebase(false);
                 stopAlarm(this);
             }
         });
@@ -167,10 +178,9 @@ public class SettingActivity extends BaseActivity {
     }
 
     // Create or update notification on Firestore
-    private void updateNotificationSwitchOnFirebase(boolean check, String s) {
+    private void updateNotificationSwitchOnFirebase(boolean check) {
         if (this.getCurrentUser() != null) {
-            UserHelper.updateNotification(Objects.requireNonNull(getCurrentUser()).getUid(), check)
-                    .addOnCompleteListener(this.onCompleteListener(this, s))
+            UserHelper.updateNotification(getCurrentUser().getUid(), check)
                     .addOnFailureListener(this.onFailureListener(this));
         }
     }
@@ -315,7 +325,7 @@ public class SettingActivity extends BaseActivity {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
 
-        Toast.makeText(context, "Alarm set !", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.notification_enable, Toast.LENGTH_SHORT).show();
     }
 
     private void stopAlarm(Context context) {
@@ -331,7 +341,7 @@ public class SettingActivity extends BaseActivity {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
 
-            Toast.makeText(this, "Alarm Canceled !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.notification_disable, Toast.LENGTH_SHORT).show();
         }
     }
 

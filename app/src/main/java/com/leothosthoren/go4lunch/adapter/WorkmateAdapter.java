@@ -21,9 +21,9 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateVie
     private Listener callback;
 
 
-    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Users> options,
+    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Users> usersOptions,
                            RequestManager glide, Listener callback, String idCurrentUser) {
-        super(options);
+        super(usersOptions);
         this.glide = glide;
         this.callback = callback;
         this.idCurrentUser = idCurrentUser;

@@ -25,7 +25,9 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Main Activity -->
-        <activity android:name=".controler.activities.MainActivity">
+        <activity
+            android:name=".controler.activities.MainActivity"
+            android:theme="@style/AppTheme.NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,7 +49,8 @@
         <!-- GO4LUNCH ACTIVITY -->
         <activity
             android:name=".controler.activities.Go4LunchActivity"
-            android:label="@string/title_action_bar_hungry" />
+            android:label="@string/title_action_bar_hungry"
+            android:theme="@style/AppTheme.NoTitle"/>
 
         <!-- SETTINGS ACTIVITY -->
         <activity
@@ -59,7 +62,7 @@
         <activity
             android:name=".controler.activities.RestaurantInfoActivity"
             android:label="@string/manifest_restaurant_info"
-            android:parentActivityName=".controler.activities.Go4LunchActivity" />
+            android:theme="@style/AppTheme.NoTitle"/>
 
         <!--ALARM MANAGER -->
         <receiver

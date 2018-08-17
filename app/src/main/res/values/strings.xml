@@ -98,8 +98,10 @@
     <string name="save_place_selection">Choice saved</string>
     <string name="delete_place_selection">Choice canceled</string>
     <string name="search_workmates">Search workmates</string>
-    <string name="restaurant_selection_availability">You haven\'t a restaurant selected!</string>
+    <string name="restaurant_selection_availability">You haven\'t a restaurant selected today!</string>
     <string name="restaurant_like">Like</string>
     <string name="restaurant_no_like">Dislike</string>
     <string name="test">n\'a pas encore décidé</string>
+    <string name="notification_enable">Notification enabled!</string>
+    <string name="notification_disable">Notification disabled!</string>
 </resources>
