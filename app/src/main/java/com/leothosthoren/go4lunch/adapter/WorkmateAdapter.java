@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.view.WorkmateViewHolder;
 
@@ -16,17 +17,19 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateVie
     //FOR DATA
     private final RequestManager glide;
     private final String idCurrentUser;
+    private final Restaurants restaurants;
 
     //FOR COMMUNICATION
     private Listener callback;
 
 
     public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Users> usersOptions,
-                           RequestManager glide, Listener callback, String idCurrentUser) {
+                           RequestManager glide, Listener callback, String idCurrentUser, Restaurants restaurants) {
         super(usersOptions);
         this.glide = glide;
         this.callback = callback;
         this.idCurrentUser = idCurrentUser;
+        this.restaurants = restaurants;
     }
 
     @NonNull
@@ -45,7 +48,10 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateVie
     @Override
     protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull Users users) {
         //add method holder
-        holder.updateWithWorkmateItem(users, this.idCurrentUser, this.glide);
+        if (!users.getUid().equals(idCurrentUser)) {
+            holder.updateWithWorkmateItem(users, this.idCurrentUser, this.restaurants, this.glide);
+        }
+
     }
 
     public interface Listener {

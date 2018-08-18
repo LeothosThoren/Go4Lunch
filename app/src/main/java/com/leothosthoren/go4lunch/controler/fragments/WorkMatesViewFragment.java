@@ -5,16 +5,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
 import java.util.Objects;
@@ -25,7 +29,7 @@ import butterknife.BindView;
  * A simple {@link Fragment} subclass.
  */
 public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapter.Listener {
-    //VAR
+    // WIDGETS
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecyclerView;
     @BindView(R.id.workmates_availability_message)
@@ -47,7 +51,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     @Override
     protected void configureDesign() {
-        this.configureRecyclerView();
+        this.getRestaurantWhereUsersAreEating();
         this.getCurrentUserFromFirestore();
     }
 
@@ -77,25 +81,45 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
                 .build();
     }
 
+    // Get all restaurant where users are eating
+    private void getRestaurantWhereUsersAreEating() {
+        RestaurantHelper.getAllRestaurants()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, "getRestaurantWhereUsersAreEating:" + document.getData());
+                            Restaurants restaurants = document.toObject(Restaurants.class);
+                            this.configureRecyclerView(restaurants);
+
+                        }
+                    } else {
+                        Log.e(TAG, "Error getting documents: " + task.getException());
+                    }
+                });
+    }
 
     // --------------------
     // UI
     // --------------------
 
 
-    private void configureRecyclerView() {
-        this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
-                Glide.with(Objects.requireNonNull(this)),
-                this,
-                Objects.requireNonNull(this.getCurrentUser()).getUid());
+    private void configureRecyclerView(Restaurants restaurant) {
+        if (modelCurrentUser != null) {
+            this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
+                    Glide.with(Objects.requireNonNull(this)),
+                    this,
+                    this.modelCurrentUser.getUid(),
+                    restaurant);
 
-        mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
-            }
+            mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    mRecyclerView.smoothScrollToPosition(mWorkmateAdapter.getItemCount());
+                }
 
-        });
+            });
+        }
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
     }
@@ -108,7 +132,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     @Override
     public void onDataChanged() {
-        // 7 - Show TextView in case RecyclerView is empty
+        // Show TextView in case RecyclerView is empty
         mTextViewRecyclerViewEmpty.setVisibility(this.mWorkmateAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 }

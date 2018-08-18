@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
@@ -36,6 +37,10 @@ public class RestaurantHelper {
 
     public static Task<DocumentSnapshot> getRestaurantSelection(String uid) {
         return RestaurantHelper.getRestaurantCollection().document(uid).get();
+    }
+
+    public static Task<QuerySnapshot> getAllRestaurants() {
+        return RestaurantHelper.getRestaurantCollection().get();
     }
 
     public static Query isRestaurantSelected() {

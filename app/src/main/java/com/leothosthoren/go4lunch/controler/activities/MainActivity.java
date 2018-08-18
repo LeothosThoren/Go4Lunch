@@ -64,7 +64,6 @@ public class MainActivity extends BaseActivity {
     // --------------------
 
     // Launch Sign-In Activity
-
     private void startSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance()
@@ -85,7 +84,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 4 - Handle SignIn Activity response on activity result
+        // Handle SignIn Activity response on activity result
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
     }
 
@@ -137,7 +136,8 @@ public class MainActivity extends BaseActivity {
             String uid = this.getCurrentUser().getUid();
 
             // Allow the creation on the data base
-            UserHelper.createUser(uid, username, email, urlPicture).addOnFailureListener(this.onFailureListener(this));
+            UserHelper.createUser(uid, username, email, urlPicture)
+                    .addOnFailureListener(this.onFailureListener(this));
 
         }
     }

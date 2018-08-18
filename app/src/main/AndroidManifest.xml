@@ -22,7 +22,8 @@
         android:roundIcon="@mipmap/ic_launcher_go4lunch"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:name=".utils.App">
 
         <!-- Main Activity -->
         <activity

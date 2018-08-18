@@ -8,7 +8,9 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.model.firebase.Users;
+import com.leothosthoren.go4lunch.utils.App;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 
 import butterknife.BindView;
@@ -21,14 +23,15 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
     TextView mTextViewWorkmateName;
     @BindView(R.id.item_workmates_photo)
     ImageView mImageViewWorkmatePhoto;
-    private TextView.BufferType mType;
+
 
     public WorkmateViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithWorkmateItem(Users workmateItem, String currentUserId, RequestManager glide) {
+    public void updateWithWorkmateItem(Users workmateItem, String currentUserId,
+                                       Restaurants restaurant, RequestManager glide) {
         //Update workmate profile picture
         if (workmateItem.getUrlPicture() != null) {
             glide.load(workmateItem.getUrlPicture())
@@ -37,8 +40,15 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         }
 
         //Update workmate name
-        if (workmateItem.getUsername() != null) {
-            this.mTextViewWorkmateName.setText(formatFullName(workmateItem.getUsername()));
+        if (currentUserId != null) {
+//            assert restaurant.getWorkmate() != null;
+            if (workmateItem.getUid().equals(restaurant.getWorkmate().getUid())) {
+                this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                        .getString(R.string.workmate_is_eating, formatFullName(workmateItem.getUsername()), restaurant.getPlaceDetail().getResult().getName()));
+            } else {
+                this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                        .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
+            }
 
         }
     }

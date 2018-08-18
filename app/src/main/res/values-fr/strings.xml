@@ -43,7 +43,7 @@
     <string name="restaurant_image">Photo du restaurant</string>
     <string name="workmate_default_decision">" %1$s n'a pas encore décidé(e)"</string>
     <string name="workmate_profil">avatar d\'un collègue</string>
-    <string name="workmate_is_eating">%1$s mange au %2$s</string>
+    <string name="workmate_is_eating">%1$s mange au (%2$s)</string>
     <string name="workmate_is_joining">%1$s vous rejoint</string>
     <string name="call">TELEPHONE</string>
     <string name="website">SITEWEB</string>
