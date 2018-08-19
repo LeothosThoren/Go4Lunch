@@ -39,24 +39,13 @@ public class RestaurantHelper {
     }
 
     // Ok
-    public static Task<QuerySnapshot> getAllDocumentFromRestaurantCollection() {
+    public static Task<QuerySnapshot> getRestaurantDocuments() {
         return RestaurantHelper.getRestaurantCollection().get();
     }
 
     //Ok
-    public static Query getAllRestaurants() {
+    public static Query queryAllRestaurants() {
         return RestaurantHelper.getRestaurantCollection();
-    }
-
-
-    //Nok
-    public static Task<DocumentSnapshot> isRestaurantSelected() {
-        return RestaurantHelper.getRestaurantCollection().document().get();
-    }
-
-    //NOk
-    public static Task<DocumentSnapshot> getRestaurantsFromDatabase(String uid) {
-        return RestaurantHelper.getRestaurantCollection().document(uid).get();
     }
 
     // --- UPDATE ---

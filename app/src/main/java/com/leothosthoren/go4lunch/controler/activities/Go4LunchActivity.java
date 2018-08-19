@@ -255,6 +255,7 @@ public class Go4LunchActivity extends BaseActivity implements
 
    // Handle GoogleApiClient, filter and autocomplete Adapter
     private void configureAutocomplete() {
+
         Log.d(TAG, "configureAutocomplete: ok");
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)

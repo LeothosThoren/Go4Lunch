@@ -3,7 +3,6 @@ package com.leothosthoren.go4lunch.controler.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,10 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.JoiningWorkmateAdapter;
@@ -96,7 +92,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     private void init() {
         if (mPlaceDetail.getResult() != null) {
             this.getCurrentUserFromFirestore();
-            this.getAllRestaurantSelected();
+            this.getWorkmatesWhichSelectTheSamePlace();
             this.getUserSelectionPlaceFromFirestore();
             this.getRestaurantLikeFromFirestore();
             this.setUpViewsWithPlaceApi();
@@ -137,37 +133,16 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
     }
 
-
     private void configureRecyclerView() {
         Log.d(TAG, "configureRecyclerView: OK");
         this.mJoiningWorkmateAdapter = new JoiningWorkmateAdapter(mRestaurantsFromFireStore,
-                        Glide.with(Objects.requireNonNull(this)),
-                        Objects.requireNonNull(Objects.requireNonNull(getCurrentUser()).getUid()));
+                Glide.with(Objects.requireNonNull(this)),
+                Objects.requireNonNull(Objects.requireNonNull(getCurrentUser()).getUid()));
 
-////        mJoiningWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-////            @Override
-////            public void onItemRangeInserted(int positionStart, int itemCount) {
-////                mRecyclerView.smoothScrollToPosition(mJoiningWorkmateAdapter.getItemCount());
-////            }
-//
-//        });
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(this.mJoiningWorkmateAdapter);
     }
-
-//    // Create options for RecyclerView from a Query
-//    private FirestoreRecyclerOptions<Restaurants> generateOptionsForAdapter(Query query) {
-//        return new FirestoreRecyclerOptions.Builder<Restaurants>()
-//                .setQuery(query, Restaurants.class)
-//                .setLifecycleOwner(this)
-//                .build();
-//    }
-
-
-    // ---------------------
-    // ACTION
-    // ---------------------
 
 
     public void clickHandler() {
@@ -278,19 +253,21 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         }
     }
 
-    private void getAllRestaurantSelected() {
-        RestaurantHelper.getAllDocumentFromRestaurantCollection().addOnCompleteListener(task -> {
+    private void getWorkmatesWhichSelectTheSamePlace() {
+        RestaurantHelper.getRestaurantDocuments().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
                     assert restaurants != null;
-                    if (!restaurants.getWorkmate().getUid().equals(Objects.requireNonNull(getCurrentUser()).getUid())
-                            && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
-                    mRestaurantsFromFireStore.add(restaurants);
-
+                    if (restaurants.getWorkmate() != null) {
+                        if (!restaurants.getWorkmate().getUid().equals(mCurrentUser.getUid())
+                                && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
+                            // Store needed data inside arrayList
+                            mRestaurantsFromFireStore.add(restaurants);
+                    }
                 }
+                //Here the recyclerview retrieve data from request above
                 this.configureRecyclerView();
-                Log.d(TAG, "getAllRestaurantSelected: " + mRestaurantsFromFireStore.size());
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }

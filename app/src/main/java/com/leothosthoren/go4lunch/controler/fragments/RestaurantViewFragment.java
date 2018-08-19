@@ -25,7 +25,6 @@ import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -115,7 +114,7 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
 
 
     private void getAllRestaurantSelected() {
-        RestaurantHelper.getAllDocumentFromRestaurantCollection().addOnCompleteListener(task -> {
+        RestaurantHelper.getRestaurantDocuments().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);

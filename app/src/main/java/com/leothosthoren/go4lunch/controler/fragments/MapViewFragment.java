@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
@@ -44,7 +45,6 @@ import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -79,9 +79,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private Disposable mDisposable;
+    private Marker marker;
     // DATA
     private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
-    private Map<String, PlaceDetail> mMarkerMap = new HashMap<>();
+    private HashMap<String, PlaceDetail> mMarkerMap = new HashMap<>();
+    private List<Restaurants> restaurantListFromFirestore = new ArrayList<>();
 
     @Override
     protected BaseFragment newInstance() {
@@ -104,12 +106,15 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     protected void configureDesign() {
-        instantiatePlacesApiClients();
+        this.instantiatePlacesApiClients();
+        this.getAllRestaurantSelected();
     }
 
     @Override
     protected void updateDesign() {
+
     }
+
 
     //---------------------------------------------------------------------------------------------//
     //                                         MAP                                                 //
@@ -122,7 +127,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         getLocationPermission();
         updateUI();
         setMapStyle(mMap);
-        setMyPositionOnMap();
+        setDevicePositionOnMap();
         mMap.setOnMarkerClickListener(this);
 
     }
@@ -315,6 +320,26 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         this.disposeWhenDestroy();
     }
 
+    //---------------------------------------------------------------------------------------------//
+    //                                       HTTP FB                                               //
+    //---------------------------------------------------------------------------------------------//
+
+
+    private void getAllRestaurantSelected() {
+        RestaurantHelper.getRestaurantDocuments().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                    Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
+                    assert restaurants != null;
+                    restaurantListFromFirestore.add(restaurants);
+
+                }
+            } else {
+                Log.d(TAG, "Error getting documents: ", task.getException());
+            }
+        }).addOnFailureListener(this.onFailureListener(getContext()));
+    }
+
 
     //---------------------------------------------------------------------------------------------//
     //                                          UI                                                 //
@@ -347,8 +372,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         //Initialize and store data in both array and singleton
         this.mPlaceDetailList.addAll(placeDetailList);
         DataSingleton.getInstance().setPlaceDetailList(mPlaceDetailList);
-        //Call for Marker object to handle marker view and click
-        Marker marker;
 
         if (mPlaceDetailList.size() != 0 || mPlaceDetailList != null) {
             for (int i = 0; i < mPlaceDetailList.size(); i++) {
@@ -359,31 +382,28 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
                             .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                    // Store in HashMap for Marker clickHandler
-                    mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
-//                    this.getAllRestaurantSelected(mMarkerMap, marker);
-                }
+                    //Change color of marker if workmate had selected a restaurant
+                    this.changeMarkerColor(i);
 
+                    // Store in HashMap for Marker id for clickHandler
+                    mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
+                }
             }
+
         } else {
             Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
         }
     }
 
-//    private void getAllRestaurantSelected(Map<String, PlaceDetail> markerMap, Marker marker) {
-//        RestaurantHelper.getRestaurantsFromDatabase()
-//                .addOnSuccessListener(document -> {
-//                    if (document.exists()) {
-//                        Log.d(TAG, "getAllRestaurantSelected: " + document.getData());
-//                        Restaurants restaurants = document.toObject(Restaurants.class);
-//                        assert restaurants != null;
-//                        Log.d(TAG, "getAllRestaurantSelected: " + restaurants.getPlaceDetail().getResult().getPlaceId());
-//                        if (markerMap.containsKey(restaurants.getPlaceDetail().getResult().getPlaceId())) {
-//                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
-//                        }
-//                    }
-//                });
-//    }
+    private void changeMarkerColor(int index) {
+        for (int j = 0; j < restaurantListFromFirestore.size(); j++) {
+                if (restaurantListFromFirestore.get(j).getPlaceDetail().getResult().getPlaceId()
+                        .equals(mPlaceDetailList.get(index).getResult().getPlaceId())) {
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
+                    break;
+                }
+            }
+    }
 
 
     //---------------------------------------------------------------------------------------------//
@@ -401,7 +421,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         return false;
     }
 
-    private void setMyPositionOnMap() {
+    private void setDevicePositionOnMap() {
         this.mGpsLocation.setOnClickListener(v -> {
             Log.d(TAG, "onClick: clicked gps icon");
             if (DataSingleton.getInstance().getDeviceLatitude() != null
