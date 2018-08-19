@@ -2,27 +2,29 @@ package com.leothosthoren.go4lunch.adapter;
 
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.view.JoiningWorkmateViewHolder;
 
+import java.util.List;
 
-public class JoiningWorkmateAdapter extends FirestoreRecyclerAdapter<Restaurants, JoiningWorkmateViewHolder> {
+
+public class JoiningWorkmateAdapter extends RecyclerView.Adapter<JoiningWorkmateViewHolder> {
     //FOR DATA
     private final RequestManager glide;
-//    private final String idCurrentUser;
+    private final String idCurrentUser;
+    private final List<Restaurants> restaurantsList;
 
-    public JoiningWorkmateAdapter(@NonNull FirestoreRecyclerOptions<Restaurants> restaurantsOptions,
-                                  RequestManager glide/*, String idCurrentUser*/) {
-        super(restaurantsOptions);
+    public JoiningWorkmateAdapter(List<Restaurants> restaurants,
+                                  RequestManager glide, String idCurrentUser) {
+        this.restaurantsList = restaurants;
         this.glide = glide;
-//        this.idCurrentUser = idCurrentUser;
+        this.idCurrentUser = idCurrentUser;
     }
 
     @NonNull
@@ -32,11 +34,14 @@ public class JoiningWorkmateAdapter extends FirestoreRecyclerAdapter<Restaurants
                 .inflate(R.layout.recycler_view_item_workmates, parent, false));
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull JoiningWorkmateViewHolder holder, int position) {
+        holder.updateWithJoiningWorkmateItem(this.restaurantsList.get(position), this.idCurrentUser, this.glide);
+    }
 
     @Override
-    protected void onBindViewHolder(@NonNull JoiningWorkmateViewHolder holder, int position, @NonNull Restaurants model) {
-//        if (!model.getWorkmate().getUid().equals(idCurrentUser)) {
-        holder.updateWithJoiningWorkmateItem(model, /*this.idCurrentUser,*/ this.glide);
-//        }
+    public int getItemCount() {
+        return this.restaurantsList.size();
     }
+
 }

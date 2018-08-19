@@ -40,16 +40,14 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         }
 
         //Update workmate name
-        if (currentUserId != null) {
-//            assert restaurant.getWorkmate() != null;
-            if (workmateItem.getUid().equals(restaurant.getWorkmate().getUid())) {
-                this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                        .getString(R.string.workmate_is_eating, formatFullName(workmateItem.getUsername()), restaurant.getPlaceDetail().getResult().getName()));
-            } else {
-                this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                        .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
-            }
-
+        if (workmateItem.getUid().equals(restaurant.getWorkmate().getUid())) {
+            this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                    .getString(R.string.workmate_is_eating, formatFullName(workmateItem.getUsername()), restaurant.getPlaceDetail().getResult().getName()));
+        } else {
+            this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                    .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
         }
+
     }
+
 }

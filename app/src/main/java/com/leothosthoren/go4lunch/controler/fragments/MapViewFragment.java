@@ -361,7 +361,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                     // Store in HashMap for Marker clickHandler
                     mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
-                    this.getAllRestaurantSelected(mMarkerMap, marker);
+//                    this.getAllRestaurantSelected(mMarkerMap, marker);
                 }
 
             }
@@ -370,20 +370,20 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         }
     }
 
-    private void getAllRestaurantSelected(Map<String, PlaceDetail> markerMap, Marker marker) {
-        RestaurantHelper.getRestaurantsFromDatabase()
-                .addOnSuccessListener(document -> {
-                    if (document.exists()) {
-                        Log.d(TAG, "getAllRestaurantSelected: " + document.getData());
-                        Restaurants restaurants = document.toObject(Restaurants.class);
-                        assert restaurants != null;
-                        Log.d(TAG, "getAllRestaurantSelected: " + restaurants.getPlaceDetail().getResult().getPlaceId());
-                        if (markerMap.containsKey(restaurants.getPlaceDetail().getResult().getPlaceId())) {
-                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
-                        }
-                    }
-                });
-    }
+//    private void getAllRestaurantSelected(Map<String, PlaceDetail> markerMap, Marker marker) {
+//        RestaurantHelper.getRestaurantsFromDatabase()
+//                .addOnSuccessListener(document -> {
+//                    if (document.exists()) {
+//                        Log.d(TAG, "getAllRestaurantSelected: " + document.getData());
+//                        Restaurants restaurants = document.toObject(Restaurants.class);
+//                        assert restaurants != null;
+//                        Log.d(TAG, "getAllRestaurantSelected: " + restaurants.getPlaceDetail().getResult().getPlaceId());
+//                        if (markerMap.containsKey(restaurants.getPlaceDetail().getResult().getPlaceId())) {
+//                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
+//                        }
+//                    }
+//                });
+//    }
 
 
     //---------------------------------------------------------------------------------------------//

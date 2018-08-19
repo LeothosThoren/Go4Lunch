@@ -49,7 +49,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     @Override
     protected void configureDesign() {
-        this.getRestaurantWhereUsersAreEating();
+//        this.getRestaurantWhereUsersAreEating();
         this.getCurrentUserFromFirestore();
         this.configureRecyclerView(null);
     }
@@ -80,22 +80,22 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
                 .build();
     }
 
-    // Get all restaurant where users are eating
-    private void getRestaurantWhereUsersAreEating() {
-        RestaurantHelper.getRestaurantsFromDatabase()
-                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Log.d(TAG, "getRestaurantWhereUsersAreEating:" + document.getData());
-//                            Restaurants restaurants = document.toObject(Restaurants.class);
-//                            this.configureRecyclerView(restaurants);
-//
-//                        }
-//                    } else {
-//                        Log.e(TAG, "Error getting documents: " + task.getException());
-//                    }
-                });
-    }
+//    // Get all restaurant where users are eating
+//    private void getRestaurantWhereUsersAreEating() {
+//        RestaurantHelper.getRestaurantsFromDatabase()
+//                .addOnCompleteListener(task -> {
+////                    if (task.isSuccessful()) {
+////                        for (QueryDocumentSnapshot document : task.getResult()) {
+////                            Log.d(TAG, "getRestaurantWhereUsersAreEating:" + document.getData());
+////                            Restaurants restaurants = document.toObject(Restaurants.class);
+////                            this.configureRecyclerView(restaurants);
+////
+////                        }
+////                    } else {
+////                        Log.e(TAG, "Error getting documents: " + task.getException());
+////                    }
+//                });
+//    }
 
     // --------------------
     // UI

@@ -29,21 +29,20 @@ public class JoiningWorkmateViewHolder extends RecyclerView.ViewHolder implement
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithJoiningWorkmateItem(Restaurants joiningWorkmate/*, String currentUserId*/,
+    public void updateWithJoiningWorkmateItem(Restaurants joiningWorkmate, String currentUserId,
                                               RequestManager glide) {
-        //Update workmate profile picture
+
         if (joiningWorkmate.getWorkmate() != null) {
+            //Update workmate profile picture
             glide.load(joiningWorkmate.getWorkmate().getUrlPicture())
                     .apply(RequestOptions.circleCropTransform())
                     .into(this.mImageViewJoiningWorkmatePhoto);
-        }
 
-        //Update workmate name
-        if (joiningWorkmate.getWorkmate() != null) {
-            assert joiningWorkmate.getWorkmate() != null;
+            //Update workmate name
             this.mTextViewJoiningWorkmateName.setText(App.getContext().getResources()
                     .getString(R.string.workmate_is_joining, formatFullName(joiningWorkmate.getWorkmate().getUsername())));
-
         }
+
     }
+
 }

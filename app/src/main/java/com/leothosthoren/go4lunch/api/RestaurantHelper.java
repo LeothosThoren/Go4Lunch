@@ -38,25 +38,26 @@ public class RestaurantHelper {
         return RestaurantHelper.getRestaurantCollection().document(uid).get();
     }
 
-    //NOk
-    public static Task<DocumentSnapshot> getRestaurantsFromDatabase() {
-        return RestaurantHelper.getRestaurantCollection().document().get();
-    }
-
     // Ok
     public static Task<QuerySnapshot> getAllDocumentFromRestaurantCollection() {
         return RestaurantHelper.getRestaurantCollection().get();
     }
+
+    //Ok
+    public static Query getAllRestaurants() {
+        return RestaurantHelper.getRestaurantCollection();
+    }
+
 
     //Nok
     public static Task<DocumentSnapshot> isRestaurantSelected() {
         return RestaurantHelper.getRestaurantCollection().document().get();
     }
 
-    public static Query getAllRestaurants() {
-        return RestaurantHelper.getRestaurantCollection();
+    //NOk
+    public static Task<DocumentSnapshot> getRestaurantsFromDatabase(String uid) {
+        return RestaurantHelper.getRestaurantCollection().document(uid).get();
     }
-
 
     // --- UPDATE ---
 
