@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.RequestManager;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 import com.leothosthoren.go4lunch.view.RestaurantViewHolder;
 
 import java.util.List;
@@ -22,11 +23,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     // FOR DATA
     private List<PlaceDetail> mRestaurantItems;
     private RequestManager glide;
+    private List<Restaurants> mRestaurantsListFromFirestore;
 
-    public RestaurantAdapter(List<PlaceDetail> restaurantItems, RequestManager glide, Listener callback) {
+
+    public RestaurantAdapter(List<PlaceDetail> restaurantItems, RequestManager glide, Listener callback, List<Restaurants> restaurantsListFromFirestore) {
         this.mRestaurantItems = restaurantItems;
         this.glide = glide;
         this.callback = callback;
+        this.mRestaurantsListFromFirestore = restaurantsListFromFirestore;
     }
 
     @NonNull
@@ -42,7 +46,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         //RESTAURANT
-        holder.updateRestaurantListView(mRestaurantItems.get(position), this.glide, this.callback);
+        int mNbOfWorkmate = 0;
+        for (int i = 0; i < mRestaurantsListFromFirestore.size(); i++) {
+            if (mRestaurantItems.get(position).getResult().getPlaceId()
+                    .equals(mRestaurantsListFromFirestore.get(i).getPlaceDetail().getResult().getPlaceId())) {
+                //add 1 when counting workmate
+                mNbOfWorkmate++;
+            }
+        }
+        holder.updateRestaurantListView(mRestaurantItems.get(position), this.glide, this.callback, mNbOfWorkmate);
     }
 
     @Override

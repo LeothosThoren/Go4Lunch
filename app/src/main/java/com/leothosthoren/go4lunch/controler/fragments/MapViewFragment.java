@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -35,11 +34,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.controler.activities.Go4LunchActivity;
 import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,10 +62,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final float DEFAULT_ZOOM = 16f;
     public static final String TAG = MapViewFragment.class.getSimpleName();
-    private static final String KEY_LOCATION = "location";
     public static final String SENDER_KEY = TAG;
     public static final String LATITUDE_BOUND = "latitude bound";
     public static final String LONGITUDE_BOUND = "longitude bound";
+    private static final String KEY_LOCATION = "location";
     // WIDGET
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
@@ -241,10 +241,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             DataSingleton.getInstance().setDeviceLatitude(latitude);
                             DataSingleton.getInstance().setDeviceLongitude(longitude);
 
-                            Intent i = new Intent(getActivity().getBaseContext(), Go4LunchActivity.class);
-                            i.putExtra(SENDER_KEY, "MapViewFragment");
-                            i.putExtra(LATITUDE_BOUND, latitude);
-                            i.putExtra(LONGITUDE_BOUND, longitude);
+//                            Intent i = new Intent(getActivity().getBaseContext(), Go4LunchActivity.class);
+//                            i.putExtra(SENDER_KEY, "MapViewFragment");
+//                            i.putExtra(LATITUDE_BOUND, latitude);
+//                            i.putExtra(LONGITUDE_BOUND, longitude);
 
                             //Move camera toward device position
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -361,12 +361,28 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
                     // Store in HashMap for Marker clickHandler
                     mMarkerMap.put(marker.getId(), mPlaceDetailList.get(i));
+                    this.getAllRestaurantSelected(mMarkerMap, marker);
                 }
 
             }
         } else {
             Log.d(TAG, "addMarkerOnMap is empty :" + mPlaceDetailList.size());
         }
+    }
+
+    private void getAllRestaurantSelected(Map<String, PlaceDetail> markerMap, Marker marker) {
+        RestaurantHelper.getRestaurantsFromDatabase()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        Log.d(TAG, "getAllRestaurantSelected: " + document.getData());
+                        Restaurants restaurants = document.toObject(Restaurants.class);
+                        assert restaurants != null;
+                        Log.d(TAG, "getAllRestaurantSelected: " + restaurants.getPlaceDetail().getResult().getPlaceId());
+                        if (markerMap.containsKey(restaurants.getPlaceDetail().getResult().getPlaceId())) {
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
+                        }
+                    }
+                });
     }
 
 

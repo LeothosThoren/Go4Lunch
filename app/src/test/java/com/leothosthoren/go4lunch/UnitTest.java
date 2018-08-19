@@ -54,7 +54,7 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
 
 
         assertEquals(12, convertStringIdIntoInteger("m13"));
-        assertEquals("12:00 – 2:00 pm,7:30 – 10:00 pm", formatWeekDayText(l));
+        assertEquals("10:00 am – 5:00 pm", formatWeekDayText(l));
     }
 
     //==========================
@@ -85,7 +85,7 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
 
     @Test
     public void formatDate() throws Exception {
-        assertEquals("16/08/2018", formatDate(Calendar.getInstance().getTime()));
+        assertEquals("19/08/2018", formatDate(Calendar.getInstance().getTime()));
     }
 
     @Test
@@ -99,6 +99,6 @@ public class UnitTest implements HttpRequestTools, DataConverterHelper {
     @Test
     public void getCurrentDayOftheWeek() throws Exception {
         //Change the expected result with the current day
-        assertEquals(3, dayOfWeek(), 0.0);
+        assertEquals(0, dayOfWeek(), 0.0);
     }
 }

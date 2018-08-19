@@ -1,7 +1,5 @@
 package com.leothosthoren.go4lunch.api;
 
-import android.support.annotation.Nullable;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,17 +33,30 @@ public class RestaurantHelper {
 
     // --- GET ---
 
+    //Ok
     public static Task<DocumentSnapshot> getRestaurantSelection(String uid) {
         return RestaurantHelper.getRestaurantCollection().document(uid).get();
     }
 
-    public static Task<QuerySnapshot> getAllRestaurants() {
+    //NOk
+    public static Task<DocumentSnapshot> getRestaurantsFromDatabase() {
+        return RestaurantHelper.getRestaurantCollection().document().get();
+    }
+
+    // Ok
+    public static Task<QuerySnapshot> getAllDocumentFromRestaurantCollection() {
         return RestaurantHelper.getRestaurantCollection().get();
     }
 
-    public static Query isRestaurantSelected() {
-        return RestaurantHelper.getRestaurantCollection().whereEqualTo("choice", true);
+    //Nok
+    public static Task<DocumentSnapshot> isRestaurantSelected() {
+        return RestaurantHelper.getRestaurantCollection().document().get();
     }
+
+    public static Query getAllRestaurants() {
+        return RestaurantHelper.getRestaurantCollection();
+    }
+
 
     // --- UPDATE ---
 

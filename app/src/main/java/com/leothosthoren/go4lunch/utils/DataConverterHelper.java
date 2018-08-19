@@ -77,11 +77,16 @@ public interface DataConverterHelper {
      */
     default String formatWeekDayText(List<String> weekDayArray) {
         StringBuilder builder = new StringBuilder();
-        String [] ot = weekDayArray.get(dayOfWeek()).split(" ");
-        for (int i = 1, otLength = ot.length; i < otLength; i++) {
-            String anOt = ot[i];
-            builder.append(anOt).append(" ");
+        if (weekDayArray.size() >=2) {
+            String[] ot = weekDayArray.get(dayOfWeek()).split(" ");
+            for (int i = 1, otLength = ot.length; i < otLength; i++) {
+                String anOt = ot[i];
+                builder.append(anOt).append(" ");
+            }
+        } else {
+            builder.append("Closed");
         }
+
         return builder.toString().toLowerCase() ;
     }
 
@@ -93,7 +98,7 @@ public interface DataConverterHelper {
     default Integer dayOfWeek() {
         Calendar calendar = Calendar.getInstance();
         //Day number of week (1 = Monday, ..., 7 = Sunday) != Place api 0 = Monday
-        return calendar.get(Calendar.DAY_OF_WEEK)-2;
+        return calendar.get(Calendar.DAY_OF_WEEK)-1;
     }
 
     /**

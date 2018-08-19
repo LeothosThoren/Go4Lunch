@@ -5,14 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
@@ -53,6 +51,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     protected void configureDesign() {
         this.getRestaurantWhereUsersAreEating();
         this.getCurrentUserFromFirestore();
+        this.configureRecyclerView(null);
     }
 
     @Override
@@ -83,18 +82,18 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     // Get all restaurant where users are eating
     private void getRestaurantWhereUsersAreEating() {
-        RestaurantHelper.getAllRestaurants()
+        RestaurantHelper.getRestaurantsFromDatabase()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, "getRestaurantWhereUsersAreEating:" + document.getData());
-                            Restaurants restaurants = document.toObject(Restaurants.class);
-                            this.configureRecyclerView(restaurants);
-
-                        }
-                    } else {
-                        Log.e(TAG, "Error getting documents: " + task.getException());
-                    }
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Log.d(TAG, "getRestaurantWhereUsersAreEating:" + document.getData());
+//                            Restaurants restaurants = document.toObject(Restaurants.class);
+//                            this.configureRecyclerView(restaurants);
+//
+//                        }
+//                    } else {
+//                        Log.e(TAG, "Error getting documents: " + task.getException());
+//                    }
                 });
     }
 

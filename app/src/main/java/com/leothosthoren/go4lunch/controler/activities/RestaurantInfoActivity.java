@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -14,8 +17,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.BuildConfig;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.adapter.JoiningWorkmateAdapter;
+import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.RestaurantLikeHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
@@ -52,9 +59,12 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     ImageView restaurantPhoto;
     @BindView(R.id.restaurant_info_rating_bar)
     RatingBar restaurantRatingBar;
+    @BindView(R.id.recycler_view_id)
+    RecyclerView mRecyclerView;
     // VAR
     private boolean isCheckFab = true;
     private boolean isCheckLike = true;
+    private JoiningWorkmateAdapter mJoiningWorkmateAdapter;
     // DATA
     private PlaceDetail mPlaceDetail = DataSingleton.getInstance().getPlaceDetail();
     private Users mCurrentUser;
@@ -83,6 +93,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             this.getUserSelectionPlaceFromFirestore();
             this.getRestaurantLikeFromFirestore();
             this.setUpViewsWithPlaceApi();
+            this.configureRecyclerView();
         }
         this.clickHandler();
     }
@@ -118,6 +129,36 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             Toast.makeText(RestaurantInfoActivity.this, R.string.website_no_available, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+
+    private void configureRecyclerView() {
+        Log.d(TAG, "configureRecyclerView: OK");
+//        if (mCurrentUser != null) {
+            this.mJoiningWorkmateAdapter =
+                    new JoiningWorkmateAdapter(generateOptionsForAdapter(RestaurantHelper.getAllRestaurants()),
+                    Glide.with(Objects.requireNonNull(this))/*,
+                    this.mCurrentUser.getUid()*/);
+
+            mJoiningWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    mRecyclerView.smoothScrollToPosition(mJoiningWorkmateAdapter.getItemCount());
+                }
+
+            });
+//        }
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(this.mJoiningWorkmateAdapter);
+    }
+
+    // Create options for RecyclerView from a Query
+    private FirestoreRecyclerOptions<Restaurants> generateOptionsForAdapter(Query query) {
+        return new FirestoreRecyclerOptions.Builder<Restaurants>()
+                .setQuery(query, Restaurants.class)
+                .setLifecycleOwner(this)
+                .build();
     }
 
 

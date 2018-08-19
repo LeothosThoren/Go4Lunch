@@ -2,12 +2,14 @@ package com.leothosthoren.go4lunch.model.firebase;
 
 import android.support.annotation.Nullable;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 
 import java.util.Date;
 import java.util.HashMap;
 
+@IgnoreExtraProperties
 public class Restaurants {
 
     private Date dateChoice;

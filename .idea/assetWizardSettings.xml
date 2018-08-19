@@ -56,9 +56,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="imageAsset" value="$PROJECT_DIR$/../9-Patch-Resizer-1.4.2/drawable-xxhdpi/ic_restaurant_map_icon.png" />
-                                      <entry key="outputName" value="ic_pizza_icon_map" />
+                                      <entry key="outputName" value="ic_pizza_icon_map_workmates" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ff5722" />
+                                      <entry key="themeColor" value="68f0ae" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -111,6 +111,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="foregroundAssetType" value="CLIP_ART" />
                                       <entry key="foregroundImage" value="$USER_HOME$/Téléchargements/burger.svg" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="outputName" value="ic_launcher_go4lunch" />
@@ -150,6 +151,11 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
