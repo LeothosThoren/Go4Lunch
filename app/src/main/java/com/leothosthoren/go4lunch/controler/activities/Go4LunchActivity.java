@@ -255,7 +255,6 @@ public class Go4LunchActivity extends BaseActivity implements
 
    // Handle GoogleApiClient, filter and autocomplete Adapter
     private void configureAutocomplete() {
-
         Log.d(TAG, "configureAutocomplete: ok");
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -327,6 +326,7 @@ public class Go4LunchActivity extends BaseActivity implements
 
     }
 
+    // Get resuslt callback and launch request on place detail Api
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = places -> {
         if (!places.getStatus().isSuccess()) {
             Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());

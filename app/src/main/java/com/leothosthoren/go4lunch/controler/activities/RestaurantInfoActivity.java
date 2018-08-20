@@ -42,7 +42,7 @@ import butterknife.BindView;
 
 public class RestaurantInfoActivity extends BaseActivity implements DataConverterHelper, FireBaseTools {
 
-    // VIEW
+    // WIDGET
     @BindView(R.id.restaurant_info_phone_button)
     Button mButtonCall;
     @BindView(R.id.floatingActionButton)
@@ -71,7 +71,6 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     private Date mDate;
     private String mPlaceID;
     private Boolean mRestaurantSelection;
-    //Test
     private List<Restaurants> mRestaurantsFromFireStore = new ArrayList<>();
 
     @Override
@@ -116,8 +115,6 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                 Toast.makeText(RestaurantInfoActivity.this, R.string.phone_no_available, Toast.LENGTH_SHORT).show();
             }
         }
-
-
     }
 
     public void openWebsitePage(String url) {
@@ -130,7 +127,6 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         } else {
             Toast.makeText(RestaurantInfoActivity.this, R.string.website_no_available, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void configureRecyclerView() {
@@ -259,8 +255,8 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
                     assert restaurants != null;
-                    if (restaurants.getWorkmate() != null) {
-                        if (!restaurants.getWorkmate().getUid().equals(mCurrentUser.getUid())
+                    if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
+                        if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
                                 && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
                             // Store needed data inside arrayList
                             mRestaurantsFromFireStore.add(restaurants);

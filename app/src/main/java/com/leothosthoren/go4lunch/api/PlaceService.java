@@ -29,8 +29,4 @@ public interface PlaceService {
     @GET("details/json?&key=" + apiKey)
     Observable<PlaceDetail> getDetail(@Query("placeid") String placeId);
 
-    //Place Photo api
-    @GET("photo?maxwidth=100&maxheight=100&&key=" + apiKey)
-    Observable<?> getPlacePhoto(@Query("photoReference") String photoRef);
-
 }

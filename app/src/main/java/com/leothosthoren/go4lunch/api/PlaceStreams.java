@@ -33,34 +33,35 @@ public class PlaceStreams {
 
     public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
         return streamFetchNearbyApi(location)
-                .map(new Function<NearbySearch, List<Result>>() {
-                    @Override
-                    public List<Result> apply(NearbySearch restaurant) throws Exception {
-                        return restaurant.getResults();
-                    }
-                })
-                .concatMap(new Function<List<Result>, Observable<List<PlaceDetail>>>() {
-                    @Override
-                    public Observable<List<PlaceDetail>> apply(List<Result> results) throws Exception {
-                        return Observable.fromIterable(results)
-                                .concatMap(new Function<Result, Observable<PlaceDetail>>() {
-                                    @Override
-                                    public Observable<PlaceDetail> apply(Result result) throws Exception {
-                                        return streamFetchPlaceDetail(result.getPlaceId());
-                                    }
-                                })
-                                .toList()
-                                .toObservable();
-                    }
-                });
+                .map(NearbySearch::getResults)
+                .concatMap((Function<List<Result>, Observable<List<PlaceDetail>>>) results -> Observable.fromIterable(results)
+                        .concatMap((Function<Result, Observable<PlaceDetail>>) result -> streamFetchPlaceDetail(result.getPlaceId()))
+                        .toList()
+                        .toObservable());
     }
+
 
 //    public static Observable<List<PlaceDetail>> streamFetchListPlaceDetail(String location) {
 //        return streamFetchNearbyApi(location)
-//                .map(NearbySearch::getResults)
-//                .flatMap((Function<List<Result>, Observable<List<PlaceDetail>>>) results -> Observable.fromIterable(results)
-//                        .flatMap((Function<Result, Observable<PlaceDetail>>) result -> streamFetchPlaceDetail(result.getPlaceId()))
-//                        .toList()
-//                        .toObservable());
+//                .map(new Function<NearbySearch, List<Result>>() {
+//                    @Override
+//                    public List<Result> apply(NearbySearch restaurant) throws Exception {
+//                        return restaurant.getResults();
+//                    }
+//                })
+//                .concatMap(new Function<List<Result>, Observable<List<PlaceDetail>>>() {
+//                    @Override
+//                    public Observable<List<PlaceDetail>> apply(List<Result> results) throws Exception {
+//                        return Observable.fromIterable(results)
+//                                .concatMap(new Function<Result, Observable<PlaceDetail>>() {
+//                                    @Override
+//                                    public Observable<PlaceDetail> apply(Result result) throws Exception {
+//                                        return streamFetchPlaceDetail(result.getPlaceId());
+//                                    }
+//                                })
+//                                .toList()
+//                                .toObservable();
+//                    }
+//                });
 //    }
 }
