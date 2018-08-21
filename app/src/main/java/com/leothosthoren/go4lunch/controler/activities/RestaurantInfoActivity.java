@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -91,7 +92,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     private void init() {
         if (mPlaceDetail.getResult() != null) {
             this.getCurrentUserFromFirestore();
-            this.getWorkmatesWhichSelectTheSamePlace();
+            this.getWorkmatesNameWhoSelectedTheSameUserPlace();
             this.getUserSelectionPlaceFromFirestore();
             this.getRestaurantLikeFromFirestore();
             this.setUpViewsWithPlaceApi();
@@ -143,53 +144,29 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
     public void clickHandler() {
         //RESTAURANT SELECTION
-        mFab.setOnClickListener(v -> {
+        mFab.setOnClickListener(view -> {
             if (isCheckFab) {
                 mFab.setImageResource(R.drawable.ic_check_circle);
-                if (getCurrentUser() != null) {
-                    RestaurantHelper.saveRestaurantChoice(getCurrentUser().getUid(), mPlaceDetail,
-                            true, null, mCurrentUser)
-                            .addOnFailureListener(onFailureListener(this));
-                    Snackbar.make(v, getString(R.string.save_place_selection), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+                this.setUserSelectionPlaceToFirestore(view);
                 isCheckFab = false;
-
             } else {
                 mFab.setImageResource(R.drawable.ic_uncheck_circle);
-                if (getCurrentUser() != null) {
-                    RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid())
-                            .addOnFailureListener(this.onFailureListener(this));
-                    Snackbar.make(v, getString(R.string.delete_place_selection), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+                this.deleteUserSelection(view);
                 isCheckFab = true;
             }
 
         });
 
         //LIKE BUTTON
-        mLikeButton.setOnClickListener(v -> {
+        mLikeButton.setOnClickListener(view -> {
             if (isCheckLike) {
                 mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
-                if (getCurrentUser() != null) {
-
-                    RestaurantLikeHelper.likeRestaurant(getCurrentUser().getUid(),
-                            mPlaceDetail.getResult().getName(), mPlaceDetail.getResult().getPlaceId(), true)
-                            .addOnFailureListener(this.onFailureListener(this));
-                    Snackbar.make(v, R.string.restaurant_like, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+                this.setLikeToFirestore(view);
                 isCheckLike = false;
 
             } else {
                 mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border, 0, 0);
-                if (getCurrentUser() != null) {
-                    RestaurantLikeHelper.dislikeRestaurant(getCurrentUser().getUid(), mPlaceDetail.getResult().getPlaceId())
-                            .addOnFailureListener(this.onFailureListener(this));
-                    Snackbar.make(v, R.string.restaurant_no_like, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+                this.deleteLikeFromFirestore(view);
                 isCheckLike = true;
             }
 
@@ -208,6 +185,57 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     // REST REQUESTS
     // --------------------
 
+    //Set user selection place
+    private void setUserSelectionPlaceToFirestore(View v) {
+        if (getCurrentUser() != null) {
+            RestaurantHelper.saveRestaurantChoice(getCurrentUser().getUid(), mPlaceDetail,
+                    true, null, mCurrentUser)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Update at the same time the user collection
+                            UserHelper.updateRestaurantSelection(getCurrentUser().getUid(), mPlaceDetail.getResult().getName(),
+                                    mPlaceDetail.getResult().getPlaceId()).addOnFailureListener(this.onFailureListener(this));
+                        }
+                        Snackbar.make(v, getString(R.string.save_place_selection), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    })
+                    .addOnFailureListener(onFailureListener(this));
+        }
+
+    }
+
+    private void setLikeToFirestore(View v) {
+        if (getCurrentUser() != null) {
+            RestaurantLikeHelper.likeRestaurant(getCurrentUser().getUid(),
+                    mPlaceDetail.getResult().getName(), mPlaceDetail.getResult().getPlaceId(), true)
+                    .addOnFailureListener(this.onFailureListener(this));
+            Snackbar.make(v, R.string.restaurant_like, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+    }
+
+    private void deleteLikeFromFirestore(View v) {
+        if (getCurrentUser() != null) {
+            RestaurantLikeHelper.dislikeRestaurant(getCurrentUser().getUid(), mPlaceDetail.getResult().getPlaceId())
+                    .addOnFailureListener(this.onFailureListener(this));
+            Snackbar.make(v, R.string.restaurant_no_like, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+    }
+
+    // Delete user selection
+    private void deleteUserSelection(View v) {
+        if (getCurrentUser() != null) {
+            //From restaurants collection the entire document
+            RestaurantHelper.deleteRestaurantSelection(getCurrentUser().getUid())
+                    .addOnFailureListener(this.onFailureListener(this));
+            //From users collection only the data
+            UserHelper.deleteRestaurantSelectionFields(getCurrentUser().getUid())
+                    .addOnFailureListener(this.onFailureListener(this));
+            Snackbar.make(v, getString(R.string.delete_place_selection), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+    }
 
     // Get Current User from Firestore
     private void getCurrentUserFromFirestore() {
@@ -249,17 +277,18 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         }
     }
 
-    private void getWorkmatesWhichSelectTheSamePlace() {
+    private void getWorkmatesNameWhoSelectedTheSameUserPlace() {
         RestaurantHelper.getAllRestaurants().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    assert restaurants != null;
-                    if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
-                        if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
-                                && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
-                            // Store needed data inside arrayList
-                            mRestaurantsFromFireStore.add(restaurants);
+                    if (restaurants != null) {
+                        if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
+                            if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
+                                    && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
+                                // Store needed data inside arrayList
+                                mRestaurantsFromFireStore.add(restaurants);
+                        }
                     }
                 }
                 //Here the recyclerview retrieve data from request above
@@ -301,6 +330,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         Date d = Calendar.getInstance().getTime();
         if (selection && mPlaceDetail.getResult().getPlaceId().equals(placeID) && formatDate(d).equals(formatDate(date))) {
             mFab.setImageResource(R.drawable.ic_check_circle);
+            isCheckFab = false;
         }
 
     }
@@ -310,6 +340,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         // when parcouring documents you find the same placeID with placeID from singleton
         if (mPlaceDetail.getResult().getPlaceId().equals(placeID)) {
             mLikeButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_full, 0, 0);
+            isCheckLike = false;
         }
     }
 
