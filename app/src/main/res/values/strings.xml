@@ -3,7 +3,7 @@
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_action_bar_hungry">I\'am hungry!</string>
-    <string name="title_action_bar_workmate">Available workmates</string>
+    <string name="title_action_bar_workmate">Available users</string>
 
     <!-- Main activity -->
     <string name="splash_screen_text">Find a nice restaurant and invite your co-workers for lunch!</string>
@@ -24,7 +24,7 @@
 
     <string name="toolbar_icon_search">Search restaurants</string>
     <!-- SEARCH -->
-    <string name="search_workmates">Search workmates</string>
+    <string name="search_workmates">Search users</string>
     <string name="search_restaurant">Search a restaurant</string>
 
 
@@ -61,7 +61,7 @@
     <string name="no_restaurants_available_check_the_map_view">No restaurants available&#8230; check the map view</string>
 
 
-    <!--RecyclerView workmates item-->
+    <!--RecyclerView users item-->
     <string name="workmate_default_decision"> %1$s hasn\'t decided yet</string>
     <string name="workmate_profil">workmates_profil</string>
     <string name="workmate_is_eating">%1$s is eating in (%2$s)</string>

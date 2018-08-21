@@ -39,7 +39,7 @@ public class RestaurantHelper {
     }
 
     // Ok
-    public static Task<QuerySnapshot> getRestaurantDocuments() {
+    public static Task<QuerySnapshot> getAllRestaurants() {
         return RestaurantHelper.getRestaurantCollection().get();
     }
 

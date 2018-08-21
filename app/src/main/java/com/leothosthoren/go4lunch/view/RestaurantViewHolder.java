@@ -58,7 +58,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference=";
         String apiKey = "&key=" + BuildConfig.ApiKey;
 
-        assert placeDetail.getResult() != null;
+        if ( placeDetail.getResult() != null)
         {
             //Restaurant name
             this.mRestaurantName.setText(placeDetail.getResult().getName());
@@ -85,6 +85,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
             // Number of workmates
             if (nbOfWorkmate > 0) {
                 mNbOfWorkmates.setText(String.valueOf("(" + nbOfWorkmate + ")"));
+                this.mNbOfWorkmates.setVisibility(View.VISIBLE);
+                this.mWorkmateImageView.setVisibility(View.VISIBLE);
             } else {
                 this.mNbOfWorkmates.setVisibility(View.INVISIBLE);
                 this.mWorkmateImageView.setVisibility(View.INVISIBLE);

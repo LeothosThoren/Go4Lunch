@@ -5,6 +5,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 
 public class UserHelper {
@@ -30,6 +31,10 @@ public class UserHelper {
 
     public static Task<DocumentSnapshot> getUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).get();
+    }
+
+    public static Task<QuerySnapshot> getAllWorkmates() {
+        return UserHelper.getUsersCollection().get();
     }
 
     public static Query getAllUsers() {

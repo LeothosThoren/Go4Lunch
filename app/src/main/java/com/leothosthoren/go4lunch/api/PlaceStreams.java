@@ -37,6 +37,7 @@ public class PlaceStreams {
                 .concatMap((Function<List<Result>, Observable<List<PlaceDetail>>>) results -> Observable.fromIterable(results)
                         .concatMap((Function<Result, Observable<PlaceDetail>>) result -> streamFetchPlaceDetail(result.getPlaceId()))
                         .toList()
+                        //Include data from firebase
                         .toObservable());
     }
 

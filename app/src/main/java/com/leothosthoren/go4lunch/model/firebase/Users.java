@@ -21,19 +21,6 @@ public class Users {
         this.urlPicture = urlPicture;
     }
 
-    public Users(String uid, String username, String userEmail) {
-        this.uid = uid;
-        this.username = username;
-        this.userEmail = userEmail;
-    }
-
-    public Users(String uid, String username, String userEmail, @Nullable String urlPicture, Boolean notificationEnabled) {
-        this.uid = uid;
-        this.username = username;
-        this.userEmail = userEmail;
-        this.urlPicture = urlPicture;
-        this.notificationEnabled = notificationEnabled;
-    }
 
     public String getUid() {
         return uid;

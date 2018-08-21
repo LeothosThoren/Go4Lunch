@@ -250,7 +250,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
     }
 
     private void getWorkmatesWhichSelectTheSamePlace() {
-        RestaurantHelper.getRestaurantDocuments().addOnCompleteListener(task -> {
+        RestaurantHelper.getAllRestaurants().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
