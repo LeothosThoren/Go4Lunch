@@ -8,12 +8,9 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
-import com.leothosthoren.go4lunch.model.firebase.WorkmateAndRestaurant;
+import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.App;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
-
-import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,32 +23,34 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
     @BindView(R.id.item_workmates_photo)
     ImageView mImageViewWorkmatePhoto;
 
+
     public WorkmateViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void updateWithWorkmateItem(WorkmateAndRestaurant workmateAndRestaurant, String currentUserId,
+    public void updateWithWorkmateItem(Users workmateItem, String currentUserId,
                                        RequestManager glide) {
-        //Update workmate profile picture
-        if (workmateAndRestaurant.getUsers() != null) {
-            glide.load(workmateAndRestaurant.getUsers().getUrlPicture())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(this.mImageViewWorkmatePhoto);
-        }
+        if (!workmateItem.getUid().equals(currentUserId)) {
+            //Update workmate profile picture
+            if (workmateItem.getUrlPicture() != null) {
+                glide.load(workmateItem.getUrlPicture())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(this.mImageViewWorkmatePhoto);
+            }
 
-        //Update workmate name
-        assert workmateAndRestaurant.getRestaurants() != null;
-        if (workmateAndRestaurant.getUsers().getUid().equals(workmateAndRestaurant.getRestaurants().getWorkmate().getUid())) {
-            this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                    .getString(R.string.workmate_is_eating,
-                            formatFullName(workmateAndRestaurant.getUsers().getUsername()),
-                            workmateAndRestaurant.getRestaurants().getPlaceDetail().getResult().getName()));
-        } else {
-            this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                    .getString(R.string.workmate_default_decision, formatFullName(workmateAndRestaurant.getUsers().getUsername())));
+            //Update workmate name and restaurant choice
+            if (workmateItem.getWorkmateSelection() != null) {
+                this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                        .getString(R.string.workmate_is_eating,
+                                formatFullName(workmateItem.getUsername()),
+                                workmateItem.getWorkmateSelection().getRestaurantName()));
+            } else {
+                this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                        .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
+            }
+
         }
 
     }
-
 }

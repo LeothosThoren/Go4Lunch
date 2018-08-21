@@ -1,28 +1,33 @@
 package com.leothosthoren.go4lunch.adapter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leothosthoren.go4lunch.R;
-import com.leothosthoren.go4lunch.model.firebase.WorkmateAndRestaurant;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
+import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.view.WorkmateViewHolder;
 
-import java.util.List;
 
-
-public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder> {
+public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateViewHolder> {
     //FOR DATA
     private final RequestManager glide;
     private final String idCurrentUser;
-    private List<WorkmateAndRestaurant> mWorkmateAndRestaurantList;
+//    private final String idRestaurant;
+
+    //FOR COMMUNICATION
+    private Listener callback;
 
 
-    public WorkmateAdapter(List<WorkmateAndRestaurant> workmateAndRestaurantList, RequestManager glide, String idCurrentUser) {
-        this.mWorkmateAndRestaurantList = workmateAndRestaurantList;
+    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Users> usersOptions,
+                           RequestManager glide, Listener callback, String idCurrentUser) {
+        super(usersOptions);
         this.glide = glide;
+        this.callback = callback;
         this.idCurrentUser = idCurrentUser;
     }
 
@@ -34,39 +39,21 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position) {
-        //add method holder
-        if (!mWorkmateAndRestaurantList.get(position).getUsers().getUid().equals(idCurrentUser)) {
-            holder.updateWithWorkmateItem(mWorkmateAndRestaurantList.get(position), this.idCurrentUser, this.glide);
-        }
+    public void onDataChanged() {
+        super.onDataChanged();
+        this.callback.onDataChanged();
     }
 
     @Override
-    public int getItemCount() {
-        return mWorkmateAndRestaurantList.size();
-    }
-
-    //Handle click on recycler view list
-    public WorkmateAndRestaurant getWorkamteRestaurantChoice(int position) {
-        return this.mWorkmateAndRestaurantList.get(position);
-    }
-
-//    @Override
-//    public void onDataChanged() {
-//        super.onDataChanged();
-//        this.callback.onDataChanged();
-//    }
-//
-//    @Override
-//    protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull WorkmateAndRestaurant workmateAndRestaurant) {
-//        //add method holder
-//        if (!workmateAndRestaurant.getUsers().getUid().equals(idCurrentUser)) {
-//            holder.updateWithWorkmateItem(workmateAndRestaurant, this.idCurrentUser, this.glide);
+    protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull Users users) {
+        //add method holder
+//        if (!users.getUid().equals(idCurrentUser)) {
+            holder.updateWithWorkmateItem(users, this.idCurrentUser, this.glide);
 //        }
-//
-//    }
 
-//    public interface Listener {
-//        void onDataChanged();
-//    }
+    }
+
+    public interface Listener {
+        void onDataChanged();
+    }
 }
