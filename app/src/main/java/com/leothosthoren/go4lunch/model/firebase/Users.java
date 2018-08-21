@@ -10,6 +10,8 @@ public class Users {
     @Nullable
     private String urlPicture;
     private Boolean notificationEnabled;
+    @Nullable
+    private WorkmateSelection workmateSelection;
 
     public Users() {
     }
@@ -21,6 +23,14 @@ public class Users {
         this.urlPicture = urlPicture;
     }
 
+    @Nullable
+    public WorkmateSelection getWorkmateSelection() {
+        return workmateSelection;
+    }
+
+    public void setWorkmateSelection(@Nullable WorkmateSelection workmateSelection) {
+        this.workmateSelection = workmateSelection;
+    }
 
     public String getUid() {
         return uid;
