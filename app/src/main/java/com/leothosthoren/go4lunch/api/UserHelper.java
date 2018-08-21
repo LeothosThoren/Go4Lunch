@@ -3,10 +3,14 @@ package com.leothosthoren.go4lunch.api;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.leothosthoren.go4lunch.model.firebase.Users;
+import com.leothosthoren.go4lunch.model.firebase.WorkmateSelection;
+
+import java.util.Date;
 
 public class UserHelper {
 
@@ -56,11 +60,22 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("notificationEnabled", enabled);
     }
 
+    public static Task<Void> updateRestaurantSelection(String uid, String restaurantName, String restaurantId) {
+        WorkmateSelection workmateSelection = new WorkmateSelection(restaurantName, restaurantId);
+        return UserHelper.getUsersCollection().document(uid).update("workmateSelection.restaurantName", workmateSelection.getRestaurantName(),
+                                                                    "workmateSelection.restaurantId", workmateSelection.getRestaurantId(),
+                                                                            "workmateSelection.selectionDate", FieldValue.serverTimestamp());
+    }
+
 
     // --- DELETE ---
 
     public static Task<Void> deleteUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).delete();
+    }
+
+    public static Task<Void> deleteRestaurantSelectionFields(String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("workmateSelection", FieldValue.delete());
     }
 
 }
