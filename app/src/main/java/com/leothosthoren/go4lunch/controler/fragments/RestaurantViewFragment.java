@@ -118,9 +118,8 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    assert restaurants != null;
+                    if (restaurants != null)
                     mRestaurantsFromFireStore.add(restaurants);
-                    Log.i(TAG, "getAllRestaurantSelected: "+ restaurants.getPlaceDetail().getResult().getName());
                 }
                 Log.d(TAG, "getAllRestaurantSelected: " + mRestaurantsFromFireStore.size());
             } else {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.R;
@@ -25,12 +26,14 @@ import butterknife.BindView;
  * A simple {@link Fragment} subclass.
  */
 public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapter.Listener {
-    //VAR
+    // WIDGET
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecyclerView;
     @BindView(R.id.workmates_availability_message)
     TextView mTextViewRecyclerViewEmpty;
+    // VAR
     private WorkmateAdapter mWorkmateAdapter;
+    private Users modelCurrentUser;
 
     @Override
     protected BaseFragment newInstance() {
@@ -57,6 +60,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     // REST REQUESTS
     // --------------------
 
+
     // Create options for RecyclerView from a Query
     private FirestoreRecyclerOptions<Users> generateOptionsForAdapter(Query query) {
         return new FirestoreRecyclerOptions.Builder<Users>()
@@ -73,7 +77,8 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     private void configureRecyclerView() {
         if (getCurrentUser() != null) {
-            this.mWorkmateAdapter = new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
+            this.mWorkmateAdapter =
+                    new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
                     Glide.with(Objects.requireNonNull(this)),
                     this,
                     this.getCurrentUser().getUid());

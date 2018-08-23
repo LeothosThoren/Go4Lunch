@@ -277,15 +277,18 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         }
     }
 
+    // Get All workmate
     private void getWorkmatesNameWhoSelectedTheSameUserPlace() {
         RestaurantHelper.getAllRestaurants().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
+
                     if (restaurants != null) {
                         if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
                             if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
-                                    && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId()))
+                                    && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId())
+                                    && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime())))
                                 // Store needed data inside arrayList
                                 mRestaurantsFromFireStore.add(restaurants);
                         }

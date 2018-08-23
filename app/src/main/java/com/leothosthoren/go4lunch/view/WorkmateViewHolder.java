@@ -1,5 +1,8 @@
 package com.leothosthoren.go4lunch.view;
 
+import android.graphics.Typeface;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,28 +32,30 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         ButterKnife.bind(this, itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateWithWorkmateItem(Users workmateItem, String currentUserId,
                                        RequestManager glide) {
-        if (!workmateItem.getUid().equals(currentUserId)) {
-            //Update workmate profile picture
-            if (workmateItem.getUrlPicture() != null) {
-                glide.load(workmateItem.getUrlPicture())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(this.mImageViewWorkmatePhoto);
-            }
 
-            //Update workmate name and restaurant choice
-            if (workmateItem.getWorkmateSelection() != null) {
-                this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                        .getString(R.string.workmate_is_eating,
-                                formatFullName(workmateItem.getUsername()),
-                                workmateItem.getWorkmateSelection().getRestaurantName()));
-            } else {
-                this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                        .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
-            }
+        //Update workmate profile picture
+        if (workmateItem.getUrlPicture() != null) {
+            glide.load(workmateItem.getUrlPicture())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(this.mImageViewWorkmatePhoto);
+        }
 
+        //Update workmate name and restaurant choice
+        if (workmateItem.getWorkmateSelection() != null) {
+            this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                    .getString(R.string.workmate_is_eating,
+                            formatFullName(workmateItem.getUsername()),
+                            workmateItem.getWorkmateSelection().getRestaurantName()));
+            this.mTextViewWorkmateName.setTextAppearance(R.style.textStyle);
+        } else {
+            this.mTextViewWorkmateName.setText(App.getContext().getResources()
+                    .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
         }
 
     }
+
 }
+

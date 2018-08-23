@@ -41,8 +41,10 @@ import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -56,7 +58,7 @@ import io.reactivex.observers.DisposableObserver;
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener, DataConverterHelper {
 
     // CONSTANT
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -330,8 +332,10 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    assert restaurants != null;
-                    restaurantListFromFirestore.add(restaurants);
+                    if (restaurants != null && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime()))) {
+                        restaurantListFromFirestore.add(restaurants);
+                    }
+
 
                 }
             } else {
@@ -379,7 +383,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLat(),
                                     mPlaceDetailList.get(i).getResult().getGeometry().getLocation().getLng()))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_locator_for_map_orange))
                             .title(mPlaceDetailList.get(i).getResult().getName()));
 
                     //Change color of marker if workmate had selected a restaurant
@@ -399,7 +403,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         for (int j = 0; j < restaurantListFromFirestore.size(); j++) {
                 if (restaurantListFromFirestore.get(j).getPlaceDetail().getResult().getPlaceId()
                         .equals(mPlaceDetailList.get(index).getResult().getPlaceId())) {
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pizza_icon_map_workmates));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_locator_for_map_green));
                     break;
                 }
             }
