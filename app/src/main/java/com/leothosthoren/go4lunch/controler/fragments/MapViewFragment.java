@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -71,6 +72,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     // WIDGET
     @BindView(R.id.position_icon)
     ImageButton mGpsLocation;
+    @BindView(R.id.map_swipe_refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
     // VAR
     private MapView mMapView;
     private GoogleMap mMap;
@@ -110,6 +113,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     protected void configureDesign() {
         this.instantiatePlacesApiClients();
         this.getAllRestaurantSelected();
+        this.configurationSwipeRefreshLayout();
     }
 
     @Override
@@ -186,6 +190,14 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
         // Construct a FusedLocationProviderClient
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
+    }
+
+    private void configurationSwipeRefreshLayout() {
+        this.mRefreshLayout.setOnRefreshListener(() -> {
+            this.getAllRestaurantSelected();
+            this.updateUI();
+
+        });
     }
 
 
@@ -292,6 +304,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                     @Override
                     public void onNext(List<PlaceDetail> placeDetail) {
                         Log.d(TAG, "onNext: " + placeDetail.size());
+                        mRefreshLayout.setRefreshing(false);
                         addMarkerOnMap(placeDetail);
                     }
 
