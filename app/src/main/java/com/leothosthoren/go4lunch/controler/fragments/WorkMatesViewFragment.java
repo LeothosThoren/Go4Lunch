@@ -1,26 +1,33 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.adapter.WorkmateAdapter;
+import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
+import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
+import com.leothosthoren.go4lunch.data.DataSingleton;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Users;
+import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
 import java.util.Objects;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +41,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     // VAR
     private WorkmateAdapter mWorkmateAdapter;
     private Users modelCurrentUser;
+    private Disposable mDisposable;
 
     @Override
     protected BaseFragment newInstance() {
@@ -47,12 +55,13 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
 
     @Override
     protected void configureDesign() {
-
+        this.configureRecyclerView();
+        this.configureRecyclerViewClick();
     }
 
     @Override
     protected void updateDesign() {
-        this.configureRecyclerView();
+
     }
 
 
@@ -69,6 +78,45 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
                 .build();
     }
 
+    //------------------------
+    // HTTP RxJava
+    //------------------------
+
+    public void executeHttpRequestWithPlaceDetail(String placeID) {
+        mDisposable = PlaceStreams.streamFetchPlaceDetail(placeID)
+                .subscribeWith(new DisposableObserver<PlaceDetail>() {
+                    @Override
+                    public void onNext(PlaceDetail placeDetail) {
+                        Log.d(TAG, "onNext: " + placeDetail.getResult().getName());
+                        DataSingleton.getInstance().setPlaceDetail(placeDetail);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: " + placeID);
+                        startActivity(RestaurantInfoActivity.class);
+                    }
+                });
+    }
+
+    // Dispose subscription
+    private void disposeWhenDestroy() {
+        if (this.mDisposable != null && !this.mDisposable.isDisposed())
+            this.mDisposable.dispose();
+    }
+
+    // Called for better performances
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
+    }
+
 
     // --------------------
     // UI
@@ -79,9 +127,9 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
         if (getCurrentUser() != null) {
             this.mWorkmateAdapter =
                     new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
-                    Glide.with(Objects.requireNonNull(this)),
-                    this,
-                    this.getCurrentUser().getUid());
+                            Glide.with(Objects.requireNonNull(this)),
+                            this,
+                            this.getCurrentUser().getUid());
 
             mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
@@ -95,6 +143,20 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
     }
 
+
+    // -------------------------------------------------------------------------------------------//
+    //                                      ACTION                                                //
+    // -------------------------------------------------------------------------------------------//
+
+    private void configureRecyclerViewClick() {
+        ItemClickSupport.addTo(mRecyclerView, R.id.item_restaurant_layout)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    Users workmateItem = mWorkmateAdapter.getItem(position);
+                    if (workmateItem.getWorkmateSelection() != null) {
+                        this.executeHttpRequestWithPlaceDetail(workmateItem.getWorkmateSelection().getRestaurantId());
+                    }
+                });
+    }
 
     // --------------------
     // CALLBACK

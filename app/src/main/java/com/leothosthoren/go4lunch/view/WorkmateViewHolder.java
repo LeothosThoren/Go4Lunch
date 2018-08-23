@@ -53,6 +53,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         } else {
             this.mTextViewWorkmateName.setText(App.getContext().getResources()
                     .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));
+            this.mTextViewWorkmateName.setTextAppearance(R.style.textNoStyle);
         }
 
     }

@@ -1,6 +1,8 @@
 package com.leothosthoren.go4lunch.adapter;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -43,15 +45,22 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateVie
         this.callback.onDataChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull Users users) {
-        //add method holder
         holder.updateWithWorkmateItem(users, this.idCurrentUser, this.glide);
-
-
     }
+
 
     public interface Listener {
         void onDataChanged();
     }
+
+    @NonNull
+    @Override
+    public Users getItem(int position) {
+        return super.getItem(position);
+    }
+
+
 }

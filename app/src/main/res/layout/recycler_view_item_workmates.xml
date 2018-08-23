@@ -26,6 +26,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
             android:text="@string/workmate_default_decision"
+            android:textColor="@android:color/darker_gray"
             android:textStyle="italic" />
 
         <!--SEPARATION-->

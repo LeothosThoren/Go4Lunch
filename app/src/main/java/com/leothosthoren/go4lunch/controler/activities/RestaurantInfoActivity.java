@@ -182,7 +182,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
 
 
     // --------------------
-    // REST REQUESTS
+    // FIRESTORE REQUESTS
     // --------------------
 
     //Set user selection place
@@ -277,13 +277,12 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         }
     }
 
-    // Get All workmate
+    // Get the workmates whose selection is equal of the user choice
     private void getWorkmatesNameWhoSelectedTheSameUserPlace() {
         RestaurantHelper.getAllRestaurants().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-
                     if (restaurants != null) {
                         if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
                             if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
@@ -294,8 +293,13 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                         }
                     }
                 }
-                //Here the recyclerview retrieve data from request above
-                this.configureRecyclerView();
+                //Here the recyclerview retrieve data from request above else visibility is set to gone
+                if (mRestaurantsFromFireStore != null) {
+                    this.configureRecyclerView();
+                } else {
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }

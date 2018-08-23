@@ -323,7 +323,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     //---------------------------------------------------------------------------------------------//
-    //                                       HTTP FB                                               //
+    //                                       HTTP FIREBASE                                         //
     //---------------------------------------------------------------------------------------------//
 
 
@@ -332,11 +332,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    if (restaurants != null && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime()))) {
-                        restaurantListFromFirestore.add(restaurants);
+                    if (restaurants != null && getCurrentUser() != null) {
+                        if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
+                                && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime()))) {
+                            restaurantListFromFirestore.add(restaurants);
+                        }
                     }
-
-
                 }
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
@@ -361,7 +362,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 getDeviceLocation();
             } else {
-                mGpsLocation.setVisibility(View.INVISIBLE);
+                mGpsLocation.setVisibility(View.GONE);
                 mMap.setMyLocationEnabled(false);
                 mLastKnownLocation = null;
                 //Try to obtain location permission
@@ -386,7 +387,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_locator_for_map_orange))
                             .title(mPlaceDetailList.get(i).getResult().getName()));
 
-                    //Change color of marker if workmate had selected a restaurant
+                    //Change color of marker if a workmate selected a restaurant
                     this.changeMarkerColor(i);
 
                     // Store in HashMap for Marker id for clickHandler
@@ -401,12 +402,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
 
     private void changeMarkerColor(int index) {
         for (int j = 0; j < restaurantListFromFirestore.size(); j++) {
-                if (restaurantListFromFirestore.get(j).getPlaceDetail().getResult().getPlaceId()
-                        .equals(mPlaceDetailList.get(index).getResult().getPlaceId())) {
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_locator_for_map_green));
-                    break;
-                }
+            if (restaurantListFromFirestore.get(j).getPlaceDetail().getResult().getPlaceId()
+                    .equals(mPlaceDetailList.get(index).getResult().getPlaceId())) {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.restaurant_locator_for_map_green));
+                break;
             }
+        }
     }
 
 
@@ -428,8 +429,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private void setDevicePositionOnMap() {
         this.mGpsLocation.setOnClickListener(v -> {
             Log.d(TAG, "onClick: clicked gps icon");
-            if (DataSingleton.getInstance().getDeviceLatitude() != null
-                    || DataSingleton.getInstance().getDeviceLongitude() != null) {
+            if (DataSingleton.getInstance().getDeviceLatitude() != null || DataSingleton.getInstance().getDeviceLongitude() != null) {
                 Double latitude = DataSingleton.getInstance().getDeviceLatitude();
                 Double longitude = DataSingleton.getInstance().getDeviceLongitude();
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(

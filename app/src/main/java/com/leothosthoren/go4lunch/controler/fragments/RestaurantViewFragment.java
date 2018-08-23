@@ -21,9 +21,11 @@ import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,7 +34,7 @@ import io.reactivex.disposables.Disposable;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantViewFragment extends BaseFragment implements RestaurantAdapter.Listener {
+public class RestaurantViewFragment extends BaseFragment implements RestaurantAdapter.Listener, DataConverterHelper {
 
     private static final String TAG = RestaurantViewFragment.class.getSimpleName();
     //VIEW
@@ -118,8 +120,12 @@ public class RestaurantViewFragment extends BaseFragment implements RestaurantAd
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    if (restaurants != null)
-                    mRestaurantsFromFireStore.add(restaurants);
+                    if (restaurants != null && getCurrentUser() != null) {
+                        if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
+                                && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime()))) {
+                            mRestaurantsFromFireStore.add(restaurants);
+                        }
+                    }
                 }
                 Log.d(TAG, "getAllRestaurantSelected: " + mRestaurantsFromFireStore.size());
             } else {
