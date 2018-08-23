@@ -284,12 +284,14 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
                     if (restaurants != null) {
-                        if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
-                            if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
-                                    && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId())
-                                    && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime())))
+                        if (mCurrentUser.getWorkmateSelection() != null && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mCurrentUser.getWorkmateSelection().getRestaurantId())) {
+                            if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
                                 // Store needed data inside arrayList
-                                mRestaurantsFromFireStore.add(restaurants);
+                                if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())
+                                        && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mPlaceDetail.getResult().getPlaceId())
+                                        && formatDate(restaurants.getDateChoice()).equals(formatDate(Calendar.getInstance().getTime())))
+                                    mRestaurantsFromFireStore.add(restaurants);
+                            }
                         }
                     }
                 }

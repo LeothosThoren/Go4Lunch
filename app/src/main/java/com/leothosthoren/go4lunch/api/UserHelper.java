@@ -42,7 +42,7 @@ public class UserHelper {
     }
 
     public static Query getAllUsers() {
-        return UserHelper.getUsersCollection().limit(15);
+        return UserHelper.getUsersCollection().orderBy("username").limit(15);
     }
 
 

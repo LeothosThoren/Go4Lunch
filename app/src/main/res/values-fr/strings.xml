@@ -67,8 +67,8 @@
     <string name="search_workmates">Chercher collègues</string>
     <string name="restaurant_selection_availability">Vous n\'avez pas de restaurant sélectionné aujourd\'hui!</string>
     <string name="delete_place_selection">Sélection annulée</string>
-    <string name="restaurant_like">Favori</string>
-    <string name="restaurant_no_like">Non favori</string>
+    <string name="restaurant_like">Favoris</string>
+    <string name="restaurant_no_like">Non favoris</string>
     <string name="notification_enable">Notification activée!</string>
     <string name="notification_disable">Notification désactivée!</string>
 
