@@ -315,7 +315,7 @@ public class SettingActivity extends BaseActivity {
         // Set the alarm to start at approximately 12:00 p.m.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
 
         //Test
         int interval = 90000;

@@ -285,7 +285,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
             if (task.isSuccessful()) {
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
-                    if (restaurants != null) {
+                    if (restaurants != null && mCurrentUser != null) {
                         if (mCurrentUser.getWorkmateSelection() != null
                                 && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mCurrentUser.getWorkmateSelection().getRestaurantId())) {
                             if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
