@@ -97,7 +97,7 @@
 
     <!-- NOTIFICATION -->
     <string name="default_notification_channel_id">notification channel</string>
-    <string name="text_notification">It\'s time to lunch!</string>
+    <string name="text_notification">%1$s! It\'s time to lunch!</string>
 
     <!-- FIREBASE -->
     <string name="save_place_selection">Choice saved</string>

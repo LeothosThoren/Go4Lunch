@@ -139,6 +139,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(this.mJoiningWorkmateAdapter);
+        mJoiningWorkmateAdapter.notifyDataSetChanged();
     }
 
 
@@ -297,13 +298,8 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                         }
                     }
                 }
-                //Here the recyclerview retrieve data from request above else visibility is set to gone
-                if (mRestaurantsFromFireStore != null) {
-                    this.configureRecyclerView();
-                } else {
-                    mRecyclerView.setVisibility(View.GONE);
-                }
-
+                //Here the recyclerview retrieve data from request above
+                this.configureRecyclerView();
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }

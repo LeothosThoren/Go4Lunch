@@ -5,6 +5,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Restaurants;
@@ -41,9 +42,6 @@ public class RestaurantHelper {
         return RestaurantHelper.getRestaurantCollection().get();
     }
 
-    public static Query queryAllRestaurants() {
-        return RestaurantHelper.getRestaurantCollection();
-    }
 
     // --- UPDATE ---
 

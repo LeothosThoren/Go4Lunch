@@ -12,30 +12,31 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
+import com.leothosthoren.go4lunch.data.DataSingleton;
+import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
+import com.leothosthoren.go4lunch.model.firebase.Restaurants;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
+import com.leothosthoren.go4lunch.utils.FireBaseTools;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 
-public class ScheduledNotificationSender extends BroadcastReceiver {
-
-    // VAR
-    private String subText = "test"; // Info from firebase ...
+public class ScheduledNotificationSender extends BroadcastReceiver implements FireBaseTools, DataConverterHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
-            // Set the alarm here.
-            // todo:
-            // - check if notification enabled
-            // - check if restaurant choice exists on the current day
-
-            // - launch notification
-            sendNotification(context);
+            // First the data is update and then the notification is send
+            this.getDataFromFirestore(context);
         }
 
     }
+
 
     /*
      * @method sendNotification
@@ -58,7 +59,6 @@ public class ScheduledNotificationSender extends BroadcastReceiver {
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(context.getString(R.string.text_notification))
-                        .setSubText(subText)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)
@@ -80,6 +80,35 @@ public class ScheduledNotificationSender extends BroadcastReceiver {
 
         assert mNotificationManager != null;
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+
+    /**
+     * @method getDataFromFirestore
+     * @param context
+     *
+     * Get the data from Firestore and check several conditions before sending
+     * */
+    public void getDataFromFirestore(Context context) {
+        // Get Restaurant selection from Firestore
+        if (getCurrentUser() != null) {
+            RestaurantHelper.getRestaurantSelection(getCurrentUser().getUid())
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
+                        if (restaurants != null) {
+                            Date dateChoice = restaurants.getDateChoice();
+                            PlaceDetail placeDetail = restaurants.getPlaceDetail();
+                            boolean notification = restaurants.getWorkmate().getNotificationEnabled();
+                            if (notification && formatDate(dateChoice).equals(formatDate(Calendar.getInstance().getTime()))) {
+                                //Set Singleton
+                                DataSingleton.getInstance().setPlaceDetail(placeDetail);
+                                // Send Notification
+                                this.sendNotification(context);
+                            }
+                        }
+                    }).addOnFailureListener(this.onFailureListener(context));
+        }
+
     }
 
 }
