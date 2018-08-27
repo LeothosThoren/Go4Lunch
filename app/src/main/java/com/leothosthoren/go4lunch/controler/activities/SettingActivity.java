@@ -73,7 +73,6 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.updateUIOnCreation();
         this.notificationSwitchHandler();
-        this.configureAlarmManager(this);
     }
 
     @Override
@@ -312,13 +311,18 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void startAlarm(Context context) {
+        this.configureAlarmManager(this);
         // Set the alarm to start at approximately 12:00 p.m.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
 
+        //Test
+        int interval = 90000;
         // SetInexactRepeating()
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, alarmIntent);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent);
 
         //Enable notification even after rebooting
@@ -333,6 +337,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void stopAlarm(Context context) {
+        this.configureAlarmManager(this);
         // If the alarm has been set, cancel it.
         if (alarmMgr!= null) {
             alarmMgr.cancel(alarmIntent);

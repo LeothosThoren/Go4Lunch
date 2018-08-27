@@ -30,6 +30,7 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReceive(Context context, Intent intent) {
+        this.getDataFromFirestore(context);
         if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
             // First the data is update and then the notification is send
             this.getDataFromFirestore(context);
@@ -38,7 +39,7 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
     }
 
 
-    /*
+    /**
      * @method sendNotification
      * @param context
      *
@@ -58,7 +59,7 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
                 new NotificationCompat.Builder(context, channelID)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(context.getString(R.string.text_notification))
+                        .setContentText(context.getString(R.string.text_notification, Objects.requireNonNull(getCurrentUser()).getDisplayName()))
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)
