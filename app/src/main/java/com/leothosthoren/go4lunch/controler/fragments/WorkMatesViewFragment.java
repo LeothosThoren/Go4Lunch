@@ -128,8 +128,7 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
             this.mWorkmateAdapter =
                     new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
                             Glide.with(Objects.requireNonNull(this)),
-                            this,
-                            this.getCurrentUser().getUid());
+                            this);
 
             mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override

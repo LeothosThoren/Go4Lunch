@@ -10,8 +10,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.model.firebase.WorkmateSelection;
 
-import java.util.Date;
-
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
@@ -62,9 +60,10 @@ public class UserHelper {
 
     public static Task<Void> updateRestaurantSelection(String uid, String restaurantName, String restaurantId) {
         WorkmateSelection workmateSelection = new WorkmateSelection(restaurantName, restaurantId);
-        return UserHelper.getUsersCollection().document(uid).update("workmateSelection.restaurantName", workmateSelection.getRestaurantName(),
-                                                                    "workmateSelection.restaurantId", workmateSelection.getRestaurantId(),
-                                                                            "workmateSelection.selectionDate", FieldValue.serverTimestamp());
+        return UserHelper.getUsersCollection().document(uid)
+                .update("workmateSelection.restaurantName", workmateSelection.getRestaurantName(),
+                        "workmateSelection.restaurantId", workmateSelection.getRestaurantId(),
+                        "workmateSelection.selectionDate", FieldValue.serverTimestamp());
     }
 
 

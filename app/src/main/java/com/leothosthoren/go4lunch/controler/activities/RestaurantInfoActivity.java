@@ -194,7 +194,8 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                         if (task.isSuccessful()) {
                             // Update at the same time the user collection
                             UserHelper.updateRestaurantSelection(getCurrentUser().getUid(), mPlaceDetail.getResult().getName(),
-                                    mPlaceDetail.getResult().getPlaceId()).addOnFailureListener(this.onFailureListener(this));
+                                    mPlaceDetail.getResult().getPlaceId())
+                                    .addOnFailureListener(this.onFailureListener(this));
                         }
                         Snackbar.make(v, getString(R.string.save_place_selection), Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
@@ -284,7 +285,8 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                     Restaurants restaurants = documentSnapshot.toObject(Restaurants.class);
                     if (restaurants != null) {
-                        if (mCurrentUser.getWorkmateSelection() != null && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mCurrentUser.getWorkmateSelection().getRestaurantId())) {
+                        if (mCurrentUser.getWorkmateSelection() != null
+                                && restaurants.getPlaceDetail().getResult().getPlaceId().equals(mCurrentUser.getWorkmateSelection().getRestaurantId())) {
                             if (restaurants.getWorkmate() != null && getCurrentUser() != null) {
                                 // Store needed data inside arrayList
                                 if (!restaurants.getWorkmate().getUid().equals(getCurrentUser().getUid())

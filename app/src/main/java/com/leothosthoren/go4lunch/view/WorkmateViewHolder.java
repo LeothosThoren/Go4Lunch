@@ -1,6 +1,5 @@
 package com.leothosthoren.go4lunch.view;
 
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,8 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.utils.App;
 import com.leothosthoren.go4lunch.utils.DataConverterHelper;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +34,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void updateWithWorkmateItem(Users workmateItem, String currentUserId,
-                                       RequestManager glide) {
+    public void updateWithWorkmateItem(Users workmateItem, RequestManager glide) {
 
         //Update workmate profile picture
         if (workmateItem.getUrlPicture() != null) {
@@ -44,12 +44,13 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder implements DataC
         }
 
         //Update workmate name and restaurant choice
-        if (workmateItem.getWorkmateSelection() != null) {
-            this.mTextViewWorkmateName.setText(App.getContext().getResources()
-                    .getString(R.string.workmate_is_eating,
-                            formatFullName(workmateItem.getUsername()),
-                            workmateItem.getWorkmateSelection().getRestaurantName()));
+        if (workmateItem.getWorkmateSelection() != null
+                && formatDate(workmateItem.getWorkmateSelection().getSelectionDate()).equals(formatDate(Calendar.getInstance().getTime()))) {
+            this.mTextViewWorkmateName.setText(App.getContext().getResources().getString(R.string.workmate_is_eating,
+                    formatFullName(workmateItem.getUsername()),
+                    workmateItem.getWorkmateSelection().getRestaurantName()));
             this.mTextViewWorkmateName.setTextAppearance(R.style.textStyle);
+
         } else {
             this.mTextViewWorkmateName.setText(App.getContext().getResources()
                     .getString(R.string.workmate_default_decision, formatFullName(workmateItem.getUsername())));

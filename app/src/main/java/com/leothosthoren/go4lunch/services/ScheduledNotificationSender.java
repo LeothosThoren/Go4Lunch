@@ -55,14 +55,14 @@ public class ScheduledNotificationSender extends BroadcastReceiver {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, channelID)
-                        .setSmallIcon(R.drawable.ic_restaurant_map_icon)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(context.getString(R.string.text_notification))
                         .setSubText(subText)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)
-                        .setAutoCancel(false);
+                        .setAutoCancel(true);
 
         // Gets an instance of the NotificationManager service//
 

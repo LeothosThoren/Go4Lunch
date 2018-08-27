@@ -13,23 +13,22 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.model.firebase.Users;
 import com.leothosthoren.go4lunch.view.WorkmateViewHolder;
 
+import java.util.Calendar;
+
 
 public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateViewHolder> {
     //FOR DATA
     private final RequestManager glide;
-    private final String idCurrentUser;
-//    private final String idRestaurant;
 
     //FOR COMMUNICATION
     private Listener callback;
 
 
     public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Users> usersOptions,
-                           RequestManager glide, Listener callback, String idCurrentUser) {
+                           RequestManager glide, Listener callback) {
         super(usersOptions);
         this.glide = glide;
         this.callback = callback;
-        this.idCurrentUser = idCurrentUser;
     }
 
     @NonNull
@@ -48,7 +47,7 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<Users, WorkmateVie
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull Users users) {
-        holder.updateWithWorkmateItem(users, this.idCurrentUser, this.glide);
+        holder.updateWithWorkmateItem(users, this.glide);
     }
 
 

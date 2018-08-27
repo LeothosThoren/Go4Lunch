@@ -1,9 +1,12 @@
 package com.leothosthoren.go4lunch.model.firebase;
 
+import java.util.Date;
+
 public class WorkmateSelection {
 
     private String restaurantName;
     private String restaurantId;
+    private Date selectionDate;
 
     public WorkmateSelection() {
     }
@@ -13,8 +16,8 @@ public class WorkmateSelection {
         this.restaurantId = restaurantId;
     }
 
-    //--- GETTER---
 
+    //--- GETTER---
 
     public String getRestaurantName() {
         return restaurantName;
@@ -24,15 +27,21 @@ public class WorkmateSelection {
         return restaurantId;
     }
 
+    public Date getSelectionDate() {
+        return selectionDate;
+    }
 
     //--- SETTER---
 
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
     }
 
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setSelectionDate(Date selectionDate) {
+        this.selectionDate = selectionDate;
     }
 }
