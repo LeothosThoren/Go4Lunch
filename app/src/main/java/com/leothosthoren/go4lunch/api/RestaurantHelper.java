@@ -33,25 +33,22 @@ public class RestaurantHelper {
 
     // --- GET ---
 
-    //Ok
     public static Task<DocumentSnapshot> getRestaurantSelection(String uid) {
         return RestaurantHelper.getRestaurantCollection().document(uid).get();
     }
 
-    // Ok
     public static Task<QuerySnapshot> getAllRestaurants() {
         return RestaurantHelper.getRestaurantCollection().get();
     }
 
-    //Ok
     public static Query queryAllRestaurants() {
         return RestaurantHelper.getRestaurantCollection();
     }
 
     // --- UPDATE ---
 
-    public static Task<Void> updateRestaurantLike(HashMap<String, Boolean> like, String uid) {
-        return RestaurantHelper.getRestaurantCollection().document(uid).update("restaurantLike", like);
+    public static Task<Void> updateNotification(String uid, boolean enable) {
+        return RestaurantHelper.getRestaurantCollection().document(uid).update("workmate.notificationEnabled", enable);
     }
 
     // --- DELETE ---

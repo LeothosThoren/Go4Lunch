@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.leothosthoren.go4lunch.R;
+import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.api.UserHelper;
 import com.leothosthoren.go4lunch.base.BaseActivity;
 import com.leothosthoren.go4lunch.model.firebase.Users;
@@ -181,6 +182,9 @@ public class SettingActivity extends BaseActivity {
     private void updateNotificationSwitchOnFirebase(boolean check) {
         if (this.getCurrentUser() != null) {
             UserHelper.updateNotification(getCurrentUser().getUid(), check)
+                    .addOnFailureListener(this.onFailureListener(this));
+
+            RestaurantHelper.updateNotification(getCurrentUser().getUid(), check)
                     .addOnFailureListener(this.onFailureListener(this));
         }
     }
