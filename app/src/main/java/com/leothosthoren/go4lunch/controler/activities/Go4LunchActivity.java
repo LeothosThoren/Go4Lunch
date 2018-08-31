@@ -426,8 +426,7 @@ public class Go4LunchActivity extends BaseActivity implements
     private void getLocationPermission() {
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
             getDeviceLocation();
         } else {
@@ -462,8 +461,7 @@ public class Go4LunchActivity extends BaseActivity implements
                             searchPlaceWithAutocomplete(latitude, longitude);
 
                         } else {
-                            Toast.makeText(this,
-                                    R.string.toast_message_geolocation,
+                            Toast.makeText(this, R.string.toast_message_geolocation,
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -483,7 +481,7 @@ public class Go4LunchActivity extends BaseActivity implements
     // ---------------------
     // ACTION
     // ---------------------
-    
+
 
     // Configure click on menu Toolbar
     @Override

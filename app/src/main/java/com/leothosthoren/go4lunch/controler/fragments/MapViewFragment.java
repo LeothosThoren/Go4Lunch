@@ -1,7 +1,6 @@
 package com.leothosthoren.go4lunch.controler.fragments;
 
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -13,7 +12,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -39,7 +37,6 @@ import com.leothosthoren.go4lunch.R;
 import com.leothosthoren.go4lunch.api.PlaceStreams;
 import com.leothosthoren.go4lunch.api.RestaurantHelper;
 import com.leothosthoren.go4lunch.base.BaseFragment;
-import com.leothosthoren.go4lunch.controler.activities.Go4LunchActivity;
 import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
@@ -86,6 +83,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
     private List<PlaceDetail> mPlaceDetailList = new ArrayList<>();
     private HashMap<String, PlaceDetail> mMarkerMap = new HashMap<>();
     private List<Restaurants> restaurantListFromFirestore = new ArrayList<>();
+
 
     @Override
     protected BaseFragment newInstance() {
@@ -360,8 +358,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback,
             } else {
                 mGpsLocation.setVisibility(View.GONE);
                 mMap.setMyLocationEnabled(false);
+                Toast.makeText(this.getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                 mLastKnownLocation = null;
-                //Try to obtain location permission
+//              Try to obtain location permission
                 getLocationPermission();
             }
         } catch (SecurityException e) {

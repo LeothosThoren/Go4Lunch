@@ -317,6 +317,7 @@ public class RestaurantInfoActivity extends BaseActivity implements DataConverte
         //Restaurant address
         restaurantAddress.setText(mPlaceDetail.getResult().getVicinity());
         //Restaurant rating
+        if (mPlaceDetail.getResult().getRating() != null)
         restaurantRatingBar.setRating(formatRating(mPlaceDetail.getResult().getRating()));
         //Restaurant Photo
         if (mPlaceDetail.getResult().getPhotos() != null) {
