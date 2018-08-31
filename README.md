@@ -1,4 +1,4 @@
-# GO4LUNCH [![Build Status](https://travis-ci.org/LeothosThoren/Go4Lunch.svg?branch=master)](https://travis-ci.org/LeothosThoren/Go4Lunch) [![codecov](https://codecov.io/gh/LeothosThoren/Go4Lunch/branch/master/graph/badge.svg)](https://codecov.io/gh/LeothosThoren/Go4Lunch)
+# GO4LUNCH <!--[![Build Status](https://travis-ci.org/LeothosThoren/Go4Lunch.svg?branch=master)](https://travis-ci.org/LeothosThoren/Go4Lunch) [![codecov](https://codecov.io/gh/LeothosThoren/Go4Lunch/branch/master/graph/badge.svg)](https://codecov.io/gh/LeothosThoren/Go4Lunch)-->
 
 The Go4Lunch app is a collaborative application used by all employees.
 It allows you to search for a restaurant in the area, then select the one of your choice by sharing it with your colleagues.
