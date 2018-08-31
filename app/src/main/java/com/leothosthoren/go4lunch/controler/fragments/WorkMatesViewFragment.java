@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -21,8 +20,10 @@ import com.leothosthoren.go4lunch.controler.activities.RestaurantInfoActivity;
 import com.leothosthoren.go4lunch.data.DataSingleton;
 import com.leothosthoren.go4lunch.model.detail.PlaceDetail;
 import com.leothosthoren.go4lunch.model.firebase.Users;
+import com.leothosthoren.go4lunch.utils.DataConverterHelper;
 import com.leothosthoren.go4lunch.utils.ItemClickSupport;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -32,7 +33,7 @@ import io.reactivex.observers.DisposableObserver;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapter.Listener {
+public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapter.Listener, DataConverterHelper {
     // WIDGET
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecyclerView;
@@ -56,7 +57,6 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
     @Override
     protected void configureDesign() {
         this.configureRecyclerView();
-        this.configureRecyclerViewClick();
     }
 
     @Override
@@ -129,7 +129,6 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
                     new WorkmateAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()),
                             Glide.with(Objects.requireNonNull(this)),
                             this);
-
             mWorkmateAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -140,6 +139,8 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(this.mWorkmateAdapter);
+        //Handle the click on item of recycler view
+        this.configureRecyclerViewClick();
     }
 
 
@@ -151,7 +152,8 @@ public class WorkMatesViewFragment extends BaseFragment implements WorkmateAdapt
         ItemClickSupport.addTo(mRecyclerView, R.id.item_restaurant_layout)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     Users workmateItem = mWorkmateAdapter.getItem(position);
-                    if (workmateItem.getWorkmateSelection() != null) {
+                    if (workmateItem.getWorkmateSelection() != null
+                            && formatDate(workmateItem.getWorkmateSelection().getSelectionDate()).equals(formatDate(Calendar.getInstance().getTime()))) {
                         this.executeHttpRequestWithPlaceDetail(workmateItem.getWorkmateSelection().getRestaurantId());
                     }
                 });

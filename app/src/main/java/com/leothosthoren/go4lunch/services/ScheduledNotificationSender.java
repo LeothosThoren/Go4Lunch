@@ -40,11 +40,9 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
 
 
     /**
+     * @param context Notify the user even the app is not launched
      * @method sendNotification
-     * @param context
-     *
-     * Notify the user even the app is not launched
-     * */
+     */
     public void sendNotification(Context context) {
 
         final int NOTIFICATION_ID = 700;
@@ -52,9 +50,7 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
         Intent intent = new Intent(context, RestaurantInfoActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
         //Get an instance of NotificationManager//
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, channelID)
                         .setSmallIcon(R.drawable.ic_notification)
@@ -66,7 +62,6 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
                         .setAutoCancel(true);
 
         // Gets an instance of the NotificationManager service//
-
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -85,11 +80,11 @@ public class ScheduledNotificationSender extends BroadcastReceiver implements Fi
 
 
     /**
-     * @method getDataFromFirestore
      * @param context
+     * @method getDataFromFirestore
      *
      * Get the data from Firestore and check several conditions before sending
-     * */
+     */
     public void getDataFromFirestore(Context context) {
         // Get Restaurant selection from Firestore
         if (getCurrentUser() != null) {
